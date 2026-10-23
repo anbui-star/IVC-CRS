@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tài liệu CRS – IVC</title>
+<style>
+  :root { --brand:#1f4e79; --soft:#e8eff7; --line:#c9d1db; --desk:#e5e7eb; --side:260px; }
+  * { box-sizing:border-box; }
+  html, body { height:100%; margin:0; }
+  body { display:flex; font-family:Calibri,"Segoe UI",Arial,sans-serif; color:#000; background:var(--desk); }
+  nav { width:var(--side); flex:none; display:flex; flex-direction:column; background:#fff; border-right:1px solid var(--line); overflow-y:auto; }
+  nav header { padding:18px 16px 12px; border-bottom:1px solid var(--line); }
+  nav h1 { margin:0; font-size:16pt; color:var(--brand); }
+  nav p { margin:2px 0 0; font-size:10pt; color:#444; }
+  nav ul { list-style:none; margin:0; padding:8px; }
+  nav a { display:block; padding:9px 10px; margin-bottom:6px; border:1px solid var(--line); border-left:4px solid transparent; border-radius:3px; color:inherit; text-decoration:none; }
+  nav a:hover { background:var(--soft); }
+  nav a[aria-current="page"] { background:var(--soft); border-left-color:var(--brand); }
+  .tk { display:inline-block; padding:0 7px; border-radius:3px; background:var(--brand); color:#fff; font-weight:700; font-size:10.5pt; }
+  nav strong { display:block; margin-top:4px; font-size:11pt; color:var(--brand); }
+  nav small { display:block; font-size:9.5pt; color:#444; }
+  main { flex:1; min-width:0; }
+  iframe { width:100%; height:100%; border:0; background:var(--desk); }
+  .empty { padding:40px; color:#444; }
+  @media (max-width:720px) {
+    body { flex-direction:column; }
+    nav { width:auto; max-height:40%; border-right:0; border-bottom:1px solid var(--line); }
+  }
+</style>
+</head>
+<body>
+<nav aria-label="Danh sách tài liệu">
+  <header><h1>Tài liệu CRS</h1><p>Chọn số ticket để xem tài liệu</p></header>
+  <ul id="menu"></ul>
+</nav>
+<main><iframe id="view" title="Tài liệu" hidden></iframe><div id="empty" class="empty">Chọn một ticket ở menu bên trái.</div></main>
+<script>
+  var DOCS = [{"key": "5781", "id": "5781", "name": "Customer Survey", "desc": "Tự động gửi & xử lý khảo sát khách hàng (E2E-02-068)", "file": "Quy%20tr%C3%ACnh%20t%E1%BB%B1%20%C4%91%E1%BB%99ng%20g%E1%BB%ADi%20link%20kh%E1%BA%A3o%20s%C3%A1t%20kh%C3%A1ch%20h%C3%A0ng%20%28Customer%20Survey%29%20-%20CRS.html"}, {"key": "CRS_R003 + R004", "id": "CRS_R003-R004", "name": "CST Visiting", "desc": "Mapping field báo cáo Thăm khách hàng", "file": "%28CRS_R003%20%2B%20CRS_R004%29%20Mapping%20field%20b%C3%A1o%20c%C3%A1o%20Th%C4%83m%20kh%C3%A1ch%20h%C3%A0ng%20%28CST%20Visiting%29.html"}];
+  var menu = document.getElementById('menu'), view = document.getElementById('view'), empty = document.getElementById('empty');
+  DOCS.forEach(function (d) {
+    var li = document.createElement('li'), a = document.createElement('a');
+    a.href = '#' + d.id; a.dataset.id = d.id;
+    var t = document.createElement('span'); t.className = 'tk'; t.textContent = d.key;
+    var n = document.createElement('strong'); n.textContent = d.name;
+    var s = document.createElement('small'); s.textContent = d.desc;
+    a.append(t, n, s); li.appendChild(a); menu.appendChild(li);
+  });
+  function show() {
+    var id = decodeURIComponent(location.hash.slice(1)) || DOCS[0].id;
+    var d = DOCS.filter(function (x) { return x.id === id; })[0] || DOCS[0];
+    view.hidden = false; empty.hidden = true;
+    if (view.getAttribute('src') !== d.file) view.setAttribute('src', d.file);
+    document.title = d.key + ' – Tài liệu CRS';
+    menu.querySelectorAll('a').forEach(function (a) {
+      if (a.dataset.id === d.id) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+    });
+  }
+  window.addEventListener('hashchange', show);
+  show();
+</script>
+</body>
+</html>
