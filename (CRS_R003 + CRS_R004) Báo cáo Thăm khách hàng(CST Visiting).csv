@@ -1,0 +1,81 @@
+﻿CRS_R0003/ CRS_R0004,,,,,,,,,,,,,,,,,CRS_R0003/ CRS_R0004,,,,,,
+,CUSTOMER VISITING in FY2025,,,,,,,,,,,,,,,,ACTION AFTER VISITING,,,,,,
+,Tên report,IVC Customer Visit Report,,,,IVC Customer Visit Report,,,,,,,,,,,Tên report,,,,,,
+,,Filter 1,"From date--- To date (khoảng thời gian xem báo cáo) Check In Datetime
+",,,,,,,,,,,,,,Filter 1,cột (7),,,,,
+,,Filter 2,Cat.01,Visit__c.Vendor__r.Customer_Tier__c,,,,,,,,,,,,,Filter 2,Cột (3),,,,,
+,,Filter 3,Cat.02,,,,,,,,,,,,,,Filter 3,Cột (6),,,,,
+,No,Date,DLR,IVC PIC,Visit member,Customer Name,Cat. 01,Cat. 02,Holding Units,Holding Units Detail,Business ,Place,Inquiry,CST Comments (Market Situation; Business…),"Other Information, Comments",,CST's Request,To do,PIC,Kết quả,Số báo cái visit plan liên quan,Due date xử lý ,Progress/ Status
+,No,Ngày thăm,Đại lý đi cùng ,"Người đi thăm (IVC)
+Chọn được nhiều người đi thăm",,"Customer Name (hiện tại đang nhập manual, đối với mục đích thống kê thì cần dhọn từ danh sách Lead hoặc Account, có đi thăm khách chưa là khách hàng của IVC)","Phân nhóm (FLS / SPV)
+Phân loại khách theo xe","Cat. 02
+Phân  loại  tùy theo Cat.01","Tổng số xe mà khách hàng đang sở hữu
+(bao gồm xe của IVC và không phải của IVC)",Chi tiết số xe sở hữu (note trên  CUSTOMER BASIC DATA),Business ,"Place
+(Theo visit plan)","Nhu cầu/đề xuất mới của khách hàng (ví dụ: muốn mua thêm xe, cần tư vấn dịch vụ...)
+stt 17 trong Customer Basit data","Ghi chú, phản hồi hoặc nhận xét từ phía khách hàng (cột 17)",cột 18 theo Customer Basit data,,"Yều cầu của khách hàng cần xử lý (nhập manual theo Kết quả (13,14) ghi nhận được",xướng xử lý,Phòng ban xử lý ,Kết quả,,,Progress/ Status
+,(1),(2),(3),(4),,(5),(6),(7),(8),(9),(10),(11),(12),(13),(14),,(1),(2),(3),(4),(5),(6),(7)
+O1 mapping filed,,"Visit.Check inDatetime
+",Visit__c.Dealer_Name__r.Search Name,"Visit__c.Visit_By__r.Owner
+ 
+","Visit__c.Visit_By__r.Note
+Note=> Visit member
+ 
+",Visit__c.Khách hàng.Name,Visit__c.Vendor__r.Customer_Tier__c,Visit__c.Customer_Basic_Data__r.Customer_Rank__c,Visit__c.Customer_Basic_Data__r.Total_Vehicles__c,"lấy tất cả thông tin xe trên holding unit (mỗi field 1 cột)
+Total_Isuzu__c, Total_Hino__c, Total_HYD__c, Total_Thaco__c, Total_Mitsu__c, Total_TYT__c, Total_FORD__c, Total_Other__c",Visit__c.Customer_Basic_Data__r.Business line,Visit__c.Visit plan. province,Visit__c.Customer_Basic_Data__r.Purchase_Plan_Inquiry__c,Visit__c.Customer_Basic_Data__r.Customer_Comments__c,Visit__c.Customer_Basic_Data__r.Other_Information__c,,"Case.Subject
+Case có look up từ customer basic data
+Ẩn subject1 trên case record type = case",Case.Description,"Case.Owner
+Dep của user",Case.Case result,Case.Visit__r.Visit_Plan__r.Visit_Plan_Code__c,thêm field due date trên case,Case.Status
+,9,4-Apr-25,IVC,Quoc,,LONG PHUOC ENVIRONMENT TRADING SERVICE CONSULTANCY COMPANY LIMITED,SPV,Big 4,17,,"Transportation: hazardous waste from industrial park and household waste, scrap",Dong Nai,,"- Waste volume increases from industrial zone
+- Customer have a need to invest vacuum truck, but the disbursement of vehicle investment money from the Department of Natural Resources and Environment is still slow, leads to customer being hesitant to invest.",,,,,,,,,
+,10,4-Apr-25,IVC,Quoc,,ENVIRONMENT COOPERATIVE NGUYEN HUE,SPV,Big 4,7,- Garbage truck: Isuzu NQR x1 (Duc Long RRB); Hino x 3; Other x 3,Urban Service,Dong Nai,,"- Isuzu trucks are very good, CST received vehicle in Mar.2023 and until now any problems
+- CST unhappy about using condition of Customer Care voucher due to: Customer Care voucher apply for odometer & total of 3 year using. => CRS explained to Customers that from 2025, Customers can use Customer care vouchers regardless of the kilometers. Please come to DLR workshop for advice => CST noted
+",,,,,,,,,
+,11,18-Apr-25,IVC,Khoi/ Tam,,"ANHA FOD CO., LTD",SPV,Reefer,13,"5u QKR (2.1 & 2.5 tons)
+1u NPR (3.5 tons)
+1u Hino XZU (3.5 tons)
+1u HYD (6 tons)
+5u Kia K200 (1.35 tons)
+*All RRB is reefer which made by QA and Oto 1-5",- Export freezed food & distribute to factories (industrial kitchen),Ha Noi,- 2u 2.5 tons / 3.5 tons reefer trucks in 2025,"- CST wonder about the impact of USA & China tariffs to the number of factories in Vietnam. If it drops down, it can negatively impact to the demand of food because they only supply food to factories (industrial kitchen)",,,,,,,,,
+,12,19-Apr-25,TL,Khoi/ Tam,,VIETNAM VACCINE JSC (VNVC) - Hanoi Branch,FLS,Silver,7,"- 7u QKR reefer (2.1 & 2.5 tons) and freezing box made by QA, which is for Hanoi branch",'- Vaccination,Ha Noi,,"- Measles epidemic is taking place in a complicated direction, the number of cases is increasing => The number of people getting vaccinated in Hanoi increase significantly
+Vehicles/RRB:
+- Both of Isuzu cabin-chassis and QA RRB have good quality, which brings benefits to their business, therefore, they never hesitate to use Reefer truck from Isuzu & QA to transport their high value shipment (the value of their goods can be over 10 bil. per shipment).
+- They always have backup of 1 generator belt set on each vehicles to replace when it has trouble on operation route due to high value shipment.
+- We discussed about quality of Yokohama tire for surveying quality, Mr. Hung shared that they nerver transport with high load (their shipment weight is from 0.1 tons to 1 tons) so Yokohama tires do not have any big troubles.
+-  Vehicle operation time is approximately 18 hours per day and temperature in freezing box is required from 7 to 3 degree Celsius => Isuzu & QA meet their requirement and they highly satisfy both.",,,,,,,,,
+,13,19-Apr-25,TL,Khoi/ Tam,,ECON HANOI ,SPV,Big 4,12,"- 1u FVR and 1u FVZ hooklift (RRB from HH)
+- 10u Hino hooklift","- Collect solid waste from construction site
+- Collect househole waste",Ha Noi,,"- Currently, CST's business is good because they had contract with several construction site for collect waste.
+- Besides, they forecast the number of construction project around Hanoi increasing from this time, this is good signal for their business and they try to have more contact to collect cons. waste in the future. ",,,,,,,,,
+,14,21-Apr-25,IVC,Khoi/ Quoc/ Tam,,FIRE FIGHTING HUNG YEN,SPV,Big 4,8,"- 3u QKR fire fighting truck
+- 1 u NQR fire fightting truck
+- 1u FRR fire fighting truck",,Hung Yen,,"RRB:
+- As same as other province firefighting truck, their truck fell in trouble related to emergency horn / light (no sound/ not working), however, they fixed for all trucks by themselves.
+- 1u NQR firefighting truck has fault with hand acceleration switch of water pump did not work and they resolved by themselves.
+
+Maintenances:
+- When vehicles has issues or need to maintain, they will propose to logistics department and wait for processing.
+- At present, their maintenaces is very bad, for instances:
+   + Engine oil & oil filter are replaced after one-year usage (because they follow milage to do maintenance)
+   + Engine oil is not enough quantity
+   + Nerver check/inspect condition of fuel filter to release water
+   + Air filter is very dirty
+   + A/C filter is damaged by mouses
+   + Lack of grease in many joints
+=> At visiting, CRS advice and point out these issues in their vehicle
+- Mr. Binh would like to have a letter related to caution about maintenances from IVC, they will follow it to propose to Logistics department for good maintenances.
+- He also want their driver to join training about maintenance => CRS will contact to Mr. Duc - Manager (0913 280 313) to arrange the training",,,,,,,,,
+,15,21-Apr-25,IVC,Khoi/ Quoc/ Tam,,HUNG YEN UENCO (Traditional customer of Hiep Hoa),SPV,Big 4,18,"- 7u Garbage truck which 1u FVZ and 6u Hino & HYD
+- 11u Crane, tank and funeral truck (Hino & HYD)","Garbage collection, trees, lighting",Hung Yen,,"Vehicles:
+- At the beginning, they only used Hino & HYD, and now, they has changed to use Isuzu.
+- They has purchased Isuzu by HH introduction and their research about Isuzu quality, they has used and evaluated positively about FVZ => For next purchase, they will choose Isuzu.
+
+Others:
+- Mr. Duc do not about Customer care voucher so their business nerver use it => We consult him drive to ISZ DLR and use the voucher.
+- He appreciate if IVC organize a training for his driver about maintenance => CRS will schedule for this training
+- For the future training, he will arrange 30 drivers/staffs for attending.",,,,,,,,,
+,16,26-Apr-25,IVC,Khoi/ Quoc ,,PHU YEN URENCO (CÔNG TY CỔ PHẦN MÔI TRƯỜNG ĐÔ THỊ PHÚ YÊN),SPV,Big 4,40,"Isuzu x 4u (FVR x 01 garbage & FVZ x 01 Tank _ Duc Long RRB; NQR x 2 garbage truck _ Hiep Hoa RRB)
+- Previously: Most of the garbage trucks are purchased from Hiep Hoa.","Garbage collection, trees, lighting",Phu Yen,,"'- Vehicle: CST received vehicle in Jan.2025 (Duc Long body) and until now any problems
+- Almost Hino vehicles are Euro-2, easy to use/ repair/ easy to buy SPP. Basically, Hino ==> Isuzu for durable and good quality, but Hino truck is stronger than isuzu truck.
+- CST use Petrolimex fuel 0.05%S DO for Hino truck; 0.001%S DO for Isuzu (E4)
+- CST has good feedbacks for Duc Long's service (Quick repair; Support CST 24/24, SPP available)
+- CST interested in the SPV daily vehicle mantenance training (Participants: 17 driver/Technician & 01 MG). The customer requested to organize training on Sunday for many drivers to participate.",,,,,,,,,

@@ -1,0 +1,577 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hướng dẫn kiểm thử – Tự động gửi &amp; xử lý khảo sát khách hàng (CRS)</title>
+<style>
+  :root {
+    --ink: #000000;
+    --muted: #333333;
+    --brand: #1f4e79;
+    --brand-soft: #e8eff7;
+    --line: #c9d1db;
+    --head-bg: #1f4e79;
+    --zebra: #f6f8fb;
+    --note-bg: #eef6ff;  --note-bar: #2f80ed;
+    --warn-bg: #fff6e5;  --warn-bar: #f2994a;
+    --ok-bg:   #edf8f1;  --ok-bar:   #27ae60;
+    --bad-bg:  #fdeeee;  --bad-bar:  #eb5757;
+    --code-bg: #f3f4f6;
+    --desk: #e5e7eb;
+    --paper: #ffffff;
+  }
+
+  * { box-sizing: border-box; }
+  html { background: var(--desk); }
+  body {
+    margin: 0;
+    padding: 32px 16px;
+    font-family: Calibri, "Segoe UI", Arial, sans-serif;
+    font-size: 11pt;
+    line-height: 1.5;
+    color: var(--ink);
+  }
+
+  /* ===== Trang giấy A4 ===== */
+  .page {
+    width: 210mm;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 22mm 20mm;
+    background: var(--paper);
+    box-shadow: 0 2px 14px rgba(0, 0, 0, .18);
+  }
+
+  /* ===== Bìa / tiêu đề tài liệu ===== */
+  .doc-eyebrow {
+    margin: 0;
+    font-size: 10pt;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  h1.doc-title {
+    margin: 4pt 0 6pt;
+    font-size: 22pt;
+    line-height: 1.2;
+    color: var(--brand);
+  }
+  .doc-sub { margin: 0 0 14pt; font-size: 12pt; color: var(--muted); }
+
+  table.meta { width: 100%; border-collapse: collapse; margin: 0 0 6pt; font-size: 10.5pt; }
+  table.meta th, table.meta td { padding: 5pt 8pt; border: 1px solid var(--line); text-align: left; vertical-align: top; }
+  table.meta th { width: 28%; background: var(--brand-soft); color: var(--brand); font-weight: 600; }
+
+  /* ===== Mục lục ===== */
+  nav.toc { margin: 18pt 0 4pt; padding: 12pt 16pt; background: var(--brand-soft); border-left: 4px solid var(--brand); }
+  nav.toc h2 { margin: 0 0 6pt; padding: 0; border: 0; font-size: 12pt; color: var(--brand); }
+  nav.toc ol { margin: 0; padding-left: 18pt; }
+  nav.toc li { margin: 1pt 0; }
+  nav.toc ol ol { margin-top: 1pt; font-size: 10.5pt; }
+  nav.toc a { color: var(--ink); text-decoration: none; }
+  nav.toc a:hover { text-decoration: underline; }
+
+  /* ===== Heading ===== */
+  h2 {
+    margin: 26pt 0 8pt;
+    padding-bottom: 3pt;
+    font-size: 16pt;
+    color: var(--brand);
+    border-bottom: 2px solid var(--brand);
+  }
+  h3 { margin: 18pt 0 6pt; font-size: 13pt; color: var(--brand); }
+  h4 { margin: 12pt 0 4pt; font-size: 11.5pt; color: var(--ink); }
+  h2, h3, h4 { break-after: avoid; }
+
+  p { margin: 0 0 7pt; }
+  ul, ol { margin: 0 0 8pt; padding-left: 20pt; }
+  li { margin: 2pt 0; }
+  a { color: #1a5fb4; }
+  hr { margin: 18pt 0; border: 0; border-top: 1px solid var(--line); }
+
+  /* ===== Inline code / code block ===== */
+  code {
+    padding: 0 3pt;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 9.5pt;
+    background: var(--code-bg);
+    border-radius: 3px;
+    color: #000;
+    word-break: break-word;
+  }
+  pre {
+    margin: 6pt 0 10pt;
+    padding: 10pt 12pt;
+    background: var(--code-bg);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--brand);
+    border-radius: 3px;
+    overflow-x: auto;
+    break-inside: avoid;
+  }
+  pre code { padding: 0; background: none; color: var(--ink); font-size: 9pt; line-height: 1.45; word-break: normal; }
+
+  /* ===== Bảng ===== */
+  table.grid { width: 100%; margin: 6pt 0 8pt; border-collapse: collapse; font-size: 10pt; }
+  table.grid th, table.grid td { padding: 5pt 7pt; border: 1px solid var(--line); vertical-align: top; text-align: left; }
+  table.grid thead th { background: var(--head-bg); color: #fff; font-weight: 600; }
+  table.grid tbody tr:nth-child(even) td { background: var(--zebra); }
+  table.grid td.c, table.grid th.c { text-align: center; }
+  table.grid tr { break-inside: avoid; }
+  table.grid thead { display: table-header-group; }
+
+  /* ===== Callout ===== */
+  .callout { margin: 8pt 0 10pt; padding: 8pt 12pt; border-left: 4px solid; border-radius: 0 3px 3px 0; break-inside: avoid; }
+  .callout > :last-child { margin-bottom: 0; }
+  .callout .label { display: block; margin-bottom: 2pt; font-weight: 700; font-size: 10pt; text-transform: uppercase; letter-spacing: .04em; }
+  .callout.note { background: var(--note-bg); border-color: var(--note-bar); }
+  .callout.warn { background: var(--warn-bg); border-color: var(--warn-bar); }
+  .callout.ok   { background: var(--ok-bg);   border-color: var(--ok-bar); }
+  .callout.bad  { background: var(--bad-bg);  border-color: var(--bad-bar); }
+
+  /* ===== Khối test case ===== */
+  .tc-tag {
+    display: inline-block;
+    margin-right: 6pt;
+    padding: 1pt 7pt;
+    background: var(--brand);
+    color: #fff;
+    border-radius: 3px;
+    font-size: 10pt;
+    font-weight: 700;
+    vertical-align: 1pt;
+  }
+  .desc {
+    margin: 0 0 8pt;
+    padding: 7pt 12pt;
+    background: var(--brand-soft);
+    border-left: 4px solid var(--brand);
+    border-radius: 0 3px 3px 0;
+    break-inside: avoid;
+  }
+  .desc strong { color: var(--brand); }
+  table.grid ol.steps { margin: 2pt 0 0; padding: 0; list-style: none; counter-reset: st; }
+  table.grid ol.steps li { margin: 3pt 0; counter-increment: st; }
+  table.grid ol.steps li::before { content: "Bước " counter(st) ": "; font-weight: 700; color: var(--brand); }
+  .expect { margin: 4pt 0 0; padding-left: 0; list-style: none; }
+  .expect li { position: relative; padding-left: 14pt; }
+  .expect li::before { content: "▸"; position: absolute; left: 0; color: var(--brand); }
+
+  footer.doc-foot { margin-top: 26pt; padding-top: 6pt; border-top: 1px solid var(--line); font-size: 9pt; color: var(--muted); text-align: center; }
+
+  /* ===== In / lưu PDF ===== */
+  @page { size: A4; margin: 18mm 16mm; }
+  @media print {
+    html, body { background: #fff; }
+    body { padding: 0; font-size: 10.5pt; }
+    .page { width: auto; margin: 0; padding: 0; box-shadow: none; }
+    a { color: inherit; text-decoration: none; }
+    h2.page-break { break-before: page; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+  @media (max-width: 720px) {
+    .page { padding: 16px; }
+    h1.doc-title { font-size: 18pt; }
+  }
+</style>
+</head>
+<body>
+<main class="page">
+
+  <!-- ============ TIÊU ĐỀ ============ -->
+  <h1 class="doc-title">Tự động gửi &amp; xử lý khảo sát khách hàng</h1>
+  <p class="doc-sub">Customer Survey – Auto send link &amp; Survey response handling</p>
+
+  <table class="meta">
+    <tr><th>Ticket DevOps</th><td><a href="https://isuzu-it.visualstudio.com/DMS%20%E2%80%93%20OMN1%20-%20IVC/_workitems/edit/5781">Issue 5781 [CRS] Test Case ID E2E-02-068_Auto send link cho Customer</a></td></tr>
+    <tr><th>Môi trường test</th><td>Partial (Sandbox)</td></tr>
+  </table>
+
+  <nav class="toc" aria-label="Mục lục">
+    <h2>Mục lục</h2>
+    <ol>
+      <li><a href="#s1">Toàn bộ luồng tổng quan</a>
+        <ol type="a">
+          <li><a href="#cond1">Điều kiện tự động gửi survey – Bán xe</a></li>
+          <li><a href="#cond2">Điều kiện tự động gửi survey – Dịch vụ</a></li>
+        </ol>
+      </li>
+      <li><a href="#s2">Chuẩn bị trước khi test (tài khoản &amp; dữ liệu)</a></li>
+      <li><a href="#s3">Từng bước thực hiện chi tiết từng test case</a>
+        <ol type="a">
+          <li><a href="#tc1">TC_01 – Bán xe: tự động gửi link khảo sát</a></li>
+          <li><a href="#tc2">TC_02 – Dịch vụ xưởng: tự động gửi link khảo sát</a></li>
+          <li><a href="#tc3">TC_03 – Chống gửi trùng khảo sát</a></li>
+          <li><a href="#tc4">TC_04 – Khách hài lòng (4–5 sao)</a></li>
+          <li><a href="#tc5">TC_05 – Khách đánh giá 3 sao → tạo Case</a></li>
+          <li><a href="#tc6">TC_06 – Khách đánh giá dưới 3 sao → tạo Visit</a></li>
+        </ol>
+      </li>
+      <li><a href="#s4">Nơi kiểm tra kết quả trên hệ thống</a></li>
+      <li><a href="#s5">Gặp sự cố khi test</a></li>
+    </ol>
+  </nav>
+
+  <!-- ============ 1 ============ -->
+  <h2 id="s1">1. Toàn bộ luồng tổng quan</h2>
+
+<pre><code>[ NGHIỆP VỤ PHÁT SINH TẠI ĐẠI LÝ ]
+  ├─ Nhánh 1 (Bán xe): Đại lý bàn giao xe, cập nhật Ship out date (ngày nhận xe thực tế) = hôm nay
+  │  └─ Hệ thống tự quét mỗi ngày 1 lần để tìm các xe vừa giao (điều kiện chi tiết: mục 1.1)
+  └─ Nhánh 2 (Dịch vụ): Xưởng dịch vụ bấm nút Check Out trên Vehicle Check-in (isCheckOut = true)
+     └─ Hệ thống gửi ngay khi Check Out thành công (điều kiện chi tiết: mục 1.2)
+          │
+          ▼
+[ BƯỚC 1: HỆ THỐNG TỰ ĐỘNG GỬI KHẢO SÁT ]
+  ├─ Bỏ qua xe / lượt dịch vụ đã được gửi khảo sát trước đó (chống gửi trùng)
+  ├─ Tạo phiếu mời khảo sát (loại Sale hoặc Service)
+  └─ Gửi email kèm link khảo sát đến người sử dụng xe (Contact Using)
+          │
+          ▼
+[ BƯỚC 2: KHÁCH HÀNG THỰC HIỆN KHẢO SÁT ]
+  └─ Khách mở link từ email → chấm điểm đánh giá → Submit
+          │
+          ▼
+[ BƯỚC 3: HỆ THỐNG XỬ LÝ PHẢN HỒI ]
+  ├─ Ghi nhận điểm số &amp; câu trả lời vào Survey Result
+  └─ Phân loại theo điểm đánh giá:
+        ├─ TC_04: Đánh giá &gt; 3 sao (4 - 5 sao) ───→ Hoàn tất (dữ liệu dùng cho báo cáo CSAT)
+        ├─ TC_05: Đánh giá = 3 sao ───────────────→ Tự động tạo [ Case ] (Origin: Survey) → Staff CRS xử lý
+        └─ TC_06: Đánh giá &lt; 3 sao (1 - 2 sao) ───→ Tự động tạo [ Visit ] (Visit Survey) → Staff CRS thăm khách</code></pre>
+
+  <h3 id="cond1">1.1. Điều kiện tự động gửi survey – Nhánh 1 (Bán xe)</h3>
+  <p><strong>Thời điểm gửi:</strong> hệ thống quét <strong>1 lần mỗi ngày</strong> các Sales Order Item có ngày nhận xe thực tế là ngày quét, không gửi ngay lúc nhập <strong>Ship out date</strong>. Việc gửi survey <strong>không còn phụ thuộc</strong> vào <strong>Status</strong> (<code>Status__c</code>) của Sales Order Item (không còn kích hoạt khi Status = <code>Completed</code>). Khi test có thể bấm nút <strong>"Run Survey by Received Date (Daily DO Scan)"</strong> trên trang <em>Run Test</em> để quét ngay.</p>
+  <table class="grid">
+    <thead><tr><th class="c" style="width:5%">#</th><th style="width:24%">Điều kiện</th><th style="width:38%">Object › Field (Label)</th><th>Giá trị yêu cầu / Nếu không đạt</th></tr></thead>
+    <tbody>
+      <tr><td class="c"><strong>1</strong></td><td>Ngày nhận xe thực tế là ngày quét</td><td>Sales Order Item (<code>Sales_Order_Item__c</code>) › <strong>Ship out date</strong> (<code>Actual_Delivery_Date__c</code>)</td><td>= ngày hôm nay (ngày chạy quét). Khác ngày hôm nay hoặc để trống → không được quét.</td></tr>
+      <tr><td class="c"><strong>2</strong></td><td>Dòng đơn hàng đã gắn xe</td><td>Sales Order Item › <strong>Vehicle</strong> (<code>Vehicle__c</code>)</td><td>Không để trống. Để trống → không được quét.</td></tr>
+      <tr><td class="c"><strong>3</strong></td><td>Chưa từng gửi survey cho Sales Order Item này</td><td>Survey Invitation (<code>SurveyInvitation</code>) › <strong>Sales Order Item</strong> (<code>Sales_Order_Item__c</code>) và <strong>Type</strong> (<code>Type__c</code>)</td><td>Chưa có Survey Invitation nào có Type = <code>Sale</code> cho Sales Order Item này. Đã có → bỏ qua, không tạo mới, không gửi lại.</td></tr>
+      <tr><td class="c"><strong>4</strong></td><td>Có người nhận email</td><td>Vehicle (<code>Vehicle__c</code>) › <strong>Contact Using</strong> (<code>Contact_Using__c</code>) › <strong>Email</strong></td><td>Contact Using phải có Email. Thiếu Contact Using hoặc Email → vẫn tạo Survey Invitation (Type = <code>Sale</code>) nhưng <strong>không gửi email</strong>.</td></tr>
+      <tr><td class="c"><strong>5</strong></td><td>Cấu hình hệ thống (Admin đã setup)</td><td>Digital Experience site <strong>SurveyCRS</strong>; Survey <strong>ĐÁNH GIÁ TRẢI NGHIỆM MUA XE</strong> (dự phòng: <strong>Mail - Đánh giá mức độ hài lòng</strong>); Email Template <code>Email_Survey</code></td><td>Thiếu site SurveyCRS hoặc cả hai Survey → không tạo Survey Invitation và không gửi email.</td></tr>
+    </tbody>
+  </table>
+  <p><strong>Kết quả khi đủ điều kiện:</strong> tạo Survey Invitation (<strong>Type</strong> = <code>Sale</code>, gắn <strong>Sales Order Item</strong> và <strong>Vehicle</strong>) và gửi email tiêu đề <em>"Xin ý kiến đánh giá mua xe tại [Tên đại lý]"</em> đến Email của Contact Using.</p>
+
+  <h3 id="cond2">1.2. Điều kiện tự động gửi survey – Nhánh 2 (Dịch vụ)</h3>
+  <p><strong>Thời điểm gửi:</strong> <strong>ngay khi</strong> Vehicle Check-in được Check Out thành công, tức là khi bấm nút <strong>Check Out</strong> trên trang bản ghi <strong>Vehicle Check-in</strong>. Điều kiện kích hoạt là field <strong>isCheckOut</strong> chuyển từ chưa tích sang đã tích, <strong>không phải</strong> do đổi <strong>Status</strong> bằng tay.</p>
+  <table class="grid">
+    <thead><tr><th class="c" style="width:5%">#</th><th style="width:24%">Điều kiện</th><th style="width:38%">Object › Field (Label)</th><th>Giá trị yêu cầu / Nếu không đạt</th></tr></thead>
+    <tbody>
+      <tr><td class="c"><strong>1</strong></td><td>Sự kiện kích hoạt</td><td>Vehicle Check-in (<code>Vehicle_Check_in__c</code>) › <strong>isCheckOut</strong> (<code>isCheckOut__c</code>)</td><td>Đổi từ <code>false</code> sang <code>true</code>. Nút <strong>Check Out</strong> đặt <strong>isCheckOut</strong> = <code>true</code>, <strong>Thời gian rời xưởng</strong> (<code>Check_out_Time__c</code>) và <strong>End Time</strong> (<code>End_Time__c</code>) = thời điểm bấm, <strong>Status</strong> (<code>Status__c</code>) = <code>Completed</code>.</td></tr>
+      <tr><td class="c"><strong>2</strong></td><td>Phiếu có ảnh Check-in</td><td>Files đính kèm trên Vehicle Check-in</td><td>Có ít nhất 1 file ảnh <code>JPG</code> / <code>JPEG</code> / <code>PNG</code>. Thiếu → báo "Chưa có hình ảnh Check-in…", không Check Out được.</td></tr>
+      <tr><td class="c"><strong>3</strong></td><td>Quote liên quan đã chốt</td><td>Quote › <strong>Vehicle Check-in</strong> (<code>Vehicle_Check_In__c</code>) = phiếu này; <strong>Status</strong> của Quote</td><td>Mọi Quote có Status = <code>Rejected</code>, <code>Accepted</code> hoặc <code>Approved</code>. Còn Quote khác → báo "Có báo giá chưa hoàn thành".</td></tr>
+      <tr><td class="c"><strong>4</strong></td><td>Sales Order theo Quote đã xong</td><td>Sales Order (<code>Sales_Order__c</code>) › <strong>Quote</strong> (<code>Quote__c</code>), <strong>Status</strong> (<code>Status__c</code>)</td><td>Mọi Sales Order của các Quote trên có Status = <code>Completed</code> hoặc <code>Cancelled</code>. Còn lại → báo "Có Đơn hàng (Sales Order) chưa hoàn thành".</td></tr>
+      <tr><td class="c"><strong>5</strong></td><td>Work Order đã xong</td><td>Work Order (<code>WorkOrder</code>) › <strong>Quote</strong> (<code>Quote__c</code>), <strong>Vehicle Check-in</strong> (<code>Vehicle_Check_in__c</code>), <strong>Status</strong></td><td>Work Order theo Quote có Status = <code>Completed</code> hoặc <code>Cancelled</code>; mọi Work Order gắn Vehicle Check-in phải <code>Completed</code>. Còn lại → báo "Vẫn còn công việc chưa hoàn thành" hoặc "Phải completed tất cả work order…".</td></tr>
+      <tr><td class="c"><strong>6</strong></td><td>Purchase Order theo Quote đã xong</td><td>Purchase Order (<code>Purchase_Order__c</code>) › <strong>Quote</strong> (<code>Quote__c</code>), <strong>Status</strong> (<code>Status__c</code>)</td><td>Mọi Purchase Order của các Quote trên có Status = <code>Rejected</code> hoặc <code>Approved</code>. Còn lại → báo "Có Đơn mua hàng chưa hoàn thành".</td></tr>
+      <tr><td class="c"><strong>7</strong></td><td>User bấm Check Out có setup Dealer</td><td>Contact của user đăng nhập (Contact có <strong>UserId</strong> = user đó) › <strong>Dealer Location</strong> (<code>Dealer_Location__c</code>) › <strong>Dealer</strong> (<code>Dealer__c</code>)</td><td>Không để trống. Thiếu → báo "Thiếu setup Dealer cho Dealer Location của người dùng. Vui lòng setup Dealer trước khi check out." và <strong>chặn Check Out</strong>.</td></tr>
+      <tr><td class="c"><strong>8</strong></td><td>Có người nhận email</td><td>Vehicle Check-in › <strong>VIN</strong> (<code>VIN__c</code>, trỏ tới Vehicle) › <strong>Contact Using</strong> (<code>Contact_Using__c</code>) › <strong>Email</strong></td><td>Contact Using phải có Email. Thiếu → vẫn tạo Survey Invitation (Type = <code>Service</code>) nhưng <strong>không gửi email</strong>.</td></tr>
+      <tr><td class="c"><strong>9</strong></td><td>Cấu hình hệ thống (Admin đã setup)</td><td>Digital Experience site <strong>SurveyCRS</strong>; Survey <strong>Mail đánh giá mức độ hàng lòng của khách hàng</strong>; Email Template <code>Email_Survey</code></td><td>Thiếu site hoặc Survey → Check Out vẫn thành công nhưng <strong>không tạo Survey Invitation</strong>, không gửi email.</td></tr>
+    </tbody>
+  </table>
+  <p><strong>Kết quả khi đủ điều kiện:</strong> tạo Survey Invitation (<strong>Type</strong> = <code>Service</code>, gắn <strong>Vehicle Check-in</strong> và <strong>Vehicle</strong>) và gửi email tiêu đề <em>"Xin ý kiến đánh giá dịch vụ tại [Tên đại lý]"</em> đến Email của Contact Using.</p>
+  <div class="callout note">
+    <span class="label">Khác biệt giữa 2 nhánh</span>
+    Nhánh Bán xe có kiểm tra "đã gửi chưa" theo Survey Invitation (<strong>Type</strong> = <code>Sale</code>). Nhánh Dịch vụ không có kiểm tra này: mỗi lần <strong>isCheckOut</strong> đổi từ <code>false</code> sang <code>true</code> là gửi một survey. Vì nút Check Out chỉ bấm được một lần trên mỗi Vehicle Check-in nên thực tế mỗi phiếu chỉ gửi một lần.
+  </div>
+
+  <!-- ============ 2 ============ -->
+  <h2 id="s2">2. Chuẩn bị trước khi test (tài khoản &amp; dữ liệu)</h2>
+  <h3>2.1. Tài khoản phòng CRS dùng để test</h3>
+  <p>Đăng nhập môi trường <strong>Partial</strong> bằng một trong các tài khoản thuộc phòng CRS dưới đây.</p>
+  <table class="grid">
+    <thead><tr><th style="width:20%">Họ tên</th><th style="width:30%">Username (Partial)</th><th style="width:20%">Profile</th><th style="width:15%">Role</th><th>Vai trò khi test</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Nguyễn Văn Khôi</strong></td><td><code>vkhoi@isuzu-vietnam.com.partial</code></td><td><code>IVC_SAL_CRS_HOD</code></td><td><code>IVC_CRS_HOD</code></td><td>Trưởng bộ phận CRS (HOD)</td></tr>
+      <tr><td><strong>Phạm Mai Trinh</strong></td><td><code>trinhpm@isuzu-vietnam.com.partial</code></td><td><code>IVC_SAL_CRS_CRS_Staff</code></td><td><code>IVC_CRS_Staff</code></td><td>Đóng vai <strong>khách hàng</strong> nhận link khảo sát (không dùng làm Staff CRS)</td></tr>
+      <tr><td><strong>Hồ Thiên Quốc</strong></td><td><code>quoc-ht@isuzu-vietnam.com.partial</code></td><td><code>IVC_SAL_CRS_CRS_Staff</code></td><td><code>IVC_CRS_Staff</code></td><td>Staff CRS</td></tr>
+    </tbody>
+  </table>
+
+  <h3>2.2. Email nhận khảo sát</h3>
+  <p>Email của khách hàng test (người nhận link khảo sát): <code>trinhpm@isuzu-vietnam.com</code> (Phạm Mai Trinh, vai khách hàng).</p>
+
+  <h3 id="data">2.3. Bộ dữ liệu test đã khởi tạo trên môi trường Partial</h3>
+  <table class="grid">
+    <thead><tr><th style="width:24%">Đối tượng</th><th>Bản ghi</th><th style="width:27%">Id</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Xe (Vehicle)</strong></td><td><a href="https://ivcl--partial.sandbox.lightning.force.com/lightning/r/Vehicle__c/a25WC000005NpADYA0/view">VINTESTCRS2026001</a> (biển số 51A-999.99)</td><td><code>a25WC000005NpADYA0</code></td></tr>
+      <tr><td><strong>Người sử dụng xe (Contact Using)</strong></td><td><a href="https://ivcl--partial.sandbox.lightning.force.com/lightning/r/Contact/003WC0000158JjiYAE/view">Phạm Mai Trinh</a> – Email: <code>trinhpm@isuzu-vietnam.com</code></td><td><code>003WC0000158JjiYAE</code></td></tr>
+      <tr><td><strong>Khách hàng sở hữu (Current Owner)</strong></td><td><a href="https://ivcl--partial.sandbox.lightning.force.com/lightning/r/Account/001WC00000w0vQ4YAI/view">Khách Hàng Test Survey CRS</a></td><td><code>001WC00000w0vQ4YAI</code></td></tr>
+      <tr><td><strong>Đại lý (Dealer)</strong></td><td><a href="https://ivcl--partial.sandbox.lightning.force.com/lightning/r/Account/001Vu00002h45RCIAY/view">Công ty Cơ Khí Ô tô Sài Gòn (SAMCO)</a></td><td><code>001Vu00002h45RCIAY</code></td></tr>
+    </tbody>
+  </table>
+
+  <!-- ============ 3 ============ -->
+  <h2 id="s3" class="page-break">3. Từng bước thực hiện chi tiết từng test case</h2>
+
+  <!-- TC_01 -->
+  <h3 id="tc1"><span class="tc-tag">TC_01</span>Bán xe (Vehicle Sales) – Tự động gửi link khảo sát mua xe</h3>
+  <p class="desc"><strong>Mô tả:</strong> Sau khi Đại lý bàn giao xe mới cho khách hàng và cập nhật ngày nhận xe thực tế (Ship out date), hệ thống tự động gửi email mời khách đánh giá trải nghiệm mua xe tại Đại lý. CRS và Đại lý không cần gửi link khảo sát thủ công.</p>
+  <table class="grid">
+    <thead><tr><th class="c" style="width:6%">STT</th><th style="width:14%">Actor</th><th>Làm gì</th><th style="width:20%">Trạng thái sau bước</th></tr></thead>
+    <tbody>
+      <tr><td class="c"><strong>1</strong></td><td>DLR Sales staff</td><td>
+        <ol class="steps">
+          <li>Mở tab <strong>Sales Orders</strong> → bấm <strong>New</strong> → chọn Record Type <code>Vehicle DLR to CST</code> → <strong>Next</strong>.</li>
+          <li>Điền <strong>Dealer Name</strong> = <em>Công ty Cơ Khí Ô tô Sài Gòn (SAMCO)</em>; <strong>Khách hàng</strong> = <em>Khách Hàng Test Survey CRS</em>; <strong>Contact</strong> = <em>Phạm Mai Trinh</em>. Các trường bắt buộc khác (ví dụ Broker) điền theo quy trình bán xe thường ngày.</li>
+          <li>Bấm <strong>Save</strong>.</li>
+        </ol></td><td><code>Draft</code> / <code>Open</code></td></tr>
+      <tr><td class="c"><strong>2</strong></td><td>DLR Sales staff</td><td>
+        <ol class="steps">
+          <li>Trong Sales Order vừa tạo, kéo xuống related list <strong>Sales Order Items</strong> → bấm <strong>New</strong>.</li>
+          <li>Tại trường <strong>Vehicle</strong>, gõ <code>VINTESTCRS2026001</code> và chọn xe này (biển số 51A-999.99).</li>
+          <li>Bấm <strong>Save</strong>.</li>
+        </ol></td><td>Có 1 Sales Order Item gắn xe test</td></tr>
+      <tr><td class="c"><strong>3</strong></td><td>DLR Sales staff</td><td>
+        <ol class="steps">
+          <li>Mở Sales Order Item vừa tạo → bấm <strong>Edit</strong>.</li>
+          <li>Điền <strong>Ship out date</strong> = <strong>ngày hôm nay</strong> (ngày bàn giao xe thực tế).</li>
+          <li>Bấm <strong>Save</strong>.</li>
+        </ol></td><td>Sales Order Item có <strong>Ship out date</strong> = hôm nay</td></tr>
+      <tr><td class="c"><strong>4</strong></td><td>Tester</td><td>
+        Để không phải chờ lần quét hằng ngày, chạy quét thủ công:
+        <ol class="steps">
+          <li>Mở trang <a href="https://ivcl--partial.sandbox.lightning.force.com/lightning/n/Run_Test"><em>Run Test</em></a>.</li>
+          <li>Bấm nút <strong>"Run Survey by Received Date (Daily DO Scan)"</strong>.</li>
+          <li>Chờ thông báo màu xanh <em>"Survey Batch … started successfully!"</em>.</li>
+        </ol></td><td>Hệ thống tạo phiếu mời khảo sát (loại <code>Sale</code>)</td></tr>
+      <tr><td class="c"><strong>5</strong></td><td>Hệ thống</td><td>Tự động gửi email khảo sát đến <code>trinhpm@isuzu-vietnam.com</code> (email của người sử dụng xe <em>Phạm Mai Trinh</em>).</td><td>Email đã gửi</td></tr>
+      <tr><td class="c"><strong>6</strong></td><td>Khách hàng (Tester đóng vai)</td><td>
+        <ol class="steps">
+          <li>Mở hộp thư <code>trinhpm@isuzu-vietnam.com</code> (kiểm tra cả thư mục Spam nếu chưa thấy).</li>
+          <li>Mở email tiêu đề <em>"Xin ý kiến đánh giá mua xe tại [Tên đại lý]"</em>.</li>
+          <li>Bấm vào nút link khảo sát trong email.</li>
+        </ol></td><td>Mở được trang khảo sát (<strong>không bị lỗi 404</strong>)</td></tr>
+    </tbody>
+  </table>
+  <ul class="expect">
+    <li>Email chỉ được gửi khi người sử dụng xe (Contact Using) có email hợp lệ.</li>
+    <li>Khách mở link khảo sát không cần đăng nhập.</li>
+  </ul>
+
+  <!-- TC_02 -->
+  <h3 id="tc2"><span class="tc-tag">TC_02</span>Dịch vụ xưởng (Service) – Tự động gửi link khảo sát dịch vụ</h3>
+  <p class="desc"><strong>Mô tả:</strong> Khi xưởng dịch vụ của Đại lý hoàn tất sửa chữa/bảo dưỡng và xác nhận Check-out, hệ thống tự động gửi email mời khách đánh giá chất lượng dịch vụ vừa sử dụng.</p>
+  <table class="grid">
+    <thead><tr><th class="c" style="width:6%">STT</th><th style="width:14%">Actor</th><th>Làm gì</th><th style="width:20%">Trạng thái sau bước</th></tr></thead>
+    <tbody>
+      <tr><td class="c"><strong>1</strong></td><td>DLR Service Adviser</td><td>
+        <ol class="steps">
+          <li>Mở tab <strong>Vehicle Check-ins</strong> → bấm <strong>New</strong>.</li>
+          <li>Điền <strong>VIN</strong> = <code>VINTESTCRS2026001</code>; <strong>Dealer</strong> = <em>Công ty Cơ Khí Ô tô Sài Gòn (SAMCO)</em>.</li>
+          <li>Nhập yêu cầu sửa chữa/bảo dưỡng theo mẫu phiếu xưởng, bấm <strong>Save</strong>.</li>
+        </ol></td><td>Vehicle Check-in được tạo</td></tr>
+      <tr><td class="c"><strong>2</strong></td><td>DLR Technician / Adviser</td><td>
+        <ol class="steps">
+          <li>Mở phiếu Check-in của xe <code>VINTESTCRS2026001</code>.</li>
+          <li>Thực hiện và cập nhật tiến độ bảo dưỡng/sửa chữa theo quy trình xưởng.</li>
+        </ol></td><td><code>In Progress</code></td></tr>
+      <tr><td class="c"><strong>3</strong></td><td>DLR Service Adviser</td><td>
+        <ol class="steps">
+          <li>Mở lại phiếu Check-in của xe <code>VINTESTCRS2026001</code>.</li>
+          <li>Đảm bảo đủ điều kiện Check Out (mục <a href="#cond2">1.2</a>): đã có ảnh Check-in, Quote / Sales Order / Work Order / Purchase Order liên quan đã hoàn tất.</li>
+          <li>Bấm nút <strong>Check Out</strong> trên trang bản ghi Vehicle Check-in.</li>
+          <li>Kiểm tra phiếu có <strong>isCheckOut</strong> đã tích, <strong>Thời gian rời xưởng</strong> có giá trị, <strong>Status</strong> = <code>Completed</code>.</li>
+        </ol></td><td><strong>isCheckOut</strong> = <code>true</code>, <strong>Status</strong> = <code>Completed</code></td></tr>
+      <tr><td class="c"><strong>4</strong></td><td>Hệ thống</td><td>Ngay khi <strong>isCheckOut</strong> chuyển sang <code>true</code>, tự động tạo phiếu mời khảo sát (loại <code>Service</code>).</td><td>Đã tạo phiếu khảo sát</td></tr>
+      <tr><td class="c"><strong>5</strong></td><td>Hệ thống</td><td>Tự động gửi email đến <code>trinhpm@isuzu-vietnam.com</code> (người sử dụng xe <em>Phạm Mai Trinh</em>) với tiêu đề <em>"Xin ý kiến đánh giá dịch vụ tại [Tên đại lý]"</em>.</td><td>Email đã gửi</td></tr>
+      <tr><td class="c"><strong>6</strong></td><td>Khách hàng (Tester đóng vai)</td><td>
+        <ol class="steps">
+          <li>Mở hộp thư <code>trinhpm@isuzu-vietnam.com</code>.</li>
+          <li>Mở email <em>"Xin ý kiến đánh giá dịch vụ tại …"</em>.</li>
+          <li>Bấm vào link khảo sát.</li>
+        </ol></td><td>Mở thành công form khảo sát dịch vụ</td></tr>
+    </tbody>
+  </table>
+  <ul class="expect">
+    <li>Tài khoản DLR Service Adviser phải thuộc một Đại lý hợp lệ; nếu thiếu, hệ thống sẽ báo lỗi và chặn Check-out.</li>
+  </ul>
+
+  <!-- TC_03 -->
+  <h3 id="tc3"><span class="tc-tag">TC_03</span>Chống gửi trùng khảo sát (Anti-spam)</h3>
+  <p class="desc"><strong>Mô tả:</strong> Mỗi lần giao xe hoặc mỗi lượt Check-out dịch vụ chỉ gửi <strong>một</strong> khảo sát. Nếu hệ thống quét lại, khách hàng không bị nhận email trùng.</p>
+  <table class="grid">
+    <thead><tr><th class="c" style="width:6%">STT</th><th style="width:14%">Actor</th><th>Làm gì</th><th style="width:20%">Trạng thái sau bước</th></tr></thead>
+    <tbody>
+      <tr><td class="c"><strong>1</strong></td><td>Tester</td><td>
+        <ol class="steps">
+          <li>Chọn Sales Order Item (TC_01) hoặc phiếu Check-in (TC_02) của xe <code>VINTESTCRS2026001</code> đã được gửi khảo sát.</li>
+          <li>Mở hộp thư <code>trinhpm@isuzu-vietnam.com</code> và ghi lại số email khảo sát đã nhận của lần đó (ví dụ: 1 email).</li>
+        </ol></td><td>Đã có 1 phiếu mời khảo sát</td></tr>
+      <tr><td class="c"><strong>2</strong></td><td>Tester</td><td>
+        Cố ý chạy lại việc quét:
+        <ol class="steps">
+          <li>Mở trang <a href="https://ivcl--partial.sandbox.lightning.force.com/lightning/n/Run_Test"><em>Run Test</em></a>.</li>
+          <li>Bấm lại nút <strong>"Run Survey by Received Date (Daily DO Scan)"</strong>.</li>
+        </ol></td><td>Hệ thống chạy quét</td></tr>
+      <tr><td class="c"><strong>3</strong></td><td>Hệ thống</td><td>Nhận thấy xe/lượt dịch vụ này đã được gửi khảo sát → <strong>bỏ qua</strong>, không gửi lại.</td><td>Không tạo thêm phiếu khảo sát</td></tr>
+      <tr><td class="c"><strong>4</strong></td><td>Tester</td><td>
+        <ol class="steps">
+          <li>Chờ vài phút, mở lại hộp thư <code>trinhpm@isuzu-vietnam.com</code>.</li>
+          <li>Đếm lại số email khảo sát của xe <code>VINTESTCRS2026001</code> và so với số đã ghi ở STT 1.</li>
+        </ol></td><td>Số email không tăng, không có email trùng</td></tr>
+    </tbody>
+  </table>
+
+  <!-- TC_04 -->
+  <h3 id="tc4"><span class="tc-tag">TC_04</span>Khách hài lòng (đánh giá 4 – 5 sao)</h3>
+  <p class="desc"><strong>Mô tả:</strong> Khách chấm 4 hoặc 5 sao được xem là hài lòng. Hệ thống chỉ ghi nhận kết quả để CRS tổng hợp báo cáo mức độ hài lòng (CSAT), <strong>không</strong> phát sinh Case hay Visit.</p>
+  <table class="grid">
+    <thead><tr><th class="c" style="width:6%">STT</th><th style="width:14%">Actor</th><th>Làm gì</th><th style="width:20%">Trạng thái sau bước</th></tr></thead>
+    <tbody>
+      <tr><td class="c"><strong>1</strong></td><td>Khách hàng</td><td>
+        <ol class="steps">
+          <li>Mở hộp thư <code>trinhpm@isuzu-vietnam.com</code>, mở email khảo sát chưa dùng (từ TC_01 hoặc TC_02).</li>
+          <li>Bấm vào link khảo sát để mở trên trình duyệt (không cần đăng nhập).</li>
+        </ol></td><td>Giao diện khảo sát sẵn sàng</td></tr>
+      <tr><td class="c"><strong>2</strong></td><td>Khách hàng</td><td>
+        <ol class="steps">
+          <li>Tại câu hỏi mức độ hài lòng, chọn <strong>4 sao</strong> hoặc <strong>5 sao</strong>.</li>
+          <li>Nhập nhận xét tích cực (nếu có).</li>
+        </ol></td><td>Đã chọn điểm</td></tr>
+      <tr><td class="c"><strong>3</strong></td><td>Khách hàng</td><td>Bấm nút <strong>Submit / Hoàn tất</strong>.</td><td>Màn hình cảm ơn, hoàn tất khảo sát</td></tr>
+      <tr><td class="c"><strong>4</strong></td><td>Hệ thống</td><td>Ghi nhận kết quả khảo sát (Survey Result) với điểm 4 hoặc 5.</td><td>Survey Result được tạo mới</td></tr>
+      <tr><td class="c"><strong>5</strong></td><td>Hệ thống</td><td>Điểm trên 3 sao → <strong>không</strong> tạo Case, <strong>không</strong> tạo Visit.</td><td>Kết thúc quy trình khảo sát</td></tr>
+      <tr><td class="c"><strong>6</strong></td><td>Staff CRS</td><td>
+        <ol class="steps">
+          <li>Đăng nhập Partial bằng tài khoản Staff CRS (mục <a href="#s2">2.1</a>).</li>
+          <li>Mở tab <strong>Survey Results</strong>.</li>
+          <li>Tìm bản ghi mới nhất của xe <code>VINTESTCRS2026001</code> / khách <em>Khách Hàng Test Survey CRS</em> và kiểm tra điểm là 4 hoặc 5.</li>
+          <li>Mở tab <strong>Cases</strong> và <strong>Visits</strong>, xác nhận <strong>không</strong> có bản ghi mới cho lần khảo sát này.</li>
+        </ol></td><td>Đã ghi nhận kết quả</td></tr>
+    </tbody>
+  </table>
+  <ul class="expect">
+    <li>Dữ liệu được lưu để phục vụ báo cáo CSAT (CRS_R001 / CRS_R002).</li>
+  </ul>
+
+  <!-- TC_05 -->
+  <h3 id="tc5"><span class="tc-tag">TC_05</span>Khách đánh giá 3 sao – Tự động tạo Case chăm sóc khách hàng</h3>
+  <p class="desc"><strong>Mô tả:</strong> Khách chấm đúng 3 sao nghĩa là chưa thực sự hài lòng. Hệ thống tự động mở một Case chăm sóc khách hàng để Staff CRS liên hệ khách, tìm hiểu lý do và phối hợp Đại lý xử lý.</p>
+  <table class="grid">
+    <thead><tr><th class="c" style="width:6%">STT</th><th style="width:14%">Actor</th><th>Làm gì</th><th style="width:20%">Trạng thái sau bước</th></tr></thead>
+    <tbody>
+      <tr><td class="c"><strong>1</strong></td><td>Khách hàng</td><td>
+        <ol class="steps">
+          <li>Mở hộp thư <code>trinhpm@isuzu-vietnam.com</code>, mở một email khảo sát chưa dùng.</li>
+          <li>Bấm vào link khảo sát.</li>
+        </ol></td><td>Form khảo sát hiển thị</td></tr>
+      <tr><td class="c"><strong>2</strong></td><td>Khách hàng</td><td>
+        <ol class="steps">
+          <li>Tại câu hỏi mức độ hài lòng, chọn đúng <strong>3 sao</strong> (chưa thực sự hài lòng).</li>
+        </ol></td><td>Đã chọn 3 sao</td></tr>
+      <tr><td class="c"><strong>3</strong></td><td>Khách hàng</td><td>Bấm nút <strong>Submit / Hoàn tất</strong>.</td><td>Hoàn tất làm khảo sát</td></tr>
+      <tr><td class="c"><strong>4</strong></td><td>Hệ thống</td><td>Ghi nhận kết quả khảo sát (Survey Result) với điểm 3.</td><td>Đã lưu điểm</td></tr>
+      <tr><td class="c"><strong>5</strong></td><td>Hệ thống</td><td>Tự động tạo 1 <strong>Case</strong>: Status <code>New</code>, Origin <code>Survey</code>, gắn đúng Khách hàng, Xe, Đại lý.</td><td>Case được tạo mới</td></tr>
+      <tr><td class="c"><strong>6</strong></td><td>Staff CRS</td><td>
+        <ol class="steps">
+          <li>Đăng nhập Partial bằng tài khoản Staff CRS (mục <a href="#s2">2.1</a>).</li>
+          <li>Mở tab <strong>Cases</strong> → chọn List View <em>Survey Cases</em>.</li>
+          <li>Mở Case mới nhất, kiểm tra: Origin = <code>Survey</code>, khách = <em>Khách Hàng Test Survey CRS</em>, xe = <code>VINTESTCRS2026001</code>, đại lý = <em>SAMCO</em>.</li>
+          <li>Tiếp nhận Case: đổi <strong>Status</strong> sang <code>In Progress</code> → <strong>Save</strong>.</li>
+        </ol></td><td><code>In Progress</code></td></tr>
+      <tr><td class="c"><strong>7</strong></td><td>Staff CRS</td><td>
+        <ol class="steps">
+          <li>Gọi điện hỏi thăm khách (liên hệ <em>Phạm Mai Trinh</em>), làm rõ lý do chỉ đánh giá 3 sao; phối hợp Đại lý xử lý.</li>
+          <li>Ghi lại kết quả xử lý trên Case.</li>
+          <li>Đổi <strong>Status</strong> sang <code>Closed</code> → <strong>Save</strong>.</li>
+        </ol></td><td><code>Closed</code></td></tr>
+    </tbody>
+  </table>
+  <ul class="expect">
+    <li>Staff CRS là người trực tiếp tiếp nhận và xử lý Case phát sinh từ khảo sát.</li>
+  </ul>
+
+  <!-- TC_06 -->
+  <h3 id="tc6"><span class="tc-tag">TC_06</span>Khách đánh giá dưới 3 sao (1 – 2 sao) – Tự động tạo kế hoạch thăm khách (Visit)</h3>
+  <p class="desc"><strong>Mô tả:</strong> Khách chấm 1 hoặc 2 sao nghĩa là không hài lòng, được xem là cảnh báo nghiêm trọng. Hệ thống tự động tạo kế hoạch thăm khách (Visit) để Staff CRS cùng Đại lý đến gặp và hỗ trợ khách trực tiếp, thay vì chỉ xử lý từ xa qua Case.</p>
+  <table class="grid">
+    <thead><tr><th class="c" style="width:6%">STT</th><th style="width:14%">Actor</th><th>Làm gì</th><th style="width:20%">Trạng thái sau bước</th></tr></thead>
+    <tbody>
+      <tr><td class="c"><strong>1</strong></td><td>Khách hàng</td><td>
+        <ol class="steps">
+          <li>Mở hộp thư <code>trinhpm@isuzu-vietnam.com</code>, mở một email khảo sát chưa dùng.</li>
+          <li>Bấm vào link khảo sát.</li>
+        </ol></td><td>Form khảo sát hiển thị</td></tr>
+      <tr><td class="c"><strong>2</strong></td><td>Khách hàng</td><td>
+        <ol class="steps">
+          <li>Tại câu hỏi mức độ hài lòng, chọn <strong>1 sao</strong> hoặc <strong>2 sao</strong> (không hài lòng với dịch vụ hoặc xe).</li>
+        </ol></td><td>Đã chọn 1 – 2 sao</td></tr>
+      <tr><td class="c"><strong>3</strong></td><td>Khách hàng</td><td>Bấm nút <strong>Submit / Hoàn tất</strong>.</td><td>Hoàn tất gửi phản hồi</td></tr>
+      <tr><td class="c"><strong>4</strong></td><td>Hệ thống</td><td>Ghi nhận kết quả khảo sát (Survey Result) với điểm 1 hoặc 2.</td><td>Đã lưu điểm</td></tr>
+      <tr><td class="c"><strong>5</strong></td><td>Hệ thống</td><td>Tự động tạo 1 <strong>Visit</strong> tên <code>Visit Survey</code>, gắn đúng Khách hàng, Đại lý, VIN.</td><td>Visit được tạo mới</td></tr>
+      <tr><td class="c"><strong>6</strong></td><td>Staff CRS</td><td>
+        <ol class="steps">
+          <li>Đăng nhập Partial bằng tài khoản Staff CRS (mục <a href="#s2">2.1</a>).</li>
+          <li>Mở tab <strong>Visits</strong> (hoặc báo cáo Customer Visiting – CRS_R003 / R004).</li>
+          <li>Tìm bản ghi <code>Visit Survey</code> mới nhất, kiểm tra: khách = <em>Khách Hàng Test Survey CRS</em>, đại lý = <em>SAMCO</em>, VIN = <code>VINTESTCRS2026001</code>.</li>
+        </ol></td><td><code>Planned</code></td></tr>
+      <tr><td class="c"><strong>7</strong></td><td>Staff CRS</td><td>
+        <ol class="steps">
+          <li>Lên kế hoạch và liên hệ Đại lý <em>SAMCO</em> cùng đến thăm / hỗ trợ khách hàng.</li>
+          <li>Sau khi thăm, mở lại Visit, cập nhật kết quả thăm.</li>
+          <li>Đổi <strong>Status</strong> sang <code>Completed</code> → <strong>Save</strong>.</li>
+        </ol></td><td><code>Completed</code></td></tr>
+    </tbody>
+  </table>
+
+  <!-- ============ 4 ============ -->
+  <h2 id="s4">4. Nơi kiểm tra kết quả trên hệ thống</h2>
+  <p>Sau mỗi test case, dùng bảng dưới đây để biết cần mở màn hình nào và kỳ vọng thấy gì.</p>
+  <table class="grid">
+    <thead><tr><th style="width:28%">Cần kiểm tra</th><th style="width:30%">Vào đâu</th><th>Kỳ vọng</th></tr></thead>
+    <tbody>
+      <tr><td>Email khảo sát đã gửi</td><td>Hộp thư <code>trinhpm@isuzu-vietnam.com</code></td><td>Email <em>"Xin ý kiến đánh giá mua xe…"</em> (Bán xe) hoặc <em>"Xin ý kiến đánh giá dịch vụ…"</em> (Dịch vụ); bấm link mở được form khảo sát</td></tr>
+      <tr><td>Kết quả khách đã trả lời</td><td>Tab <strong>Survey Results</strong></td><td>Có bản ghi mới với đúng điểm khách đã chọn</td></tr>
+      <tr><td>Case phát sinh từ đánh giá 3 sao</td><td><strong>Cases</strong> → List View <em>Survey Cases</em></td><td>Case mới, Origin = <code>Survey</code>, Status = <code>New</code>, đúng Khách hàng / Xe / Đại lý</td></tr>
+      <tr><td>Visit phát sinh từ đánh giá dưới 3 sao</td><td><strong>Visits</strong> hoặc báo cáo CRS_R003 / CRS_R004</td><td>Visit tên <code>Visit Survey</code>, Status = <code>Planned</code>, đúng Khách hàng / Đại lý / VIN</td></tr>
+      <tr><td>Báo cáo mức độ hài lòng (CSAT)</td><td>Báo cáo CRS_R001 / CRS_R002</td><td>Điểm đánh giá vừa test được tính vào báo cáo</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ============ 5 ============ -->
+  <h2 id="s5">5. Gặp sự cố khi test</h2>
+  <table class="grid">
+    <thead><tr><th class="c" style="width:6%">STT</th><th style="width:24%">Hiện tượng</th><th style="width:40%">Tester tự kiểm tra trước</th><th>Báo cho ai</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="c"><strong>1</strong></td>
+        <td>Mở link khảo sát bị lỗi <strong>404</strong></td>
+        <td>Thử mở lại link mới nhất trong email, chụp lại màn hình lỗi.</td>
+        <td><strong>Admin</strong> – kiểm tra site khảo sát (<code>SurveyCRS</code>) đã được publish chưa.</td>
+      </tr>
+      <tr>
+        <td class="c"><strong>2</strong></td>
+        <td>Không nhận được email khảo sát</td>
+        <td>
+          <ol>
+            <li>Người sử dụng xe (Contact Using) đã có email chưa.</li>
+            <li>Kiểm tra cả thư mục Spam / Junk.</li>
+          </ol>
+        </td>
+        <td><strong>Admin</strong> – nếu vẫn không có email, kiểm tra cấu hình gửi email của môi trường test và mẫu email khảo sát.</td>
+      </tr>
+      <tr>
+        <td class="c"><strong>3</strong></td>
+        <td>Khách đã Submit nhưng không thấy Survey Result, không thấy Case / Visit được tạo</td>
+        <td>Ghi lại thời điểm Submit, link khảo sát và số sao đã chọn.</td>
+        <td><strong>Dev</strong> – đã ghi nhận phần xử lý sau khi Submit có thể chưa được bật trên môi trường test; Dev kiểm tra và bật lại.</td>
+      </tr>
+      <tr>
+        <td class="c"><strong>4</strong></td>
+        <td>Với Bán xe, Case / Visit không có liên kết tới Sales Order Item</td>
+        <td>Mở Case / Visit, xem có gắn Khách hàng, Xe, Đại lý hay không.</td>
+        <td><strong>BA / Dev</strong> – hiện hệ thống chỉ gắn theo Check-in; cần thống nhất bổ sung nguồn Sales Order Item.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <footer class="doc-foot">
+    E2E-02-068 · Issue 5781 · CRS Customer Survey · Phiên bản 2026-10-22
+  </footer>
+
+</main>
+</body>
+</html>
