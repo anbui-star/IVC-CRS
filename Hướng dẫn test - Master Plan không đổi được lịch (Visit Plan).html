@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hướng dẫn kiểm thử – Master Plan không đổi được lịch (Visit Plan)</title>
+<style>
+  :root {
+    --ink: #000000;
+    --muted: #333333;
+    --brand: #1f4e79;
+    --brand-soft: #e8eff7;
+    --line: #c9d1db;
+    --head-bg: #1f4e79;
+    --zebra: #f6f8fb;
+    --note-bg: #eef6ff;  --note-bar: #2f80ed;
+    --warn-bg: #fff6e5;  --warn-bar: #f2994a;
+    --ok-bg:   #edf8f1;  --ok-bar:   #27ae60;
+    --bad-bg:  #fdeeee;  --bad-bar:  #eb5757;
+    --code-bg: #f3f4f6;
+    --desk: #e5e7eb;
+    --paper: #ffffff;
+  }
+
+  * { box-sizing: border-box; }
+  html { background: var(--desk); }
+  body {
+    margin: 0;
+    padding: 32px 16px;
+    font-family: Calibri, "Segoe UI", Arial, sans-serif;
+    font-size: 11pt;
+    line-height: 1.5;
+    color: var(--ink);
+  }
+
+  .page {
+    width: 210mm;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 22mm 20mm;
+    background: var(--paper);
+    box-shadow: 0 2px 14px rgba(0, 0, 0, .18);
+  }
+
+  h1.doc-title {
+    margin: 4pt 0 6pt;
+    font-size: 22pt;
+    line-height: 1.2;
+    color: var(--brand);
+  }
+  .doc-sub { margin: 0 0 14pt; font-size: 12pt; color: var(--muted); }
+
+  table.meta { width: 100%; border-collapse: collapse; margin: 0 0 6pt; font-size: 10.5pt; }
+  table.meta th, table.meta td { padding: 5pt 8pt; border: 1px solid var(--line); text-align: left; vertical-align: top; }
+  table.meta th { width: 28%; background: var(--brand-soft); color: var(--brand); font-weight: 600; }
+
+  nav.toc { margin: 18pt 0 4pt; padding: 12pt 16pt; background: var(--brand-soft); border-left: 4px solid var(--brand); }
+  nav.toc h2 { margin: 0 0 6pt; padding: 0; border: 0; font-size: 12pt; color: var(--brand); }
+  nav.toc ol { margin: 0; padding-left: 18pt; }
+  nav.toc li { margin: 1pt 0; }
+  nav.toc ol ol { margin-top: 1pt; font-size: 10.5pt; }
+  nav.toc a { color: var(--ink); text-decoration: none; }
+  nav.toc a:hover { text-decoration: underline; }
+
+  h2 {
+    margin: 26pt 0 8pt;
+    padding-bottom: 3pt;
+    font-size: 16pt;
+    color: var(--brand);
+    border-bottom: 2px solid var(--brand);
+  }
+  h3 { margin: 18pt 0 6pt; font-size: 13pt; color: var(--brand); }
+  h4 { margin: 12pt 0 4pt; font-size: 11.5pt; color: var(--ink); }
+  h2, h3, h4 { break-after: avoid; }
+
+  p { margin: 0 0 7pt; }
+  ul, ol { margin: 0 0 8pt; padding-left: 20pt; }
+  li { margin: 2pt 0; }
+  a { color: #1a5fb4; }
+  hr { margin: 18pt 0; border: 0; border-top: 1px solid var(--line); }
+
+  code {
+    padding: 0 3pt;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 9.5pt;
+    background: var(--code-bg);
+    border-radius: 3px;
+    color: #000;
+    word-break: break-word;
+  }
+  pre {
+    margin: 6pt 0 10pt;
+    padding: 10pt 12pt;
+    background: var(--code-bg);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--brand);
+    border-radius: 3px;
+    overflow-x: auto;
+    break-inside: avoid;
+  }
+  pre code { padding: 0; background: none; color: var(--ink); font-size: 9pt; line-height: 1.45; word-break: normal; }
+
+  table.grid { width: 100%; margin: 6pt 0 8pt; border-collapse: collapse; font-size: 10pt; }
+  table.grid th, table.grid td { padding: 5pt 7pt; border: 1px solid var(--line); vertical-align: top; text-align: left; }
+  table.grid thead th { background: var(--head-bg); color: #fff; font-weight: 600; }
+  table.grid tbody tr:nth-child(even) td { background: var(--zebra); }
+  table.grid td.c, table.grid th.c { text-align: center; }
+  table.grid tr { break-inside: avoid; }
+  table.grid thead { display: table-header-group; }
+
+  .callout { margin: 8pt 0 10pt; padding: 8pt 12pt; border-left: 4px solid; border-radius: 0 3px 3px 0; break-inside: avoid; }
+  .callout > :last-child { margin-bottom: 0; }
+  .callout .label { display: block; margin-bottom: 2pt; font-weight: 700; font-size: 10pt; text-transform: uppercase; letter-spacing: .04em; }
+  .callout.note { background: var(--note-bg); border-color: var(--note-bar); }
+  .callout.warn { background: var(--warn-bg); border-color: var(--warn-bar); }
+  .callout.ok   { background: var(--ok-bg);   border-color: var(--ok-bar); }
+  .callout.bad  { background: var(--bad-bg);  border-color: var(--bad-bar); }
+
+  .tc-tag {
+    display: inline-block;
+    margin-right: 6pt;
+    padding: 1pt 7pt;
+    background: var(--brand);
+    color: #fff;
+    border-radius: 3px;
+    font-size: 10pt;
+    font-weight: 700;
+    vertical-align: 1pt;
+  }
+  .desc {
+    margin: 0 0 8pt;
+    padding: 7pt 12pt;
+    background: var(--brand-soft);
+    border-left: 4px solid var(--brand);
+    border-radius: 0 3px 3px 0;
+    break-inside: avoid;
+  }
+  .desc strong { color: var(--brand); }
+  table.grid ol.steps { margin: 2pt 0 0; padding: 0; list-style: none; counter-reset: st; }
+  table.grid ol.steps li { margin: 3pt 0; counter-increment: st; }
+  table.grid ol.steps li::before { content: "Bước " counter(st) ": "; font-weight: 700; color: var(--brand); }
+  .expect { margin: 4pt 0 0; padding-left: 0; list-style: none; }
+  .expect li { position: relative; padding-left: 14pt; }
+  .expect li::before { content: "▸"; position: absolute; left: 0; color: var(--brand); }
+
+  footer.doc-foot { margin-top: 26pt; padding-top: 6pt; border-top: 1px solid var(--line); font-size: 9pt; color: var(--muted); text-align: center; }
+
+  @page { size: A4; margin: 18mm 16mm; }
+  @media print {
+    html, body { background: #fff; }
+    body { padding: 0; font-size: 10.5pt; }
+    .page { width: auto; margin: 0; padding: 0; box-shadow: none; }
+    a { color: inherit; text-decoration: none; }
+    h2.page-break { break-before: page; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+  @media (max-width: 720px) {
+    .page { padding: 16px; }
+    h1.doc-title { font-size: 18pt; }
+  }
+</style>
+</head>
+<body>
+<main class="page">
+
+  <!-- ============ TIÊU ĐỀ ============ -->
+  <h1 class="doc-title">Master Plan không đổi được lịch</h1>
+  <p class="doc-sub">Visit Plan – Tái hiện &amp; nghiệm thu lỗi không lưu được ô lịch trên tab Master Plan</p>
+
+  <table class="meta">
+    <tr><th>Sự cố gốc (PROD)</th><td>Plan <strong>SAL - AV - Oct-26 - HNI</strong> (chủ plan: Trần Thiện Khiêm). Người dùng báo: đổi lịch cho nhân viên đi thăm khách không được, các plan / Visit khác thì chỉnh được.</td></tr>
+    <tr><th>Môi trường test</th><td>Partial (Sandbox). <strong>Không test trên PROD.</strong></td></tr>
+    <tr><th>Màn hình</th><td>Visit Plan › tab <strong>Master Plan</strong> (Aura <code>BuildVisitPlanComponent</code>, Apex <code>BuildVisitplanController</code>)</td></tr>
+  </table>
+
+  <nav class="toc" aria-label="Mục lục">
+    <h2>Mục lục</h2>
+    <ol>
+      <li><a href="#s1">Cơ chế &amp; nguyên nhân</a>
+        <ol type="a">
+          <li><a href="#c1">Mỗi ô trên bảng là một record Visit</a></li>
+          <li><a href="#c2">Ba điều kiện chặn việc lưu</a></li>
+        </ol>
+      </li>
+      <li><a href="#s2">Chuẩn bị trước khi test (tài khoản &amp; dữ liệu)</a></li>
+      <li><a href="#s3">Từng bước thực hiện chi tiết từng test case</a>
+        <ol type="a">
+          <li><a href="#tc1">TC_01 – Tạo tình huống thiếu Visit của một ngày</a></li>
+          <li><a href="#tc2">TC_02 – Ô của ngày đã qua: Lưu báo thành công nhưng không đổi</a></li>
+          <li><a href="#tc3">TC_03 – Ô của ngày hôm nay: lưu được</a></li>
+          <li><a href="#tc4">TC_04 – Ô thiếu Visit ở ngày hôm nay trở đi</a></li>
+          <li><a href="#tc5">TC_05 – Ô ngoài khoảng Start Date – End Date bị khóa</a></li>
+        </ol>
+      </li>
+      <li><a href="#s4">Cách kiểm tra kết quả trong dữ liệu</a></li>
+      <li><a href="#s5">Lưu ý khi test &amp; dọn dữ liệu</a></li>
+    </ol>
+  </nav>
+
+  <!-- ============ 1 ============ -->
+  <h2 id="s1">1. Cơ chế &amp; nguyên nhân</h2>
+
+  <h3 id="c1">1.1. Mỗi ô trên bảng là một record Visit</h3>
+<pre><code>Bảng Master Plan:   dòng = khách hàng,  cột = ngày (Thứ 2 → CN của tuần đang chọn)
+
+  Khi bấm [Thêm] một khách  →  hệ thống tạo 7 record Visit (Visit__c), mỗi ngày 1 record
+  Chữ "V" / "G" / ô trống   =  trường Planned Action (Planned_Action__c) của record Visit đó
+  Bấm [Lưu]                 =  cập nhật Planned Action của các record Visit tương ứng
+
+Ô chưa có record Visit  =  chỉ là dropdown trống, phía sau không có record nào để ghi</code></pre>
+  <div class="callout note">
+    <span class="label">Trường hợp thực tế trên PROD</span>
+    Dòng khách <strong>Kiều Anh</strong> của plan <strong>SAL - AV - Oct-26 - HNI</strong> chỉ có 6 Visit (19, 20, 21, 23, 24, 25/10). Visit ngày 22/10 của cùng đợt tạo hiện thuộc khách <strong>QHL</strong> (trường <strong>Vendor</strong> đã bị đổi), nên ô Kiều Anh × 22/10 không còn record phía sau.
+  </div>
+
+  <h3 id="c2">1.2. Ba điều kiện chặn việc lưu</h3>
+  <table class="grid">
+    <thead><tr><th class="c" style="width:5%">#</th><th style="width:26%">Điều kiện</th><th style="width:44%">Biểu hiện trên màn hình</th><th>Mức xác nhận</th></tr></thead>
+    <tbody>
+      <tr><td class="c"><strong>1</strong></td><td>Ô của <strong>ngày đã qua</strong> (nhỏ hơn hôm nay) không được gửi đi lưu</td><td>Vẫn chọn được V, bấm <strong>Lưu</strong> vẫn hiện "Update Success", nhưng sau khi tải lại ô trở về giá trị cũ.</td><td>Đã tái hiện trên Partial; code PROD giống.</td></tr>
+      <tr><td class="c"><strong>2</strong></td><td>Ô <strong>ngoài khoảng Start Date – End Date</strong> của plan bị khóa</td><td>Ô màu xám, không chọn được. Plan PROD có Start 21/10, End 22/10 nên từ 23/10 các ô đều khóa; hai ô còn mở (21, 22/10) lại là ngày đã qua.</td><td>Đã xem trên PROD ở chế độ Chỉnh Sửa.</td></tr>
+      <tr><td class="c"><strong>3</strong></td><td>Ô <strong>chưa có record Visit</strong> có thể không được tạo mới khi Lưu</td><td>Bấm Lưu không tạo Visit nào cho ô đó. Nghi do Apex so sánh <code>visitId</code> với chuỗi <code>'null'</code> thay vì giá trị null.</td><td><strong>Chưa xác nhận</strong> – cần chạy TC_04.</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ============ 2 ============ -->
+  <h2 id="s2">2. Chuẩn bị trước khi test (tài khoản &amp; dữ liệu)</h2>
+  <h3>2.1. Tài khoản</h3>
+  <p>Đăng nhập <strong>Partial</strong> (sandbox <code>ivcl--partial</code>) bằng tài khoản System Administrator, hoặc tài khoản của anh Khiêm để giống người dùng thật.</p>
+  <table class="grid">
+    <thead><tr><th style="width:22%">Họ tên</th><th style="width:34%">Username (Partial)</th><th>Profile / Role</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Trần Thiện Khiêm</strong></td><td><code>khiemtt@isuzu-vietnam.com.partial</code></td><td>Profile <code>IVC_SAL_SAL_Planing &amp; Admin_Staff_CV Planning</code>, Role <code>IVC_SAL_Staff_CV Planning</code></td></tr>
+    </tbody>
+  </table>
+  <div class="callout ok">
+    <span class="label">Quyền không phải nguyên nhân</span>
+    Profile của anh Khiêm có Read / Edit / Create / Delete trên <code>Visit__c</code> và <code>Visit_Plan__c</code>. Phần lưu của Master Plan chạy Apex <code>without sharing</code> nên không bị chặn bởi FLS hay sharing, tester dùng tài khoản nào cũng cho cùng kết quả.
+  </div>
+
+  <h3 id="data">2.2. Bộ dữ liệu test trên Partial</h3>
+  <p>Các bước dưới đây tính theo <strong>ngày hôm nay = 23/10/2026</strong> và tuần <strong>Oct 19 – Oct 25</strong>. Nếu test vào ngày khác, hiểu "ngày đã qua" là các cột trước hôm nay, "ngày chưa qua" là hôm nay trở đi.</p>
+  <table class="grid">
+    <thead><tr><th style="width:24%">Đối tượng</th><th>Bản ghi</th><th style="width:27%">Id</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Visit Plan</strong></td><td><a href="https://ivcl--partial.sandbox.lightning.force.com/lightning/r/Visit_Plan__c/a28WC000000jvDRYAY/view">test</a> (Start 01/08/2026, End 31/10/2026)</td><td><code>a28WC000000jvDRYAY</code></td></tr>
+      <tr><td><strong>Khách (dòng test)</strong></td><td>NGUYỄN PHÚC THẮNG (7 Visit, 19 → 25/10)</td><td>–</td></tr>
+      <tr><td><strong>Visit 21/10</strong></td><td><a href="https://ivcl--partial.sandbox.lightning.force.com/lightning/r/Visit__c/a29WC000002m4rPYAQ/view">Visit ngày 21/10</a> (ngày đã qua)</td><td><code>a29WC000002m4rPYAQ</code></td></tr>
+      <tr><td><strong>Visit 22/10</strong></td><td><a href="https://ivcl--partial.sandbox.lightning.force.com/lightning/r/Visit__c/a29WC000002m4rQYAQ/view">Visit ngày 22/10</a> (ngày đã qua)</td><td><code>a29WC000002m4rQYAQ</code></td></tr>
+      <tr><td><strong>Visit 23/10</strong></td><td><a href="https://ivcl--partial.sandbox.lightning.force.com/lightning/r/Visit__c/a29WC000002m4rRYAQ/view">Visit ngày 23/10</a> (hôm nay, đang có V)</td><td><code>a29WC000002m4rRYAQ</code></td></tr>
+      <tr><td><strong>Visit 24/10</strong></td><td><a href="https://ivcl--partial.sandbox.lightning.force.com/lightning/r/Visit__c/a29WC000002m4rSYAQ/view">Visit ngày 24/10</a> (chưa qua, đang có V)</td><td><code>a29WC000002m4rSYAQ</code></td></tr>
+      <tr><td><strong>Plan Start Date = 20/10</strong></td><td><a href="https://ivcl--partial.sandbox.lightning.force.com/lightning/r/Visit_Plan__c/a28WC000000rym1YAA/view">Visit Plan Tháng 10</a> (Start 20/10, End 30/10) – dùng cho TC_05</td><td><code>a28WC000000rym1YAA</code></td></tr>
+    </tbody>
+  </table>
+  <div class="callout warn">
+    <span class="label">Trạng thái hiện tại của dữ liệu</span>
+    Các lần thử trước đã đặt V ở ô 23/10 và 24/10 của khách NGUYỄN PHÚC THẮNG. Nếu muốn bắt đầu sạch, xóa V ở hai ô đó (Chỉnh Sửa → chọn ô trống → Lưu) hoặc tạo một khách mới bằng nút <strong>Thêm</strong>.
+  </div>
+
+  <!-- ============ 3 ============ -->
+  <h2 id="s3" class="page-break">3. Từng bước thực hiện chi tiết từng test case</h2>
+
+  <!-- TC_01 -->
+  <h3 id="tc1"><span class="tc-tag">TC_01</span>Tạo tình huống thiếu Visit của một ngày</h3>
+  <p class="desc"><strong>Mô tả:</strong> Mô phỏng đúng việc đã xảy ra với Kiều Anh trên PROD: chuyển Visit của một ngày sang khách khác để dòng khách ban đầu thiếu record của ngày đó.</p>
+  <table class="grid">
+    <thead><tr><th class="c" style="width:6%">STT</th><th style="width:14%">Actor</th><th>Làm gì</th><th style="width:24%">Trạng thái sau bước</th></tr></thead>
+    <tbody>
+      <tr><td class="c"><strong>1</strong></td><td>Tester</td><td>
+        <ol class="steps">
+          <li>Mở plan <a href="https://ivcl--partial.sandbox.lightning.force.com/lightning/r/Visit_Plan__c/a28WC000000jvDRYAY/view"><em>test</em></a> → tab <strong>Master Plan</strong> → chọn tuần <strong>Oct 19 - Oct 25</strong>.</li>
+          <li>Xác nhận dòng NGUYỄN PHÚC THẮNG có đủ 7 ô (19 → 25/10).</li>
+        </ol></td><td>Khách có 7 record Visit</td></tr>
+      <tr><td class="c"><strong>2</strong></td><td>Tester</td><td>
+        <ol class="steps">
+          <li>Mở <a href="https://ivcl--partial.sandbox.lightning.force.com/lightning/r/Visit__c/a29WC000002m4rQYAQ/view">Visit ngày 22/10</a> → bấm <strong>Edit</strong>.</li>
+          <li>Đổi trường <strong>Vendor</strong> sang một khách <strong>khác</strong> (ví dụ <em>CÔNG TY CP TV XD MIỀN TRUNG</em>) → <strong>Save</strong>.</li>
+        </ol></td><td>Visit 22/10 thuộc khách khác</td></tr>
+      <tr><td class="c"><strong>3</strong></td><td>Tester</td><td>
+        <ol class="steps">
+          <li>Quay lại plan <em>test</em> → tab Master Plan → tải lại trang (F5) → tuần Oct 19 – Oct 25.</li>
+          <li>Quan sát dòng NGUYỄN PHÚC THẮNG, cột <strong>Oct 22</strong>.</li>
+        </ol></td><td>Ô 22/10 của dòng này không còn record phía sau</td></tr>
+    </tbody>
+  </table>
+  <ul class="expect">
+    <li>Dòng khách mới (<em>MIỀN TRUNG</em>) có thêm một Visit ngày 22/10.</li>
+    <li>Cách kiểm tra bằng dữ liệu: mục <a href="#s4">4</a>, câu truy vấn số 1.</li>
+  </ul>
+
+  <!-- TC_02 -->
+  <h3 id="tc2"><span class="tc-tag">TC_02</span>Ô của ngày đã qua: Lưu báo thành công nhưng không đổi</h3>
+  <p class="desc"><strong>Mô tả:</strong> Kiểm tra điều kiện chặn số 1. Đặt V vào ô của một ngày đã qua (có record sẵn), bấm Lưu.</p>
+  <table class="grid">
+    <thead><tr><th class="c" style="width:6%">STT</th><th style="width:14%">Actor</th><th>Làm gì</th><th style="width:24%">Trạng thái sau bước</th></tr></thead>
+    <tbody>
+      <tr><td class="c"><strong>1</strong></td><td>Tester</td><td>
+        <ol class="steps">
+          <li>Mở plan <em>test</em> → tab Master Plan → tuần Oct 19 – Oct 25.</li>
+          <li>Bấm <strong>Chỉnh Sửa</strong>.</li>
+          <li>Ở dòng NGUYỄN PHÚC THẮNG, cột <strong>Oct 21</strong> (đã qua, đang trống) chọn <strong>V</strong>.</li>
+          <li>Bấm <strong>Lưu</strong>.</li>
+        </ol></td><td>Có toast xanh "Update Success"</td></tr>
+      <tr><td class="c"><strong>2</strong></td><td>Tester</td><td>
+        <ol class="steps">
+          <li>Tải lại trang (F5) → tab Master Plan → tuần Oct 19 – Oct 25.</li>
+          <li>Quan sát ô Oct 21.</li>
+          <li>Chạy truy vấn số 2 ở mục <a href="#s4">4</a> để xem <code>Planned_Action__c</code> của Visit 21/10.</li>
+        </ol></td><td>Xem bảng kết quả bên dưới</td></tr>
+    </tbody>
+  </table>
+  <table class="grid">
+    <thead><tr><th style="width:28%">Thời điểm</th><th>Kết quả</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Trước khi sửa lỗi (hiện tại)</strong></td><td>Ô Oct 21 vẫn trống; <code>Planned_Action__c</code> của Visit 21/10 vẫn rỗng. Toast vẫn báo thành công → <strong>lỗi tái hiện được</strong>.</td></tr>
+      <tr><td><strong>Sau khi sửa lỗi (kỳ vọng)</strong></td><td>Ô Oct 21 hiện V; <code>Planned_Action__c</code> = <code>V</code>; tên Visit = <em>V - Kế hoạch thăm khách</em>. Ô của visit đã Completed / Cancelled vẫn bị khóa.</td></tr>
+    </tbody>
+  </table>
+
+  <!-- TC_03 -->
+  <h3 id="tc3"><span class="tc-tag">TC_03</span>Ô của ngày hôm nay: lưu được</h3>
+  <p class="desc"><strong>Mô tả:</strong> Xác nhận ngày hôm nay vẫn nằm trong phạm vi lưu (điều kiện là lớn hơn hoặc bằng hôm nay), để loại trừ nghi ngờ "hôm nay cũng bị chặn".</p>
+  <table class="grid">
+    <thead><tr><th class="c" style="width:6%">STT</th><th style="width:14%">Actor</th><th>Làm gì</th><th style="width:24%">Trạng thái sau bước</th></tr></thead>
+    <tbody>
+      <tr><td class="c"><strong>1</strong></td><td>Tester</td><td>
+        <ol class="steps">
+          <li>Plan <em>test</em> → Master Plan → tuần Oct 19 – Oct 25 → <strong>Chỉnh Sửa</strong>.</li>
+          <li>Ở dòng NGUYỄN PHÚC THẮNG, cột <strong>Oct 23</strong> (hôm nay) chọn <strong>V</strong> (hoặc chọn ô trống rồi chọn lại V nếu ô đã có V).</li>
+          <li>Bấm <strong>Lưu</strong>, tải lại trang.</li>
+        </ol></td><td>Ô Oct 23 hiển thị V</td></tr>
+      <tr><td class="c"><strong>2</strong></td><td>Tester</td><td>Chạy truy vấn số 2 ở mục <a href="#s4">4</a> cho Visit 23/10.</td><td><code>Planned_Action__c</code> = <code>V</code></td></tr>
+    </tbody>
+  </table>
+  <ul class="expect">
+    <li>Kết quả này <strong>giữ nguyên cả trước và sau khi sửa</strong>.</li>
+  </ul>
+
+  <!-- TC_04 -->
+  <h3 id="tc4"><span class="tc-tag">TC_04</span>Ô thiếu Visit ở ngày hôm nay trở đi</h3>
+  <p class="desc"><strong>Mô tả:</strong> Kiểm tra điều kiện chặn số 3 (chưa xác nhận). Vì ngày 22/10 đã qua nên lỗi ngày quá khứ che mất lỗi này; ở TC_04 dùng ngày <strong>chưa qua</strong> để tách riêng.</p>
+  <table class="grid">
+    <thead><tr><th class="c" style="width:6%">STT</th><th style="width:14%">Actor</th><th>Làm gì</th><th style="width:24%">Trạng thái sau bước</th></tr></thead>
+    <tbody>
+      <tr><td class="c"><strong>1</strong></td><td>Tester</td><td>
+        <ol class="steps">
+          <li>Mở <a href="https://ivcl--partial.sandbox.lightning.force.com/lightning/r/Visit__c/a29WC000002m4rSYAQ/view">Visit ngày 24/10</a> → <strong>Edit</strong> → đổi <strong>Vendor</strong> sang khách khác → <strong>Save</strong> (cách làm giống TC_01 nhưng với ngày chưa qua).</li>
+        </ol></td><td>Dòng NGUYỄN PHÚC THẮNG thiếu record ngày 24/10</td></tr>
+      <tr><td class="c"><strong>2</strong></td><td>Tester</td><td>
+        <ol class="steps">
+          <li>Plan <em>test</em> → Master Plan → tải lại → tuần Oct 19 – Oct 25 → <strong>Chỉnh Sửa</strong>.</li>
+          <li>Ở dòng NGUYỄN PHÚC THẮNG, cột <strong>Oct 24</strong> chọn <strong>V</strong>.</li>
+          <li>Bấm <strong>Lưu</strong>, tải lại trang.</li>
+        </ol></td><td>Có toast "Update Success"</td></tr>
+      <tr><td class="c"><strong>3</strong></td><td>Tester</td><td>Chạy truy vấn số 3 ở mục <a href="#s4">4</a> để xem khách NGUYỄN PHÚC THẮNG đã có Visit mới ngày 24/10 hay chưa.</td><td>Xem bảng kết quả bên dưới</td></tr>
+    </tbody>
+  </table>
+  <table class="grid">
+    <thead><tr><th style="width:28%">Thời điểm</th><th>Kết quả</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Trước khi sửa lỗi</strong></td><td>Nếu nghi vấn đúng: <strong>không</strong> có Visit mới cho ngày 24/10, ô vẫn trống. Nếu có Visit mới: ô thiếu record ở ngày chưa qua <strong>không</strong> phải lỗi, chỉ còn lỗi của ngày đã qua (TC_02).</td></tr>
+      <tr><td><strong>Sau khi sửa lỗi (kỳ vọng)</strong></td><td>Tạo mới đúng 1 Visit: khách NGUYỄN PHÚC THẮNG, plan <em>test</em>, ngày 24/10, <code>Planned_Action__c</code> = <code>V</code>, Status = <code>Plan</code>, Owner = chủ plan.</td></tr>
+    </tbody>
+  </table>
+
+  <!-- TC_05 -->
+  <h3 id="tc5"><span class="tc-tag">TC_05</span>Ô ngoài khoảng Start Date – End Date bị khóa</h3>
+  <p class="desc"><strong>Mô tả:</strong> Kiểm tra điều kiện chặn số 2. Ô có ngày nhỏ hơn Start Date hoặc lớn hơn End Date của plan bị khóa trong chế độ Chỉnh Sửa.</p>
+  <table class="grid">
+    <thead><tr><th class="c" style="width:6%">STT</th><th style="width:14%">Actor</th><th>Làm gì</th><th style="width:24%">Trạng thái sau bước</th></tr></thead>
+    <tbody>
+      <tr><td class="c"><strong>1</strong></td><td>Tester</td><td>
+        <ol class="steps">
+          <li>Mở plan <a href="https://ivcl--partial.sandbox.lightning.force.com/lightning/r/Visit_Plan__c/a28WC000000rym1YAA/view"><em>Visit Plan Tháng 10</em></a> (Start Date = 20/10).</li>
+          <li>Tab Master Plan → tuần <strong>Oct 19 - Oct 25</strong> → <strong>Chỉnh Sửa</strong>. <strong>Không bấm Lưu</strong>, chỉ quan sát.</li>
+        </ol></td><td>Đang ở chế độ Chỉnh Sửa</td></tr>
+      <tr><td class="c"><strong>2</strong></td><td>Tester</td><td>Quan sát cột <strong>Oct 19</strong> (nhỏ hơn Start Date) so với các cột <strong>Oct 20 → Oct 25</strong>. Bấm <strong>Hủy</strong> để thoát.</td><td>Cột Oct 19 bị khóa (xám), các cột còn lại mở</td></tr>
+    </tbody>
+  </table>
+  <ul class="expect">
+    <li>Ô ngoài khoảng ngày bị khóa là <strong>hành vi đúng</strong> và giữ nguyên sau khi sửa.</li>
+    <li>Với plan có End Date ngắn (như plan PROD kết thúc 22/10), cách xử lý không cần code là mở plan → <strong>Edit</strong> → tăng <strong>End Date</strong>. Rule hiện tại chỉ cho tăng End Date, không cho giảm.</li>
+  </ul>
+
+  <!-- ============ 4 ============ -->
+  <h2 id="s4">4. Cách kiểm tra kết quả trong dữ liệu</h2>
+  <p>Dùng <strong>Developer Console › Query Editor</strong> trên Partial, hoặc lệnh <code>sf data query --target-org PARTIAL --query "…"</code>.</p>
+
+  <h4>4.1. Truy vấn số 1 – các Visit của plan <em>test</em> trong tuần 19 – 25/10</h4>
+<pre><code>SELECT Id, Vendor__r.Name, Planned_Date__c, Planned_Action__c, Visit_Status__c
+FROM Visit__c
+WHERE Visit_Plan__c = 'a28WC000000jvDRYAY'
+  AND Planned_Date__c &gt;= 2026-10-19 AND Planned_Date__c &lt;= 2026-10-25
+ORDER BY Vendor__r.Name, Planned_Date__c</code></pre>
+
+  <h4>4.2. Truy vấn số 2 – Visit của một ngày cụ thể (21 hoặc 23/10)</h4>
+<pre><code>SELECT Id, Name, Planned_Date__c, Planned_Action__c, Visit_Status__c
+FROM Visit__c
+WHERE Id IN ('a29WC000002m4rPYAQ', 'a29WC000002m4rRYAQ')</code></pre>
+
+  <h4>4.3. Truy vấn số 3 – Visit ngày 24/10 của plan <em>test</em> (kiểm tra có Visit mới được tạo không)</h4>
+<pre><code>SELECT Id, Name, Vendor__r.Name, Planned_Date__c, Planned_Action__c, CreatedDate
+FROM Visit__c
+WHERE Visit_Plan__c = 'a28WC000000jvDRYAY' AND Planned_Date__c = 2026-10-24
+ORDER BY CreatedDate</code></pre>
+
+  <table class="grid">
+    <thead><tr><th style="width:28%">Cần kiểm tra</th><th style="width:30%">Vào đâu</th><th>Kỳ vọng</th></tr></thead>
+    <tbody>
+      <tr><td>Toast sau khi Lưu</td><td>Màn hình Master Plan</td><td>"Update Success" (xuất hiện cả khi ô không được lưu vì là ngày đã qua)</td></tr>
+      <tr><td>Giá trị ô sau khi tải lại</td><td>Master Plan, F5</td><td>Khớp với <code>Planned_Action__c</code> trong truy vấn</td></tr>
+      <tr><td>Visit được tạo mới</td><td>Truy vấn số 3, hoặc related list <strong>Visits</strong> ở tab Overview của plan</td><td>Có thêm đúng 1 record (chỉ sau khi sửa)</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ============ 5 ============ -->
+  <h2 id="s5">5. Lưu ý khi test &amp; dọn dữ liệu</h2>
+  <table class="grid">
+    <thead><tr><th class="c" style="width:6%">STT</th><th style="width:30%">Lưu ý</th><th>Chi tiết</th></tr></thead>
+    <tbody>
+      <tr><td class="c"><strong>1</strong></td><td>Chỉ test trên Partial</td><td>Không bấm Lưu hay sửa dữ liệu trên PROD để thử. Việc tạo / sửa Visit trên PROD phải được người phụ trách duyệt riêng.</td></tr>
+      <tr><td class="c"><strong>2</strong></td><td>Ngày test</td><td>Các bước ghi theo hôm nay = 23/10/2026. Khi test vào ngày khác, chọn lại các cột "đã qua" / "hôm nay" / "chưa qua" cho đúng.</td></tr>
+      <tr><td class="c"><strong>3</strong></td><td>Sau mỗi lần Lưu</td><td>Luôn tải lại trang (F5) rồi mới kết luận, vì toast thành công không chứng minh dữ liệu đã đổi.</td></tr>
+      <tr><td class="c"><strong>4</strong></td><td>Thông báo khi tạo Visit mới</td><td>Trigger của Visit chạy các hàm thông báo khi tạo mới. Test trên Partial để tránh gửi thông báo thật tới người dùng PROD.</td></tr>
+      <tr><td class="c"><strong>5</strong></td><td>Dọn dữ liệu</td><td>Sau khi test xong, chuyển Vendor của Visit 22/10 và 24/10 về khách ban đầu hoặc xóa khách test bằng nút thùng rác ở cột Action của Master Plan (xóa toàn bộ Visit của khách đó trong tuần đang chọn).</td></tr>
+    </tbody>
+  </table>
+
+  <footer class="doc-foot">
+    Visit Plan · Master Plan · Hướng dẫn kiểm thử · Phiên bản 2026-10-23
+  </footer>
+
+</main>
+</body>
+</html>
