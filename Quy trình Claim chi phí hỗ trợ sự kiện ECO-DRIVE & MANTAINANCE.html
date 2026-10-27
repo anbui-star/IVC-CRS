@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quy trình Claim chi phí hỗ trợ sự kiện ECO-DRIVE &amp; MANTAINANCE</title>
+<style>
+  :root {
+    --ink: #000000;
+    --muted: #333333;
+    --brand: #1f4e79;
+    --brand-soft: #e8eff7;
+    --line: #c9d1db;
+    --head-bg: #1f4e79;
+    --zebra: #f6f8fb;
+    --note-bg: #eef6ff;  --note-bar: #2f80ed;
+    --warn-bg: #fff6e5;  --warn-bar: #f2994a;
+    --ok-bg:   #edf8f1;  --ok-bar:   #27ae60;
+    --bad-bg:  #fdeeee;  --bad-bar:  #eb5757;
+    --code-bg: #f3f4f6;
+    --desk: #e5e7eb;
+    --paper: #ffffff;
+  }
+
+  * { box-sizing: border-box; }
+  html { background: var(--desk); }
+  body {
+    margin: 0;
+    padding: 32px 16px;
+    font-family: Calibri, "Segoe UI", Arial, sans-serif;
+    font-size: 11pt;
+    line-height: 1.5;
+    color: var(--ink);
+  }
+
+  /* ===== Trang giấy A4 ===== */
+  .page {
+    width: 210mm;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 22mm 20mm;
+    background: var(--paper);
+    box-shadow: 0 2px 14px rgba(0, 0, 0, .18);
+  }
+
+  /* ===== Bìa / tiêu đề tài liệu ===== */
+  .doc-eyebrow {
+    margin: 0;
+    font-size: 10pt;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  h1.doc-title {
+    margin: 4pt 0 6pt;
+    font-size: 22pt;
+    line-height: 1.2;
+    color: var(--brand);
+  }
+  .doc-sub { margin: 0 0 14pt; font-size: 12pt; color: var(--muted); }
+
+  table.meta { width: 100%; border-collapse: collapse; margin: 0 0 6pt; font-size: 10.5pt; }
+  table.meta th, table.meta td { padding: 5pt 8pt; border: 1px solid var(--line); text-align: left; vertical-align: top; }
+  table.meta th { width: 28%; background: var(--brand-soft); color: var(--brand); font-weight: 600; }
+
+  /* ===== Mục lục ===== */
+  nav.toc { margin: 18pt 0 4pt; padding: 12pt 16pt; background: var(--brand-soft); border-left: 4px solid var(--brand); }
+  nav.toc h2 { margin: 0 0 6pt; padding: 0; border: 0; font-size: 12pt; color: var(--brand); }
+  nav.toc ol { margin: 0; padding-left: 18pt; }
+  nav.toc li { margin: 1pt 0; }
+  nav.toc ol ol { margin-top: 1pt; font-size: 10.5pt; }
+  nav.toc a { color: var(--ink); text-decoration: none; }
+  nav.toc a:hover { text-decoration: underline; }
+
+  /* ===== Heading ===== */
+  h2 {
+    margin: 26pt 0 8pt;
+    padding-bottom: 3pt;
+    font-size: 16pt;
+    color: var(--brand);
+    border-bottom: 2px solid var(--brand);
+  }
+  h3 { margin: 18pt 0 6pt; font-size: 13pt; color: var(--brand); }
+  h4 { margin: 12pt 0 4pt; font-size: 11.5pt; color: var(--ink); }
+  h2, h3, h4 { break-after: avoid; }
+
+  p { margin: 0 0 7pt; }
+  ul, ol { margin: 0 0 8pt; padding-left: 20pt; }
+  li { margin: 2pt 0; }
+  a { color: #1a5fb4; }
+  hr { margin: 18pt 0; border: 0; border-top: 1px solid var(--line); }
+
+  /* ===== Inline code / code block ===== */
+  code {
+    padding: 0 3pt;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 9.5pt;
+    background: var(--code-bg);
+    border-radius: 3px;
+    color: #000;
+    word-break: break-word;
+  }
+  pre {
+    margin: 6pt 0 10pt;
+    padding: 10pt 12pt;
+    background: var(--code-bg);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--brand);
+    border-radius: 3px;
+    overflow-x: auto;
+    break-inside: avoid;
+  }
+  pre code { padding: 0; background: none; color: var(--ink); font-size: 9pt; line-height: 1.45; word-break: normal; }
+
+  /* ===== Bảng ===== */
+  table.grid { width: 100%; margin: 6pt 0 8pt; border-collapse: collapse; font-size: 10pt; }
+  table.grid th, table.grid td { padding: 5pt 7pt; border: 1px solid var(--line); vertical-align: top; text-align: left; }
+  table.grid thead th { background: var(--head-bg); color: #fff; font-weight: 600; }
+  table.grid tbody tr:nth-child(even) td { background: var(--zebra); }
+  table.grid td.c, table.grid th.c { text-align: center; }
+  table.grid tr { break-inside: avoid; }
+  table.grid thead { display: table-header-group; }
+
+  /* ===== Callout ===== */
+  .callout { margin: 8pt 0 10pt; padding: 8pt 12pt; border-left: 4px solid; border-radius: 0 3px 3px 0; break-inside: avoid; }
+  .callout > :last-child { margin-bottom: 0; }
+  .callout .label { display: block; margin-bottom: 2pt; font-weight: 700; font-size: 10pt; text-transform: uppercase; letter-spacing: .04em; }
+  .callout.note { background: var(--note-bg); border-color: var(--note-bar); }
+  .callout.warn { background: var(--warn-bg); border-color: var(--warn-bar); }
+  .callout.ok   { background: var(--ok-bg);   border-color: var(--ok-bar); }
+  .callout.bad  { background: var(--bad-bg);  border-color: var(--bad-bar); }
+
+  /* ===== Khối test case ===== */
+  .tc-tag {
+    display: inline-block;
+    margin-right: 6pt;
+    padding: 1pt 7pt;
+    background: var(--brand);
+    color: #fff;
+    border-radius: 3px;
+    font-size: 10pt;
+    font-weight: 700;
+    vertical-align: 1pt;
+  }
+  .desc {
+    margin: 0 0 8pt;
+    padding: 7pt 12pt;
+    background: var(--brand-soft);
+    border-left: 4px solid var(--brand);
+    border-radius: 0 3px 3px 0;
+    break-inside: avoid;
+  }
+  .desc strong { color: var(--brand); }
+  table.grid ol.steps { margin: 2pt 0 0; padding: 0; list-style: none; counter-reset: st; }
+  table.grid ol.steps li { margin: 3pt 0; counter-increment: st; }
+  table.grid ol.steps li::before { content: "Bước " counter(st) ": "; font-weight: 700; color: var(--brand); }
+  .expect { margin: 4pt 0 0; padding-left: 0; list-style: none; }
+  .expect li { position: relative; padding-left: 14pt; }
+  .expect li::before { content: "▸"; position: absolute; left: 0; color: var(--brand); }
+
+  footer.doc-foot { margin-top: 26pt; padding-top: 6pt; border-top: 1px solid var(--line); font-size: 9pt; color: var(--muted); text-align: center; }
+
+  /* ===== In / lưu PDF ===== */
+  @page { size: A4; margin: 18mm 16mm; }
+  @media print {
+    html, body { background: #fff; }
+    body { padding: 0; font-size: 10.5pt; }
+    .page { width: auto; margin: 0; padding: 0; box-shadow: none; }
+    a { color: inherit; text-decoration: none; }
+    h2.page-break { break-before: page; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+  @media (max-width: 720px) {
+    .page { padding: 16px; }
+    h1.doc-title { font-size: 18pt; }
+  }
+
+  /* ===== Dòng nhóm giai đoạn ===== */
+  table.grid tbody tr.phase td { background: var(--brand-soft); color: var(--brand); font-weight: 700; }
+
+  /* ===== Ảnh UM ===== */
+  figure.shot { margin: 6pt 0 14pt; break-inside: avoid; }
+  figure.shot img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 3px; }
+  figure.shot figcaption { margin-top: 3pt; font-size: 9.5pt; color: var(--muted); font-style: italic; }
+  ol.um-steps > li { margin: 4pt 0 6pt; }
+  .role { display: inline-block; padding: 0 6pt; border-radius: 3px; background: var(--brand); color: #fff; font-size: 9.5pt; font-weight: 700; }</style>
+</head>
+<body>
+<main class="page">
+
+  <!-- ============ TIÊU ĐỀ ============ -->
+  <h1 class="doc-title">Claim chi phí hỗ trợ sự kiện ECO-DRIVE &amp; MANTAINANCE</h1>
+  <p class="doc-sub">Campaign Event – Đại lý báo cáo chi phí, IVC duyệt &amp; tự sinh Sales Order CRS Claim</p>
+
+  <table class="meta">
+    <tr><th>Ticket DevOps</th><td><a href="https://isuzu-it.visualstudio.com/DMS%20%E2%80%93%20OMN1%20-%20IVC/_workitems/edit/6411">Ticket 6411</a></td></tr>
+    <tr><th>Môi trường</th><td>Partial (Sandbox) – đã triển khai ngày 28/10/2026</td></tr>
+    <tr><th>Đối tượng</th><td><strong>Campaign</strong> (Record Type <strong>Event</strong>) và <strong>Sales Order</strong> (Record Type <strong>CRS Claim</strong>)</td></tr>
+    <tr><th>Loại sự kiện</th><td><strong>Eco-drive seminar</strong> / <strong>Maintenance training</strong> do Đại lý (DLR) tổ chức cho khách hàng, CRS của IVC duyệt</td></tr>
+    <tr><th>Tài liệu liên quan</th><td><a href="Quy trình quản lý tổ chức sự kiện (Campaign Event) - CRS.html">Quy trình quản lý tổ chức sự kiện (Campaign Event) – CRS</a> (lập kế hoạch &amp; duyệt kế hoạch, Bước 1 → 7)</td></tr>
+  </table>
+
+  <nav class="toc" aria-label="Mục lục">
+    <h2>Mục lục</h2>
+    <ol>
+      <li><a href="#claim">Tổng quan</a></li>
+      <li><a href="#claim-fields">Trường thông tin</a></li>
+      <li><a href="#claim-flow">Sơ đồ luồng</a></li>
+      <li><a href="#claim-path">Chuỗi Status (Path)</a></li>
+      <li><a href="#claim-steps">Từng bước: ai làm gì</a></li>
+      <li><a href="#claim-rules">Quy tắc hệ thống</a></li>
+      <li><a href="#claim-open">Các điểm đã chốt</a></li>
+      <li><a href="#um">UM – Hướng dẫn sử dụng</a>
+        <ol type="a">
+          <li><a href="#um-dlr-report">Đại lý: báo cáo chi phí &amp; nộp duyệt</a></li>
+          <li><a href="#um-ivc-approve">IVC CRS: duyệt báo cáo chi phí</a></li>
+          <li><a href="#um-dlr-so">Đại lý: xử lý SO CRS Claim</a></li>
+          <li><a href="#um-done">Hoàn tất</a></li>
+          <li><a href="#um-test">Kết quả kiểm thử trên Partial</a></li>
+        </ol>
+      </li>
+    </ol>
+  </nav>
+
+  <!-- ============ 1 ============ -->
+  <h2 id="claim">1. Tổng quan</h2>
+
+  <p>Luồng Claim nối tiếp <strong>Bước 7</strong> trong tài liệu <a href="Quy trình quản lý tổ chức sự kiện (Campaign Event) - CRS.html">Quy trình quản lý tổ chức sự kiện (Campaign Event) – CRS</a>: Đại lý đã tổ chức xong sự kiện và Campaign đang ở <code>In Progress</code>. Luồng này <strong>thay cho giai đoạn duyệt kết quả cũ</strong> (Bước 8 → 9, Status <code>Reporting</code> → <code>Completed</code>). Sau khi IVC duyệt báo cáo chi phí, hệ thống tự sinh một <strong>Sales Order Claim</strong>. IVC dùng SO này để thanh toán khoản hỗ trợ cho Đại lý qua ERP.</p>
+
+  <div class="callout note">
+    <span class="label">2 đối tượng trong luồng</span>
+    <strong>Campaign</strong> (Record Type <code>Event</code>): Đại lý báo cáo chi phí thực tế, IVC duyệt và chốt số tiền hỗ trợ.<br>
+    <strong>Sales Order</strong> (Record Type mới <code>CRS Claim</code>): chứng từ claim do hệ thống tự sinh, <strong>không đi approval process</strong>. SO được gửi lên ERP để tạo <strong>PO</strong>, và tự <code>Completed</code> khi ERP ghi nhận hóa đơn của Đại lý vào công nợ phải trả (<strong>AP</strong>).
+  </div>
+
+  <!-- ============ 2 ============ -->
+  <h2 id="claim-fields">2. Trường thông tin</h2>
+  <table class="grid">
+    <thead><tr><th style="width:24%">Field</th><th class="c" style="width:10%">Mới / có sẵn</th><th style="width:26%">Ai nhập, khi nào</th><th>Ý nghĩa</th></tr></thead>
+    <tbody>
+      <tr class="phase"><td colspan="4">Campaign (Record Type Event)</td></tr>
+      <tr><td><strong>Vehicle Type</strong> (<code>Vehicle_Type__c</code>): <code>CV</code> / <code>LCV</code></td><td class="c">Mới</td><td>DLR, phải có trước khi IVC duyệt báo cáo</td><td>Dòng xe của sự kiện (ticket gọi là "Campaign Type"). Quyết định mã Item Service trên SO Claim (xem mục 6). Không dùng lại field <code>Campaign_Type__c</code> vì field đó đang được MPR dùng cho loại sự kiện.</td></tr>
+      <tr><td><strong>Event Organization Cost</strong></td><td class="c">Có sẵn</td><td>DLR, ở <code>In Progress</code></td><td>Chi phí tổ chức sự kiện <strong>thực tế</strong> Đại lý đã chi.</td></tr>
+      <tr><td><strong>POSM Cost</strong></td><td class="c">Có sẵn</td><td>DLR, ở <code>In Progress</code></td><td>Chi phí POSM <strong>thực tế</strong> Đại lý đã chi.</td></tr>
+      <tr><td><strong>IVC Supported Event Cost</strong></td><td class="c">Mới</td><td>IVC CRS Staff, ở <code>Report Review</code> trước khi Approve</td><td>Tiền IVC <strong>chấp thuận</strong> hỗ trợ tổ chức sự kiện. Dùng để đối chiếu với mức trần trong policy.</td></tr>
+      <tr><td><strong>IVC Supported POSM Cost</strong></td><td class="c">Mới</td><td>IVC CRS Staff, ở <code>Report Review</code> trước khi Approve</td><td>Tiền IVC <strong>chấp thuận</strong> hỗ trợ POSM. Dùng để đối chiếu với mức trần trong policy.</td></tr>
+      <tr><td><strong>Status</strong></td><td class="c">Thêm 2 value</td><td>Hệ thống (qua approval)</td><td><code>Report Review</code> và <code>Report Approval</code>, nằm sau <code>In Progress</code> và trước <code>Completed</code>. Status <code>Reporting</code> cũ <strong>bỏ khỏi Path</strong> của Campaign Event.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout ok">
+    <span class="label">Ví dụ</span>
+    Mức trần theo policy: tổ chức 10tr, POSM 5tr.<br>
+    Đại lý khai thực tế: Event Organization Cost = <strong>10tr</strong>, POSM Cost = <strong>8tr</strong>.<br>
+    IVC duyệt: IVC Supported Event Cost = <strong>10tr</strong>, IVC Supported POSM Cost = <strong>5tr</strong> (POSM bị chặn ở mức trần).<br>
+    → SO Claim có <strong>1 dòng = 15tr</strong>.
+  </div>
+
+  <!-- ============ 3 ============ -->
+  <h2 id="claim-flow">3. Sơ đồ luồng</h2>
+<pre><code>Bước C1  DLR nhập chi phí thực tế + ĐÍNH KÈM FILE chứng từ ........ In Progress
+         ↳ Profile: DLR_Sales_CS staff
+         (Event Organization Cost, POSM Cost, file ở tab File)
+
+┌─ PHÊ DUYỆT BÁO CÁO CHI PHÍ (process CampaignCRS2, điều chỉnh)
+│ Bước C2  DLR bấm "Nộp xin Phê Duyệt" (báo cáo chi phí) ......... Report Review   &lt;- kiểm tra 2 chi phí + file
+│          ↳ Profile: DLR_Sales_CS staff (chủ record)
+│ Bước C3  IVC nhập số tiền hỗ trợ, Approve kèm comment ........... Report Approval
+│          ↳ Profile: IVC_SAL_CRS_CRS_Staff (Hồ Thiên Quốc / Phạm Mai Trinh)
+│          =&gt; Hệ thống TỰ SINH Sales Order "CRS Claim" ......... SO: New
+│          (Reject kèm comment -&gt; Campaign quay về ............. In Progress)
+└─
+
+┌─ SALES ORDER CRS CLAIM (không có approval process)
+│ Bước C4  DLR đính kèm hóa đơn, chuyển Status SO ................ SO: DLR Process
+│          ↳ Profile: DLR_Sales_CS staff
+│ Bước C5  IVC hoặc DLR chuyển Status SO ......................... SO: Open        &lt;- kiểm tra hóa đơn
+│          ↳ Profile: IVC_SAL_CRS_CRS_Staff / DLR_Sales_CS staff
+│          =&gt; Tự động gửi ERP (hook createPurchaseOrder): tạo PO trên ERP,
+│             số PO ERP trả về lưu vào SO
+│ Bước C6  Kế toán IVC ghi nhận hóa đơn Đại lý vào AP trên ERP
+│          =&gt; ERP gửi webhook VendInvoiceJour, SO tự chuyển ....... SO: Completed
+│          =&gt; Campaign tự chuyển ................................. Completed
+└─</code></pre>
+
+  <!-- ============ 4 ============ -->
+  <h2 id="claim-path">4. Chuỗi Status (Path)</h2>
+  <ul>
+    <li><strong>Campaign Event:</strong> <code>Planned</code> → <code>DLR Review</code> → <code>IVC Review</code> → <code>Manager Review</code> → <code>Approved</code> → <code>In Progress</code> → <code>Report Review</code> → <code>Report Approval</code> → <code>Completed</code>. Status <code>Reporting</code> không còn trên Path.</li>
+    <li><strong>Sales Order CRS Claim:</strong> <code>Cancelled</code> → <code>Rejected</code> → <code>New</code> → <code>DLR Process</code> → <code>Open</code> → <code>Completed</code>.</li>
+    <li>SO CRS Claim <strong>không có</strong> các bước <code>Submitted</code> và <code>IVC Approved</code> vì không đi approval process. <code>DLR Process</code> là Status mới của Sales Order.</li>
+  </ul>
+
+  <!-- ============ 5 ============ -->
+  <h2 id="claim-steps">5. Từng bước: ai làm gì</h2>
+  <table class="grid">
+    <thead><tr><th class="c" style="width:7%">Bước</th><th style="width:20%">Ai</th><th>Làm gì</th><th style="width:15%">Status Campaign</th><th style="width:14%">Status SO</th></tr></thead>
+    <tbody>
+      <tr class="phase"><td colspan="5">Đại lý báo cáo chi phí</td></tr>
+      <tr><td class="c"><strong>C1</strong></td><td>DLR CS staff</td><td>Sau khi tổ chức xong sự kiện, nhập <strong>Event Organization Cost</strong>, <strong>POSM Cost</strong> và đính kèm file chứng từ ở tab <strong>File</strong>.</td><td><code>In Progress</code></td><td>–</td></tr>
+      <tr class="phase"><td colspan="5">Phê duyệt báo cáo chi phí (process <code>CampaignCRS2</code>)</td></tr>
+      <tr><td class="c"><strong>C2</strong></td><td>DLR CS staff (<strong>chủ record</strong>)</td><td>Bấm <strong>"Nộp xin Phê Duyệt"</strong>. <strong>Báo lỗi, không cho submit</strong> nếu thiếu 1 trong 2 chi phí hoặc tab File chưa có file nào.</td><td><code>Report Review</code></td><td>–</td></tr>
+      <tr><td class="c"><strong>C3</strong></td><td><strong>Hồ Thiên Quốc</strong> hoặc <strong>Phạm Mai Trinh</strong> (1 người là xong)</td><td>Kiểm tra chứng từ. Nhập <strong>IVC Supported Event Cost</strong> và <strong>IVC Supported POSM Cost</strong>, ghi lý do vào <strong>comment</strong> rồi <strong>Approve</strong>. Hệ thống <strong>tự sinh SO CRS Claim</strong>.<br>Nếu không đạt: <strong>Reject kèm comment</strong>, Campaign quay về <code>In Progress</code> để DLR sửa và nộp lại.</td><td><code>Report Approval</code><br>(Reject: <code>In Progress</code>)</td><td><code>New</code><br>(Reject: không sinh SO)</td></tr>
+      <tr class="phase"><td colspan="5">Sales Order CRS Claim (không có approval process)</td></tr>
+      <tr><td class="c"><strong>C4</strong></td><td>DLR</td><td>Mở SO Claim, <strong>đính kèm hóa đơn</strong>, chuyển Status sang <code>DLR Process</code>.</td><td><code>Report Approval</code></td><td><code>DLR Process</code></td></tr>
+      <tr><td class="c"><strong>C5</strong></td><td>IVC hoặc DLR</td><td>Chuyển Status sang <code>Open</code>. <strong>Báo lỗi nếu SO chưa có file hóa đơn.</strong> Hệ thống tự gửi SO lên ERP và <strong>tạo PO trên ERP</strong>. Số PO ERP trả về được lưu vào SO.</td><td><code>Report Approval</code></td><td><code>Open</code></td></tr>
+      <tr><td class="c"><strong>C6</strong></td><td>Kế toán IVC (trên ERP), rồi Hệ thống</td><td>Kế toán IVC ghi nhận hóa đơn của Đại lý vào công nợ phải trả (AP) trên ERP. ERP gửi về DMS, hệ thống khớp theo số PO rồi <strong>tự chuyển SO sang</strong> <code>Completed</code>. Campaign cũng <strong>tự chuyển</strong> <code>Completed</code>.</td><td><code>Completed</code></td><td><code>Completed</code></td></tr>
+    </tbody>
+  </table>
+
+  <!-- ============ 6 ============ -->
+  <h2 id="claim-rules">6. Quy tắc hệ thống</h2>
+  <ul>
+    <li><strong>Điều kiện submit (C2):</strong> bắt buộc có <strong>Event Organization Cost</strong>, <strong>POSM Cost</strong> và <strong>ít nhất 1 file</strong> ở tab File. Thiếu điều kiện nào thì báo lỗi và Campaign vẫn ở <code>In Progress</code>.</li>
+    <li><strong>SO Claim được sinh khi Campaign sang <code>Report Approval</code> (C3)</strong>, mỗi Campaign <strong>chỉ 1 SO</strong>:
+      <ul>
+        <li>Record Type <code>CRS Claim</code>, Status <code>New</code>, Account là Đại lý của Campaign, SO liên kết ngược về Campaign.</li>
+        <li><strong>1 dòng SO line</strong>, số tiền = <strong>IVC Supported Event Cost + IVC Supported POSM Cost</strong>.</li>
+        <li>Item Service theo Campaign Type: <code>CV</code> → <code>CRS-CAM-CVV</code>, <code>LCV</code> → <code>CRS-CAM-LCV</code>. Item do chị Hiếu (Đào Thị Xuân Hiếu) thiết lập trên ERP.</li>
+      </ul>
+    </li>
+    <li><strong>Reject ở <code>Report Review</code>:</strong> người duyệt ghi lý do vào comment, Campaign quay về <code>In Progress</code>, không sinh SO.</li>
+    <li><strong>SO Claim không chạy approval process.</strong> Muốn chuyển <code>DLR Process</code> → <code>Open</code> thì SO phải có file hóa đơn đính kèm.</li>
+    <li><strong>Gửi ERP khi SO sang <code>Open</code>:</strong> dùng hook có sẵn <code>createPurchaseOrder</code> (đang dùng cho SO Service, FLS Support, Support SPV khi sang <code>Accepted</code>), tạo <strong>PO trên ERP</strong>:
+      <ul>
+        <li>Nhà cung cấp (VendorAccount) là mã nhà cung cấp của Đại lý (<code>Account Supplier</code> trên Account Đại lý).</li>
+        <li>Dòng PO dùng Item Service theo Vehicle Type, đơn giá bằng số tiền IVC hỗ trợ.</li>
+        <li>ERP trả số PO ngay trong response và DMS lưu vào SO (<code>PurchId</code>).</li>
+      </ul>
+    </li>
+    <li><strong>SO tự <code>Completed</code></strong> khi ERP gửi webhook <code>VendInvoiceJour</code> (hóa đơn nhà cung cấp đã ghi nhận vào AP) có số PO trùng với SO CRS Claim. Khi SO <code>Completed</code> thì Campaign tự <code>Completed</code>. DLR không cần chuyển tay.</li>
+    <li><strong>Email chi phí hỗ trợ</strong> (đang gửi khi IVC duyệt xong ở process <code>CampaignCRS2</code>) chuyển sang gửi ở bước C3.</li>
+    <li>Đối chiếu IVC Supported Cost với mức trần trong policy <strong>chưa thuộc phạm vi đợt này</strong>. 2 field mới chỉ ghi nhận số tiền để đối chiếu sau.</li>
+  </ul>
+
+  <!-- ============ 7 ============ -->
+  <h2 id="claim-open">7. Các điểm đã chốt</h2>
+  <table class="grid">
+    <thead><tr><th style="width:34%">Câu hỏi</th><th>Quyết định</th></tr></thead>
+    <tbody>
+      <tr><td>Campaign chuyển <code>Completed</code> thế nào</td><td><strong>Tự động</strong> khi SO CRS Claim <code>Completed</code>.</td></tr>
+      <tr><td>Status <code>Reporting</code> cũ</td><td><strong>Bỏ khỏi Path</strong> của Campaign Event. Trên Partial đang có 21 Campaign ở <code>Reporting</code>, các Campaign này vẫn giữ nguyên giá trị.</td></tr>
+      <tr><td>"Ghi lý do" ở C3, Reject ở <code>Report Review</code></td><td>Lý do ghi vào <strong>comment</strong> khi Approve/Reject. Reject thì Campaign quay về <strong><code>In Progress</code></strong>.</td></tr>
+      <tr><td>Ai chuyển SO <code>DLR Process</code> → <code>Open</code></td><td><strong>IVC hoặc DLR</strong>. Bắt buộc SO đã có <strong>file hóa đơn</strong>.</td></tr>
+      <tr><td>SO tự <code>Completed</code> dựa vào tín hiệu nào</td><td>Khi ERP ghi nhận hóa đơn vào <strong>AP</strong> (webhook <code>VendInvoiceJour</code>), theo ghi chú "SO ERP → AP" trên bảng trắng.</td></tr>
+      <tr><td>Field CV/LCV</td><td><strong>Tạo field mới</strong> <code>Vehicle_Type__c</code>, không dùng lại <code>Campaign_Type__c</code>.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout warn">
+    <span class="label">Cần chị Hiếu hỗ trợ (phía ERP)</span>
+    <ul>
+      <li>Tạo Item Service <code>CRS-CAM-CVV</code> và <code>CRS-CAM-LCV</code> trên ERP.</li>
+      <li>Xác nhận webhook <code>VendInvoiceJour</code> gửi về có <strong>số PO</strong> (<code>PurchId</code>) của PO được tạo từ SO CRS Claim, để DMS khớp được hóa đơn với SO.</li>
+      <li>Account Đại lý phải có mã nhà cung cấp (<code>Account Supplier</code>) thì mới tạo được PO trên ERP.</li>
+    </ul>
+  </div>
+
+  <!-- ============ 8 ============ -->
+  <h2 id="um" class="page-break">8. UM – Hướng dẫn sử dụng</h2>
+
+  <p>Hướng dẫn thao tác theo từng vai trò. Ảnh chụp từ môi trường <strong>Partial</strong>, đăng nhập đúng người dùng thật của từng vai (Đại lý: <code>DLR_Sales_CS staff</code>, giao diện tiếng Việt; IVC CRS: <code>IVC_SAL_CRS_CRS_Staff</code>, giao diện tiếng Anh). Ví dụ minh họa: sự kiện Eco-drive, Đại lý khai <strong>10.000.000</strong> (tổ chức) + <strong>8.000.000</strong> (POSM), IVC duyệt <strong>10.000.000</strong> + <strong>5.000.000</strong>.</p>
+
+  <!-- 8.1 -->
+  <h3 id="um-dlr-report">8.1. Đại lý: báo cáo chi phí &amp; nộp duyệt <span class="role">DLR</span></h3>
+  <ol class="um-steps">
+    <li>Sau khi tổ chức xong sự kiện, mở Chiến dịch đang ở trạng thái <strong>Đang tiến hành</strong>. Thanh trạng thái hiển thị các bước mới <strong>Report Review → Report Approval → Hoàn thành</strong>.
+      <figure class="shot"><img src="images/6411/01-campaign-in-progress.png" alt="Chiến dịch đang tiến hành"><figcaption>Hình 1 – Chiến dịch ở trạng thái Đang tiến hành, thanh trạng thái có Report Review và Report Approval.</figcaption></figure>
+    </li>
+    <li>Ở khối thông tin bên trái, Đại lý thấy 5 trường chi phí. <strong>Chi phí tổ chức sự kiện</strong>, <strong>Chi phí POSM</strong>, <strong>Vehicle Type</strong> có biểu tượng bút chì (được sửa). <strong>IVC Supported Event Cost</strong> và <strong>IVC Supported POSM Cost</strong> chỉ xem, do IVC nhập.
+      <figure class="shot"><img src="images/6411/01b-campaign-cost-fields-dlr.png" alt="Các trường chi phí"><figcaption>Hình 2 – Các trường chi phí trên Chiến dịch (góc nhìn Đại lý).</figcaption></figure>
+    </li>
+    <li>Bấm bút chì cạnh <strong>Chi phí tổ chức sự kiện</strong>, nhập chi phí thực tế, <strong>Chi phí POSM</strong>, chọn <strong>Vehicle Type</strong> (CV / LCV) rồi bấm <strong>Lưu</strong>.
+      <figure class="shot"><img src="images/6411/03-dlr-enter-actual-cost.png" alt="Nhập chi phí thực tế"><figcaption>Hình 3 – Đại lý nhập chi phí thực tế và Vehicle Type; 2 trường IVC Supported không sửa được.</figcaption></figure>
+    </li>
+    <li>Mở tab <strong>File</strong> → <strong>Thêm Tập Tin</strong>, tải lên chứng từ chi phí (công văn, hóa đơn…).
+      <figure class="shot"><img src="images/6411/05-dlr-attach-file.png" alt="Đính kèm chứng từ"><figcaption>Hình 4 – Chứng từ đã đính kèm ở tab File.</figcaption></figure>
+    </li>
+    <li>Bấm <strong>Nộp xin Phê Duyệt</strong>, nhập nhận xét, bấm <strong>Gửi</strong>. Chiến dịch chuyển sang <strong>Report Review</strong>, chờ IVC CRS (Hồ Thiên Quốc hoặc Phạm Mai Trinh) duyệt.
+      <figure class="shot"><img src="images/6411/06-submitted-report-review.png" alt="Đã nộp - Report Review"><figcaption>Hình 5 – Sau khi nộp: trạng thái Report Review, Lịch sử phê duyệt đang chờ IVC.</figcaption></figure>
+    </li>
+  </ol>
+
+  <div class="callout bad">
+    <span class="label">Hệ thống chặn nộp khi</span>
+    <ul>
+      <li>Thiếu <strong>Chi phí tổ chức sự kiện</strong> hoặc <strong>Chi phí POSM</strong> → <em>"Please fill in Event Organization Cost &amp; POSM Cost before submitting the report to IVC."</em> (Hình 6)</li>
+      <li>Chưa có file nào ở tab File → <em>"Please attach the official letter (Công văn) … before submitting to IVC."</em> (Hình 7)</li>
+    </ul>
+  </div>
+  <figure class="shot"><img src="images/6411/02-submit-blocked-missing-cost.png" alt="Chặn nộp khi thiếu chi phí"><figcaption>Hình 6 – Nộp khi chưa nhập chi phí: bị chặn.</figcaption></figure>
+  <figure class="shot"><img src="images/6411/04-submit-blocked-missing-file.png" alt="Chặn nộp khi thiếu file"><figcaption>Hình 7 – Nộp khi chưa đính kèm file: bị chặn.</figcaption></figure>
+
+  <!-- 8.2 -->
+  <h3 id="um-ivc-approve">8.2. IVC CRS: duyệt báo cáo chi phí <span class="role">IVC</span></h3>
+  <ol class="um-steps">
+    <li>Mở yêu cầu phê duyệt (từ thông báo chuông hoặc mục <strong>Items to Approve</strong>). Trang hiển thị chi phí Đại lý khai, Vehicle Type và 2 trường IVC Supported (đang trống).
+      <figure class="shot"><img src="images/6411/07-ivc-approval-request.png" alt="Yêu cầu phê duyệt"><figcaption>Hình 8 – Yêu cầu phê duyệt báo cáo chi phí.</figcaption></figure>
+    </li>
+    <li>Mở Chiến dịch (bấm tên Chiến dịch), bấm bút chì cạnh <strong>IVC Supported Event Cost</strong>, nhập số tiền IVC chấp thuận cho <strong>tổ chức sự kiện</strong> và <strong>POSM</strong> (đối chiếu mức trần trong policy) rồi bấm <strong>Save</strong>. Người duyệt hiện tại được sửa Chiến dịch trong lúc chờ duyệt.
+      <figure class="shot"><img src="images/6411/11-ivc-enter-supported-cost.png" alt="Nhập tiền IVC hỗ trợ"><figcaption>Hình 9 – IVC nhập IVC Supported Event Cost = 10.000.000, IVC Supported POSM Cost = 5.000.000 (POSM bị chặn ở mức trần).</figcaption></figure>
+    </li>
+    <li>Quay lại yêu cầu phê duyệt (hoặc dùng nút <strong>Approve</strong> ngay trên danh sách Approval History của Chiến dịch), bấm <strong>Approve</strong>, ghi lý do vào <strong>Comments</strong> rồi bấm <strong>Approve</strong>.
+      <figure class="shot"><img src="images/6411/12-ivc-approve-with-comment.png" alt="Approve kèm ghi chú"><figcaption>Hình 10 – Approve kèm ghi chú số tiền duyệt.</figcaption></figure>
+    </li>
+    <li>Chiến dịch chuyển sang <strong>Report Approval</strong>; hệ thống <strong>tự sinh Sales Order CRS Claim</strong> ở trạng thái <strong>New</strong>, gồm 1 dòng Item Service (<code>CRS-CAM-LCV</code> / <code>CRS-CAM-CVV</code> theo Vehicle Type) với số tiền = tổng 2 trường IVC (ví dụ 15.000.000). Approval cũng gửi email chi phí hỗ trợ cho chủ Chiến dịch (cấu hình sẵn của process <code>CampaignCRS2</code>).
+      <figure class="shot"><img src="images/6411/13-campaign-report-approval.png" alt="Report Approval"><figcaption>Hình 11 – Chiến dịch ở trạng thái Report Approval.</figcaption></figure>
+      <figure class="shot"><img src="images/6411/14-so-crs-claim-new.png" alt="SO CRS Claim New"><figcaption>Hình 12 – SO CRS Claim tự sinh: trạng thái New, Tổng số tiền 15.000.000, liên kết Chiến dịch.</figcaption></figure>
+    </li>
+  </ol>
+
+  <div class="callout warn">
+    <span class="label">Từ chối (Reject)</span>
+    Nếu chứng từ chưa đạt: bấm <strong>Reject</strong>, ghi lý do vào <strong>Comments</strong>. Chiến dịch quay về <strong>Đang tiến hành</strong> để Đại lý bổ sung và nộp lại (làm lại mục 8.1). Lý do từ chối xem ở <strong>Lịch sử phê duyệt</strong>.
+  </div>
+  <figure class="shot"><img src="images/6411/08-ivc-reject-with-comment.png" alt="Reject kèm lý do"><figcaption>Hình 13 – Reject kèm lý do.</figcaption></figure>
+  <figure class="shot"><img src="images/6411/09b-approval-history-rejected.png" alt="Sau khi Reject"><figcaption>Hình 14 – Sau khi Reject: Chiến dịch về In Progress, Lịch sử phê duyệt ghi Rejected.</figcaption></figure>
+
+  <div class="callout bad">
+    <span class="label">Hệ thống chặn Approve khi</span>
+    Chưa nhập đủ <strong>Vehicle Type</strong>, <strong>IVC Supported Event Cost</strong>, <strong>IVC Supported POSM Cost</strong> → <em>"Cannot approve: please fill in Vehicle Type, IVC Supported Event Cost &amp; IVC Supported POSM Cost."</em>
+  </div>
+  <figure class="shot"><img src="images/6411/10-approve-blocked-missing-ivc-cost.png" alt="Chặn Approve khi thiếu tiền IVC"><figcaption>Hình 15 – Approve khi chưa nhập tiền IVC hỗ trợ: bị chặn.</figcaption></figure>
+
+  <!-- 8.3 -->
+  <h3 id="um-dlr-so">8.3. Đại lý: xử lý SO CRS Claim <span class="role">DLR</span></h3>
+  <ol class="um-steps">
+    <li>Mở SO CRS Claim (từ tab <strong>Đơn hàng bán</strong> hoặc danh sách liên quan của Chiến dịch). Trên thanh trạng thái chọn <strong>DLR Process</strong> → bấm <strong>Đánh dấu là Trạng thái Hiện Tại</strong>.
+      <figure class="shot"><img src="images/6411/16-so-dlr-process.png" alt="SO DLR Process"><figcaption>Hình 16 – SO chuyển sang DLR Process.</figcaption></figure>
+    </li>
+    <li>Mở tab <strong>Liên Quan</strong> → danh sách <strong>Tập Tin</strong> → <strong>Thêm Tập Tin</strong>, tải lên <strong>hóa đơn</strong> Đại lý xuất cho IVC.
+      <figure class="shot"><img src="images/6411/18-dlr-attach-invoice.png" alt="Đính kèm hóa đơn"><figcaption>Hình 17 – Hóa đơn đã đính kèm vào SO.</figcaption></figure>
+    </li>
+    <li>Trên thanh trạng thái chọn <strong>Mở</strong> → <strong>Đánh dấu là Trạng thái Hiện Tại</strong> (Đại lý hoặc IVC đều thao tác được). Hệ thống tự gửi SO lên ERP để <strong>tạo PO</strong>; số PO ERP trả về được lưu vào SO (trường <em>Mã đơn mua hàng</em>).
+      <figure class="shot"><img src="images/6411/19-so-open.png" alt="SO Open"><figcaption>Hình 18 – SO ở trạng thái Mở, có dòng CRS-CAM-LCV 15.000.000 và hóa đơn đính kèm.</figcaption></figure>
+    </li>
+  </ol>
+  <div class="callout bad">
+    <span class="label">Hệ thống chặn chuyển Mở khi</span>
+    SO chưa có file hóa đơn → <em>"Please attach the dealer invoice before changing the CRS Claim Sales Order to Open."</em>
+  </div>
+  <figure class="shot"><img src="images/6411/17-so-open-blocked-missing-invoice.png" alt="Chặn Mở khi thiếu hóa đơn"><figcaption>Hình 19 – Chuyển Mở khi chưa có hóa đơn: bị chặn.</figcaption></figure>
+
+  <!-- 8.4 -->
+  <h3 id="um-done">8.4. Hoàn tất <span class="role">Hệ thống</span></h3>
+  <p>Không cần thao tác. Khi kế toán IVC ghi nhận hóa đơn của Đại lý vào công nợ phải trả (AP) trên ERP, ERP gửi hóa đơn về DMS; hệ thống khớp theo số PO, tự chuyển <strong>SO → Hoàn thành</strong> và <strong>Chiến dịch → Hoàn thành</strong>.</p>
+  <figure class="shot"><img src="images/6411/20-so-completed.png" alt="SO Completed"><figcaption>Hình 20 – SO CRS Claim Hoàn thành.</figcaption></figure>
+  <figure class="shot"><img src="images/6411/21-campaign-completed.png" alt="Campaign Completed"><figcaption>Hình 21 – Chiến dịch tự chuyển Hoàn thành; Lịch sử phê duyệt ghi nhận lần duyệt của IVC.</figcaption></figure>
+
+  <!-- 8.5 -->
+  <h3 id="um-test">8.5. Kết quả kiểm thử trên Partial (28/10/2026)</h3>
+  <p>Dữ liệu test: Chiến dịch <code>[TEST 6411] Eco-drive seminar - Claim CRS</code> (EVT-00046), SO <code>ARSO0004960</code>.</p>
+  <table class="grid">
+    <thead><tr><th class="c" style="width:7%">TC</th><th style="width:17%">Vai</th><th>Kịch bản</th><th class="c" style="width:12%">Kết quả</th></tr></thead>
+    <tbody>
+      <tr><td class="c">1</td><td>DLR CS staff</td><td>Nộp khi thiếu chi phí → bị chặn</td><td class="c">Đạt</td></tr>
+      <tr><td class="c">2</td><td>DLR CS staff</td><td>Nộp khi thiếu file → bị chặn</td><td class="c">Đạt</td></tr>
+      <tr><td class="c">3</td><td>DLR CS staff</td><td>Nộp hợp lệ → Report Review</td><td class="c">Đạt</td></tr>
+      <tr><td class="c">4</td><td>Hồ Thiên Quốc</td><td>Reject kèm lý do → In Progress</td><td class="c">Đạt</td></tr>
+      <tr><td class="c">5</td><td>DLR CS staff</td><td>Nộp lại → Report Review</td><td class="c">Đạt</td></tr>
+      <tr><td class="c">6a</td><td>Hồ Thiên Quốc</td><td>Approve khi chưa nhập tiền IVC → bị chặn</td><td class="c">Đạt</td></tr>
+      <tr><td class="c">6b</td><td>Hồ Thiên Quốc</td><td>Nhập tiền IVC, Approve → Report Approval + tự sinh SO CRS Claim (1 dòng CRS-CAM-LCV, 15.000.000)</td><td class="c">Đạt</td></tr>
+      <tr><td class="c">7a</td><td>DLR CS staff</td><td>SO New → DLR Process</td><td class="c">Đạt</td></tr>
+      <tr><td class="c">7b</td><td>DLR CS staff</td><td>SO → Mở khi thiếu hóa đơn → bị chặn</td><td class="c">Đạt</td></tr>
+      <tr><td class="c">7c</td><td>DLR CS staff</td><td>Đính kèm hóa đơn, SO → Mở → tạo hook <code>createPurchaseOrder</code> (VendorAccount V00067, CRS-CAM-LCV, 15.000.000, LCV------)</td><td class="c">Đạt (DMS)</td></tr>
+      <tr><td class="c">8</td><td>Hệ thống (giả lập ERP)</td><td>Hóa đơn VendInvoiceJour gắn vào SO → SO + Chiến dịch Hoàn thành</td><td class="c">Đạt</td></tr>
+    </tbody>
+  </table>
+  <div class="callout warn">
+    <span class="label">Còn chờ phía ERP</span>
+    Ở TC 7c, ERP trả lỗi <em>"An exception occured when invoking the operation - Update has been canceled."</em> nên SO chưa có số PO. Nhiều khả năng do Item Service <code>CRS-CAM-LCV</code> chưa được tạo trên ERP (xem mục 7). Bước TC 8 được giả lập bằng cách tạo hóa đơn VendInvoiceJour gắn vào SO.
+  </div>
+
+  <footer class="doc-foot">
+    Ticket 6411 · Claim chi phí hỗ trợ sự kiện ECO-DRIVE &amp; MANTAINANCE · Phiên bản 2026-10-28
+  </footer>
+
+</main>
+</body>
+</html>
