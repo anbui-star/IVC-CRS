@@ -279,7 +279,7 @@
 │          =&gt; Tự động gửi ERP (hook createPurchaseOrder): tạo PO trên ERP,
 │             số PO ERP trả về lưu vào SO
 │ Bước C6  Kế toán IVC ghi nhận hóa đơn Đại lý vào AP trên ERP
-│          =&gt; ERP gửi webhook VendInvoiceJour, SO tự chuyển ....... SO: Completed
+│          =&gt; Sync master data VendInvoiceJour về DMS, SO tự chuyển  SO: Completed
 │          =&gt; Campaign tự chuyển ................................. Completed
 └─</code></pre>
 
@@ -304,7 +304,7 @@
       <tr class="phase"><td colspan="5">Sales Order CRS Claim (không có approval process)</td></tr>
       <tr><td class="c"><strong>C4</strong></td><td>DLR</td><td>Mở SO Claim, <strong>đính kèm hóa đơn</strong>, chuyển Status sang <code>DLR Process</code>.</td><td><code>Report Approval</code></td><td><code>DLR Process</code></td></tr>
       <tr><td class="c"><strong>C5</strong></td><td>IVC hoặc DLR</td><td>Chuyển Status sang <code>Open</code>. <strong>Báo lỗi nếu SO chưa có file hóa đơn.</strong> Hệ thống tự gửi SO lên ERP và <strong>tạo PO trên ERP</strong>. Số PO ERP trả về được lưu vào SO.</td><td><code>Report Approval</code></td><td><code>Open</code></td></tr>
-      <tr><td class="c"><strong>C6</strong></td><td>Kế toán IVC (trên ERP), rồi Hệ thống</td><td>Kế toán IVC ghi nhận hóa đơn của Đại lý vào công nợ phải trả (AP) trên ERP. ERP gửi về DMS, hệ thống khớp theo số PO rồi <strong>tự chuyển SO sang</strong> <code>Completed</code>. Campaign cũng <strong>tự chuyển</strong> <code>Completed</code>.</td><td><code>Completed</code></td><td><code>Completed</code></td></tr>
+      <tr><td class="c"><strong>C6</strong></td><td>Kế toán IVC (trên ERP), rồi Hệ thống</td><td>Kế toán IVC ghi nhận hóa đơn của Đại lý vào công nợ phải trả (AP) trên ERP. Hóa đơn về DMS qua lần đồng bộ master data <code>VendInvoiceJour</code> tiếp theo, hệ thống khớp theo số PO rồi <strong>tự chuyển SO sang</strong> <code>Completed</code>. Campaign cũng <strong>tự chuyển</strong> <code>Completed</code>.</td><td><code>Completed</code></td><td><code>Completed</code></td></tr>
     </tbody>
   </table>
 
@@ -328,7 +328,8 @@
         <li>ERP trả số PO ngay trong response và DMS lưu vào SO (<code>PurchId</code>).</li>
       </ul>
     </li>
-    <li><strong>SO tự <code>Completed</code></strong> khi ERP gửi webhook <code>VendInvoiceJour</code> (hóa đơn nhà cung cấp đã ghi nhận vào AP) có số PO trùng với SO CRS Claim. Khi SO <code>Completed</code> thì Campaign tự <code>Completed</code>. DLR không cần chuyển tay.</li>
+    <li><strong>SO tự <code>Completed</code></strong> khi hóa đơn nhà cung cấp (đã ghi nhận vào AP trên ERP) được đồng bộ về DMS qua <strong>Sync Master Data</strong> bảng <code>VendInvoiceJour</code> và được gắn vào SO CRS Claim theo số PO (<code>PurchId</code>). Khi SO <code>Completed</code> thì Campaign tự <code>Completed</code>. DLR không cần chuyển tay.</li>
+    <li><strong>Cơ chế đồng bộ hóa đơn (không phải webhook):</strong> <code>VendInvoiceJour</code> là bảng master data – DMS chủ động lấy dữ liệu mới từ ERP theo lịch (<code>Batch_MasterData_Batch</code>, đồng bộ tăng dần theo RecId), <strong>chỉ lưu hóa đơn của nhà cung cấp nhóm <code>DLR</code></strong> (Account Supplier có <code>D365FO_VendGroup__c = DLR</code>). Sau đó <code>ProcessVendInvoiceJourBatch</code> / <code>BatchMasterdata_LookupResolver</code> gắn hóa đơn vào SO theo <code>PurchId</code>; trigger mới trên <code>D365FO_VendInvoiceJour__c</code> bắt thời điểm gắn này để chuyển SO CRS Claim (đang <code>Open</code>) sang <code>Completed</code>. Vì vậy SO/Campaign hoàn tất <strong>trễ theo chu kỳ đồng bộ</strong>, không tức thời.</li>
     <li><strong>Email chi phí hỗ trợ</strong> (đang gửi khi IVC duyệt xong ở process <code>CampaignCRS2</code>) chuyển sang gửi ở bước C3.</li>
     <li>Đối chiếu IVC Supported Cost với mức trần trong policy <strong>chưa thuộc phạm vi đợt này</strong>. 2 field mới chỉ ghi nhận số tiền để đối chiếu sau.</li>
   </ul>
@@ -342,7 +343,7 @@
       <tr><td>Status <code>Reporting</code> cũ</td><td><strong>Bỏ khỏi Path</strong> của Campaign Event. Trên Partial đang có 21 Campaign ở <code>Reporting</code>, các Campaign này vẫn giữ nguyên giá trị.</td></tr>
       <tr><td>"Ghi lý do" ở C3, Reject ở <code>Report Review</code></td><td>Lý do ghi vào <strong>comment</strong> khi Approve/Reject. Reject thì Campaign quay về <strong><code>In Progress</code></strong>.</td></tr>
       <tr><td>Ai chuyển SO <code>DLR Process</code> → <code>Open</code></td><td><strong>IVC hoặc DLR</strong>. Bắt buộc SO đã có <strong>file hóa đơn</strong>.</td></tr>
-      <tr><td>SO tự <code>Completed</code> dựa vào tín hiệu nào</td><td>Khi ERP ghi nhận hóa đơn vào <strong>AP</strong> (webhook <code>VendInvoiceJour</code>), theo ghi chú "SO ERP → AP" trên bảng trắng.</td></tr>
+      <tr><td>SO tự <code>Completed</code> dựa vào tín hiệu nào</td><td>Khi ERP ghi nhận hóa đơn vào <strong>AP</strong> (đồng bộ master data <code>VendInvoiceJour</code>), theo ghi chú "SO ERP → AP" trên bảng trắng.</td></tr>
       <tr><td>Field CV/LCV</td><td><strong>Tạo field mới</strong> <code>Vehicle_Type__c</code>, không dùng lại <code>Campaign_Type__c</code>.</td></tr>
     </tbody>
   </table>
@@ -351,7 +352,7 @@
     <span class="label">Cần chị Hiếu hỗ trợ (phía ERP)</span>
     <ul>
       <li>Tạo Item Service <code>CRS-CAM-CVV</code> và <code>CRS-CAM-LCV</code> trên ERP.</li>
-      <li>Xác nhận webhook <code>VendInvoiceJour</code> gửi về có <strong>số PO</strong> (<code>PurchId</code>) của PO được tạo từ SO CRS Claim, để DMS khớp được hóa đơn với SO.</li>
+      <li>Xác nhận hóa đơn Đại lý post vào AP cho PO tạo từ SO CRS Claim có ghi <strong>số PO</strong> (<code>PurchId</code>) trong bảng <code>VendInvoiceJour</code>, để lần Sync Master Data khớp được hóa đơn với SO.</li>
       <li>Account Đại lý phải có mã nhà cung cấp (<code>Account Supplier</code>) thì mới tạo được PO trên ERP.</li>
     </ul>
   </div>
@@ -443,7 +444,7 @@
 
   <!-- 8.4 -->
   <h3 id="um-done">8.4. Hoàn tất <span class="role">Hệ thống</span></h3>
-  <p>Không cần thao tác. Khi kế toán IVC ghi nhận hóa đơn của Đại lý vào công nợ phải trả (AP) trên ERP, ERP gửi hóa đơn về DMS; hệ thống khớp theo số PO, tự chuyển <strong>SO → Hoàn thành</strong> và <strong>Chiến dịch → Hoàn thành</strong>.</p>
+  <p>Không cần thao tác. Khi kế toán IVC ghi nhận hóa đơn của Đại lý vào công nợ phải trả (AP) trên ERP, hóa đơn được đồng bộ về DMS qua Sync Master Data (<code>VendInvoiceJour</code>); hệ thống khớp theo số PO, tự chuyển <strong>SO → Hoàn thành</strong> và <strong>Chiến dịch → Hoàn thành</strong>.</p>
   <figure class="shot"><img src="images/6411/20-so-completed.png" alt="SO Completed"><figcaption>Hình 20 – SO CRS Claim Hoàn thành.</figcaption></figure>
   <figure class="shot"><img src="images/6411/21-campaign-completed.png" alt="Campaign Completed"><figcaption>Hình 21 – Chiến dịch tự chuyển Hoàn thành; Lịch sử phê duyệt ghi nhận lần duyệt của IVC.</figcaption></figure>
 
