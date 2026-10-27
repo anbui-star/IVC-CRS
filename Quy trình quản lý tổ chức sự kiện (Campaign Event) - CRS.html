@@ -175,10 +175,8 @@
     h1.doc-title { font-size: 18pt; }
   }
 
-  /* ===== Dòng nhóm giai đoạn & chuỗi Status ===== */
-  table.grid tbody tr.phase td { background: var(--brand-soft); color: var(--brand); font-weight: 700; }
-  p.chain { line-height: 2; }
-</style>
+  /* ===== Dòng nhóm giai đoạn ===== */
+  table.grid tbody tr.phase td { background: var(--brand-soft); color: var(--brand); font-weight: 700; }</style>
 </head>
 <body>
 <main class="page">
@@ -207,19 +205,10 @@
   <nav class="toc" aria-label="Mục lục">
     <h2>Mục lục</h2>
     <ol>
-      <li><a href="#s1">Toàn bộ luồng</a>
-        <ol type="a">
-          <li><a href="#status">Chuỗi Status</a></li>
-        </ol>
-      </li>
+      <li><a href="#s1">Toàn bộ luồng</a></li>
       <li><a href="#s2">Từng bước: ai làm gì</a>
         <ol type="a">
           <li><a href="#rules">Thông báo &amp; quy tắc khi đang chờ duyệt</a></li>
-        </ol>
-      </li>
-      <li><a href="#s3">Kiểm tra file đính kèm (Issue 5770)</a>
-        <ol type="a">
-          <li><a href="#trouble">Khi user báo "không thấy lỗi"</a></li>
         </ol>
       </li>
     </ol>
@@ -228,35 +217,43 @@
   <!-- ============ 1 ============ -->
   <h2 id="s1">1. Toàn bộ luồng</h2>
 
+  <p>Luồng có <strong>4 actor (4 Profile)</strong>: <code>DLR_Sales_CS staff</code>, <code>DLR_Sales_Sales manager</code>, <code>IVC_SAL_CRS_CRS_Staff</code>, <code>IVC_SAL_CRS_HOD</code>. Profile của từng bước ghi ngay dưới bước đó (dòng <strong>↳ Profile</strong>).</p>
+
 <pre><code>Bước 1  DLR tạo Campaign ........................................... Planned
+        ↳ Profile: DLR_Sales_CS staff (DLR CS staff)
 
 ┌─ PHÊ DUYỆT GIAI ĐOẠN 1: duyệt kế hoạch (Bước 2 → Bước 5, process CampaignCRSNew)
 │ Bước 2  DLR bấm "Nộp xin Phê Duyệt" (kế hoạch) ................... DLR Review
+│         ↳ Profile: DLR_Sales_CS staff (chủ record)
 │ Bước 3  Dealer Manager duyệt ..................................... IVC Review
+│         ↳ Profile: DLR_Sales_Sales manager (DLR Sales manager)
 │ Bước 4  Staff CRS (Quốc HOẶC Trinh, 1 người là xong) duyệt ....... Manager Review
+│         ↳ Profile: IVC_SAL_CRS_CRS_Staff (Hồ Thiên Quốc / Phạm Mai Trinh)
 │ Bước 5  Manager CRS (Khôi) duyệt ................................. Approved
+│         ↳ Profile: IVC_SAL_CRS_HOD (Nguyễn Văn Khôi)
 └─
 
 Bước 6  DLR tổ chức sự kiện, đổi Status tay ........................ In Progress
+        ↳ Profile: DLR_Sales_CS staff
 Bước 7  DLR nhập kết quả + ĐÍNH KÈM FILE (tab File)
+        ↳ Profile: DLR_Sales_CS staff
 
 ┌─ PHÊ DUYỆT GIAI ĐOẠN 2: duyệt kết quả (Bước 8 → Bước 9, process CampaignCRS2)
 │ Bước 8  DLR bấm "Nộp xin Phê Duyệt" (kết quả) .................... Reporting   &lt;- kiểm tra file
+│         ↳ Profile: DLR_Sales_CS staff (chủ record)
 │ Bước 9  IVC (Quốc HOẶC Trinh, 1 người là xong) duyệt ............. Completed   &lt;- kiểm tra file
+│         ↳ Profile: IVC_SAL_CRS_CRS_Staff (Hồ Thiên Quốc / Phạm Mai Trinh)
 └─</code></pre>
 
   <ul>
     <li><strong>Phê duyệt giai đoạn 1: Bước 2 → Bước 5</strong> (Bước 2 là DLR submit, Bước 3 → 5 là 3 cấp duyệt).</li>
     <li><strong>Phê duyệt giai đoạn 2: Bước 8 → Bước 9</strong> (Bước 8 là DLR submit, Bước 9 là IVC duyệt).</li>
     <li>Bước 1, 6, 7 không thuộc phê duyệt (DLR tự làm).</li>
+    <li><strong>Chuỗi Status:</strong> <code>Planned</code> → <code>DLR Review</code> → <code>IVC Review</code> → <code>Manager Review</code> → <code>Approved</code> → <code>In Progress</code> → <code>Reporting</code> → <code>Completed</code>.</li>
     <li>Từ chối ở <strong>Bước 3, 4, 5 hoặc 9</strong> → Status <code>Rejected</code>.</li>
+    <li>Status <code>Manager Review</code> hiển thị trên giao diện là <strong>IVC Manager Review</strong>.</li>
+    <li><strong>System Administrator</strong> không có bước nào trong luồng, chỉ can thiệp khi cần sửa record đang chờ duyệt.</li>
   </ul>
-
-  <h3 id="status">1.1. Chuỗi Status</h3>
-  <p class="chain">
-    <code>Planned</code> → <code>DLR Review</code> → <code>IVC Review</code> → <code>Manager Review</code> → <code>Approved</code> → <code>In Progress</code> → <code>Reporting</code> → <code>Completed</code>
-  </p>
-  <p><code>Manager Review</code> hiển thị trên giao diện là <strong>IVC Manager Review</strong>.</p>
 
   <!-- ============ 2 ============ -->
   <h2 id="s2">2. Từng bước: ai làm gì</h2>
@@ -273,8 +270,8 @@ Bước 7  DLR nhập kết quả + ĐÍNH KÈM FILE (tab File)
       <tr><td class="c"><strong>6</strong></td><td>DLR</td><td>Tổ chức sự kiện, đổi Status sang <code>In Progress</code> (thủ công trên Path, không có tự động hóa).</td><td><code>In Progress</code></td></tr>
       <tr><td class="c"><strong>7</strong></td><td>DLR CS staff</td><td>Nhập số người, chi phí. Đính kèm file ở tab <strong>File</strong> (Công văn yêu cầu đại lý xuất service SO, Service SO, Invoice).</td><td><code>In Progress</code></td></tr>
       <tr class="phase"><td colspan="4">Phê duyệt giai đoạn 2 – duyệt kết quả (process <code>CampaignCRS2</code>)</td></tr>
-      <tr><td class="c"><strong>8</strong></td><td>DLR CS staff</td><td>Bấm <strong>"Nộp xin Phê Duyệt"</strong>. <strong>Thiếu file thì báo lỗi</strong> (mục <a href="#s3">3</a>).</td><td><code>Reporting</code></td></tr>
-      <tr><td class="c"><strong>9</strong></td><td><strong>Hồ Thiên Quốc</strong> hoặc <strong>Phạm Mai Trinh</strong> (1 người là xong)</td><td>Vào <strong>Approval History</strong> → <strong>Approve</strong>. <strong>Thiếu file thì báo lỗi</strong> (mục <a href="#s3">3</a>).</td><td><code>Completed</code></td></tr>
+      <tr><td class="c"><strong>8</strong></td><td>DLR CS staff</td><td>Bấm <strong>"Nộp xin Phê Duyệt"</strong>. <strong>Thiếu file</strong> (tab File chưa có file nào) <strong>thì báo lỗi</strong>.</td><td><code>Reporting</code></td></tr>
+      <tr><td class="c"><strong>9</strong></td><td><strong>Hồ Thiên Quốc</strong> hoặc <strong>Phạm Mai Trinh</strong> (1 người là xong)</td><td>Vào <strong>Approval History</strong> → <strong>Approve</strong>. <strong>Thiếu file</strong> (tab File chưa có file nào) <strong>thì báo lỗi</strong>.</td><td><code>Completed</code></td></tr>
     </tbody>
   </table>
 
@@ -285,37 +282,6 @@ Bước 7  DLR nhập kết quả + ĐÍNH KÈM FILE (tab File)
     <li>Lúc đang chờ duyệt, chỉ admin hoặc approver hiện tại sửa được record.</li>
     <li><strong>Không có Recall</strong>: đã submit thì không tự rút lại được.</li>
   </ul>
-
-  <!-- ============ 3 ============ -->
-  <h2 id="s3">3. Kiểm tra file đính kèm (Issue 5770)</h2>
-  <p><strong>Thiếu file</strong> = Campaign chưa có file nào ở tab <strong>File</strong>. Chỉ cần có ít nhất 1 file, không phân biệt loại.</p>
-  <table class="grid">
-    <thead><tr><th style="width:24%">Chặn ở</th><th style="width:22%">Chuyển Status</th><th>Thông báo lỗi</th></tr></thead>
-    <tbody>
-      <tr><td><strong>Bước 8</strong> (DLR submit kết quả)</td><td>→ <code>Reporting</code></td><td><em>Please attach the official letter (Công văn) requesting the dealer to issue the service SO before submitting to IVC.</em></td></tr>
-      <tr><td><strong>Bước 9</strong> (IVC duyệt kết quả)</td><td><code>Reporting</code> → <code>Completed</code></td><td><em>Cannot approve: the dealer has not attached the official letter (Công văn) requesting the service SO.</em></td></tr>
-    </tbody>
-  </table>
-
-  <div class="callout bad">
-    <span class="label">Bước 2 → 5 không kiểm tra file</span>
-    Giai đoạn duyệt kế hoạch hiện <strong>không</strong> có kiểm tra file. Người test ticket 5770 cả 3 lần (8/10, 14/10) đều đi Bước 1 → 5, không đính kèm file, Trinh/Quốc duyệt bình thường ở Bước 4 và không thấy lỗi. Ví dụ Campaign <a href="https://ivcl--partial.sandbox.lightning.force.com/lightning/r/Campaign/701WC00000vAZmhYAG/view"><code>701WC00000vAZmhYAG</code></a>.
-  </div>
-
-  <h3 id="trouble">3.1. Khi user báo "không thấy lỗi"</h3>
-  <ol>
-    <li>Hỏi user đang test ở <strong>Bước mấy</strong>.</li>
-    <li>Đối chiếu <code>ProcessInstance.ProcessDefinition.DeveloperName</code> của Campaign:
-      <ul>
-        <li><code>CampaignCRSNew</code> = Bước 2 → 5 (duyệt kế hoạch, <strong>không</strong> kiểm tra file).</li>
-        <li><code>CampaignCRS2</code> = Bước 8 → 9 (duyệt kết quả, <strong>có</strong> kiểm tra file).</li>
-      </ul>
-    </li>
-  </ol>
-  <div class="callout note">
-    <span class="label">Ghi chú kỹ thuật</span>
-    Code kiểm tra: <code>TriggerCampaignHandler.validateAttachmentRequired</code> (gọi từ <code>onBeforeUpdate</code>).
-  </div>
 
   <footer class="doc-foot">
     Issue 5770 · CRS Campaign Event · Phiên bản 2026-10-14
