@@ -216,7 +216,6 @@
           <li><a href="#um-ivc-approve">IVC CRS: duyệt báo cáo chi phí</a></li>
           <li><a href="#um-dlr-so">Đại lý: xử lý SO CRS Claim</a></li>
           <li><a href="#um-done">Hoàn tất</a></li>
-          <li><a href="#um-test">Kết quả kiểm thử trên Partial</a></li>
         </ol>
       </li>
     </ol>
@@ -447,30 +446,6 @@
   <p>Không cần thao tác. Khi kế toán IVC ghi nhận hóa đơn của Đại lý vào công nợ phải trả (AP) trên ERP, hóa đơn được đồng bộ về DMS qua Sync Master Data (<code>VendInvoiceJour</code>); hệ thống khớp theo số PO, tự chuyển <strong>SO → Hoàn thành</strong> và <strong>Chiến dịch → Hoàn thành</strong>.</p>
   <figure class="shot"><img src="images/6411/20-so-completed.png" alt="SO Completed"><figcaption>Hình 20 – SO CRS Claim Hoàn thành.</figcaption></figure>
   <figure class="shot"><img src="images/6411/21-campaign-completed.png" alt="Campaign Completed"><figcaption>Hình 21 – Chiến dịch tự chuyển Hoàn thành; Lịch sử phê duyệt ghi nhận lần duyệt của IVC.</figcaption></figure>
-
-  <!-- 8.5 -->
-  <h3 id="um-test">8.5. Kết quả kiểm thử trên Partial (28/10/2026)</h3>
-  <p>Dữ liệu test: Chiến dịch <code>[TEST 6411] Eco-drive seminar - Claim CRS</code> (EVT-00046), SO <code>ARSO0004960</code>.</p>
-  <table class="grid">
-    <thead><tr><th class="c" style="width:7%">TC</th><th style="width:17%">Vai</th><th>Kịch bản</th><th class="c" style="width:12%">Kết quả</th></tr></thead>
-    <tbody>
-      <tr><td class="c">1</td><td>DLR CS staff</td><td>Nộp khi thiếu chi phí → bị chặn</td><td class="c">Đạt</td></tr>
-      <tr><td class="c">2</td><td>DLR CS staff</td><td>Nộp khi thiếu file → bị chặn</td><td class="c">Đạt</td></tr>
-      <tr><td class="c">3</td><td>DLR CS staff</td><td>Nộp hợp lệ → Report Review</td><td class="c">Đạt</td></tr>
-      <tr><td class="c">4</td><td>Hồ Thiên Quốc</td><td>Reject kèm lý do → In Progress</td><td class="c">Đạt</td></tr>
-      <tr><td class="c">5</td><td>DLR CS staff</td><td>Nộp lại → Report Review</td><td class="c">Đạt</td></tr>
-      <tr><td class="c">6a</td><td>Hồ Thiên Quốc</td><td>Approve khi chưa nhập tiền IVC → bị chặn</td><td class="c">Đạt</td></tr>
-      <tr><td class="c">6b</td><td>Hồ Thiên Quốc</td><td>Nhập tiền IVC, Approve → Report Approval + tự sinh SO CRS Claim (1 dòng CRS-CAM-LCV, 15.000.000)</td><td class="c">Đạt</td></tr>
-      <tr><td class="c">7a</td><td>DLR CS staff</td><td>SO New → DLR Process</td><td class="c">Đạt</td></tr>
-      <tr><td class="c">7b</td><td>DLR CS staff</td><td>SO → Mở khi thiếu hóa đơn → bị chặn</td><td class="c">Đạt</td></tr>
-      <tr><td class="c">7c</td><td>DLR CS staff</td><td>Đính kèm hóa đơn, SO → Mở → tạo hook <code>createPurchaseOrder</code> (VendorAccount V00067, CRS-CAM-LCV, 15.000.000, LCV------)</td><td class="c">Đạt (DMS)</td></tr>
-      <tr><td class="c">8</td><td>Hệ thống (giả lập ERP)</td><td>Hóa đơn VendInvoiceJour gắn vào SO → SO + Chiến dịch Hoàn thành</td><td class="c">Đạt</td></tr>
-    </tbody>
-  </table>
-  <div class="callout warn">
-    <span class="label">Còn chờ phía ERP</span>
-    Ở TC 7c, ERP trả lỗi <em>"An exception occured when invoking the operation - Update has been canceled."</em> nên SO chưa có số PO. Nhiều khả năng do Item Service <code>CRS-CAM-LCV</code> chưa được tạo trên ERP (xem mục 7). Bước TC 8 được giả lập bằng cách tạo hóa đơn VendInvoiceJour gắn vào SO.
-  </div>
 
   <footer class="doc-foot">
     Ticket 6411 · Claim chi phí hỗ trợ sự kiện ECO-DRIVE &amp; MANTAINANCE · Phiên bản 2026-10-28
