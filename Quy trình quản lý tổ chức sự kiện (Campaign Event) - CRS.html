@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quy trình quản lý tổ chức sự kiện (Campaign Event) – CRS</title>
+<style>
+  :root {
+    --ink: #000000;
+    --muted: #333333;
+    --brand: #1f4e79;
+    --brand-soft: #e8eff7;
+    --line: #c9d1db;
+    --head-bg: #1f4e79;
+    --zebra: #f6f8fb;
+    --note-bg: #eef6ff;  --note-bar: #2f80ed;
+    --warn-bg: #fff6e5;  --warn-bar: #f2994a;
+    --ok-bg:   #edf8f1;  --ok-bar:   #27ae60;
+    --bad-bg:  #fdeeee;  --bad-bar:  #eb5757;
+    --code-bg: #f3f4f6;
+    --desk: #e5e7eb;
+    --paper: #ffffff;
+  }
+
+  * { box-sizing: border-box; }
+  html { background: var(--desk); }
+  body {
+    margin: 0;
+    padding: 32px 16px;
+    font-family: Calibri, "Segoe UI", Arial, sans-serif;
+    font-size: 11pt;
+    line-height: 1.5;
+    color: var(--ink);
+  }
+
+  /* ===== Trang giấy A4 ===== */
+  .page {
+    width: 210mm;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 22mm 20mm;
+    background: var(--paper);
+    box-shadow: 0 2px 14px rgba(0, 0, 0, .18);
+  }
+
+  /* ===== Bìa / tiêu đề tài liệu ===== */
+  .doc-eyebrow {
+    margin: 0;
+    font-size: 10pt;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  h1.doc-title {
+    margin: 4pt 0 6pt;
+    font-size: 22pt;
+    line-height: 1.2;
+    color: var(--brand);
+  }
+  .doc-sub { margin: 0 0 14pt; font-size: 12pt; color: var(--muted); }
+
+  table.meta { width: 100%; border-collapse: collapse; margin: 0 0 6pt; font-size: 10.5pt; }
+  table.meta th, table.meta td { padding: 5pt 8pt; border: 1px solid var(--line); text-align: left; vertical-align: top; }
+  table.meta th { width: 28%; background: var(--brand-soft); color: var(--brand); font-weight: 600; }
+
+  /* ===== Mục lục ===== */
+  nav.toc { margin: 18pt 0 4pt; padding: 12pt 16pt; background: var(--brand-soft); border-left: 4px solid var(--brand); }
+  nav.toc h2 { margin: 0 0 6pt; padding: 0; border: 0; font-size: 12pt; color: var(--brand); }
+  nav.toc ol { margin: 0; padding-left: 18pt; }
+  nav.toc li { margin: 1pt 0; }
+  nav.toc ol ol { margin-top: 1pt; font-size: 10.5pt; }
+  nav.toc a { color: var(--ink); text-decoration: none; }
+  nav.toc a:hover { text-decoration: underline; }
+
+  /* ===== Heading ===== */
+  h2 {
+    margin: 26pt 0 8pt;
+    padding-bottom: 3pt;
+    font-size: 16pt;
+    color: var(--brand);
+    border-bottom: 2px solid var(--brand);
+  }
+  h3 { margin: 18pt 0 6pt; font-size: 13pt; color: var(--brand); }
+  h4 { margin: 12pt 0 4pt; font-size: 11.5pt; color: var(--ink); }
+  h2, h3, h4 { break-after: avoid; }
+
+  p { margin: 0 0 7pt; }
+  ul, ol { margin: 0 0 8pt; padding-left: 20pt; }
+  li { margin: 2pt 0; }
+  a { color: #1a5fb4; }
+  hr { margin: 18pt 0; border: 0; border-top: 1px solid var(--line); }
+
+  /* ===== Inline code / code block ===== */
+  code {
+    padding: 0 3pt;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 9.5pt;
+    background: var(--code-bg);
+    border-radius: 3px;
+    color: #000;
+    word-break: break-word;
+  }
+  pre {
+    margin: 6pt 0 10pt;
+    padding: 10pt 12pt;
+    background: var(--code-bg);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--brand);
+    border-radius: 3px;
+    overflow-x: auto;
+    break-inside: avoid;
+  }
+  pre code { padding: 0; background: none; color: var(--ink); font-size: 9pt; line-height: 1.45; word-break: normal; }
+
+  /* ===== Bảng ===== */
+  table.grid { width: 100%; margin: 6pt 0 8pt; border-collapse: collapse; font-size: 10pt; }
+  table.grid th, table.grid td { padding: 5pt 7pt; border: 1px solid var(--line); vertical-align: top; text-align: left; }
+  table.grid thead th { background: var(--head-bg); color: #fff; font-weight: 600; }
+  table.grid tbody tr:nth-child(even) td { background: var(--zebra); }
+  table.grid td.c, table.grid th.c { text-align: center; }
+  table.grid tr { break-inside: avoid; }
+  table.grid thead { display: table-header-group; }
+
+  /* ===== Callout ===== */
+  .callout { margin: 8pt 0 10pt; padding: 8pt 12pt; border-left: 4px solid; border-radius: 0 3px 3px 0; break-inside: avoid; }
+  .callout > :last-child { margin-bottom: 0; }
+  .callout .label { display: block; margin-bottom: 2pt; font-weight: 700; font-size: 10pt; text-transform: uppercase; letter-spacing: .04em; }
+  .callout.note { background: var(--note-bg); border-color: var(--note-bar); }
+  .callout.warn { background: var(--warn-bg); border-color: var(--warn-bar); }
+  .callout.ok   { background: var(--ok-bg);   border-color: var(--ok-bar); }
+  .callout.bad  { background: var(--bad-bg);  border-color: var(--bad-bar); }
+
+  /* ===== Khối test case ===== */
+  .tc-tag {
+    display: inline-block;
+    margin-right: 6pt;
+    padding: 1pt 7pt;
+    background: var(--brand);
+    color: #fff;
+    border-radius: 3px;
+    font-size: 10pt;
+    font-weight: 700;
+    vertical-align: 1pt;
+  }
+  .desc {
+    margin: 0 0 8pt;
+    padding: 7pt 12pt;
+    background: var(--brand-soft);
+    border-left: 4px solid var(--brand);
+    border-radius: 0 3px 3px 0;
+    break-inside: avoid;
+  }
+  .desc strong { color: var(--brand); }
+  table.grid ol.steps { margin: 2pt 0 0; padding: 0; list-style: none; counter-reset: st; }
+  table.grid ol.steps li { margin: 3pt 0; counter-increment: st; }
+  table.grid ol.steps li::before { content: "Bước " counter(st) ": "; font-weight: 700; color: var(--brand); }
+  .expect { margin: 4pt 0 0; padding-left: 0; list-style: none; }
+  .expect li { position: relative; padding-left: 14pt; }
+  .expect li::before { content: "▸"; position: absolute; left: 0; color: var(--brand); }
+
+  footer.doc-foot { margin-top: 26pt; padding-top: 6pt; border-top: 1px solid var(--line); font-size: 9pt; color: var(--muted); text-align: center; }
+
+  /* ===== In / lưu PDF ===== */
+  @page { size: A4; margin: 18mm 16mm; }
+  @media print {
+    html, body { background: #fff; }
+    body { padding: 0; font-size: 10.5pt; }
+    .page { width: auto; margin: 0; padding: 0; box-shadow: none; }
+    a { color: inherit; text-decoration: none; }
+    h2.page-break { break-before: page; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+  @media (max-width: 720px) {
+    .page { padding: 16px; }
+    h1.doc-title { font-size: 18pt; }
+  }
+
+  /* ===== Dòng nhóm giai đoạn & chuỗi Status ===== */
+  table.grid tbody tr.phase td { background: var(--brand-soft); color: var(--brand); font-weight: 700; }
+  p.chain { line-height: 2; }
+</style>
+</head>
+<body>
+<main class="page">
+
+  <!-- ============ TIÊU ĐỀ ============ -->
+  <h1 class="doc-title">Quản lý tổ chức sự kiện (Campaign Event)</h1>
+  <p class="doc-sub">Campaign Event – Lập kế hoạch, tổ chức sự kiện &amp; 2 giai đoạn phê duyệt</p>
+
+  <table class="meta">
+    <tr><th>Ticket DevOps</th><td><a href="https://isuzu-it.visualstudio.com/DMS%20%E2%80%93%20OMN1%20-%20IVC/_workitems/edit/5770">Issue 5770</a> (kiểm tra file đính kèm khi duyệt kết quả)</td></tr>
+    <tr><th>Môi trường</th><td>Partial (Sandbox) – theo cấu hình retrieve 13/10 và dữ liệu thật trên Partial</td></tr>
+    <tr><th>Đối tượng</th><td><strong>Campaign</strong>, Record Type <strong>Event</strong></td></tr>
+    <tr><th>Loại sự kiện</th><td><strong>Eco-drive seminar</strong> / <strong>Maintenance training</strong> do Đại lý (DLR) tổ chức cho khách hàng, CRS của IVC duyệt</td></tr>
+  </table>
+
+  <div class="callout warn">
+    <span class="label">Ngoài phạm vi</span>
+    Campaign có <strong>Type</strong> = <code>Mobile Service</code> là quy trình khác, <strong>không</strong> đi theo luồng này.
+  </div>
+  <div class="callout note">
+    <span class="label">2 lần duyệt</span>
+    <strong>Giai đoạn 1 – duyệt kế hoạch:</strong> Bước 2 → 5, process <code>CampaignCRSNew</code>.<br>
+    <strong>Giai đoạn 2 – duyệt kết quả:</strong> Bước 8 → 9, process <code>CampaignCRS2</code>.
+  </div>
+
+  <nav class="toc" aria-label="Mục lục">
+    <h2>Mục lục</h2>
+    <ol>
+      <li><a href="#s1">Toàn bộ luồng</a>
+        <ol type="a">
+          <li><a href="#status">Chuỗi Status</a></li>
+        </ol>
+      </li>
+      <li><a href="#s2">Từng bước: ai làm gì</a>
+        <ol type="a">
+          <li><a href="#rules">Thông báo &amp; quy tắc khi đang chờ duyệt</a></li>
+        </ol>
+      </li>
+      <li><a href="#s3">Kiểm tra file đính kèm (Issue 5770)</a>
+        <ol type="a">
+          <li><a href="#trouble">Khi user báo "không thấy lỗi"</a></li>
+        </ol>
+      </li>
+    </ol>
+  </nav>
+
+  <!-- ============ 1 ============ -->
+  <h2 id="s1">1. Toàn bộ luồng</h2>
+
+<pre><code>Bước 1  DLR tạo Campaign ........................................... Planned
+
+┌─ PHÊ DUYỆT GIAI ĐOẠN 1: duyệt kế hoạch (Bước 2 → Bước 5, process CampaignCRSNew)
+│ Bước 2  DLR bấm "Nộp xin Phê Duyệt" (kế hoạch) ................... DLR Review
+│ Bước 3  Dealer Manager duyệt ..................................... IVC Review
+│ Bước 4  Staff CRS (Quốc HOẶC Trinh, 1 người là xong) duyệt ....... Manager Review
+│ Bước 5  Manager CRS (Khôi) duyệt ................................. Approved
+└─
+
+Bước 6  DLR tổ chức sự kiện, đổi Status tay ........................ In Progress
+Bước 7  DLR nhập kết quả + ĐÍNH KÈM FILE (tab File)
+
+┌─ PHÊ DUYỆT GIAI ĐOẠN 2: duyệt kết quả (Bước 8 → Bước 9, process CampaignCRS2)
+│ Bước 8  DLR bấm "Nộp xin Phê Duyệt" (kết quả) .................... Reporting   &lt;- kiểm tra file
+│ Bước 9  IVC (Quốc HOẶC Trinh, 1 người là xong) duyệt ............. Completed   &lt;- kiểm tra file
+└─</code></pre>
+
+  <ul>
+    <li><strong>Phê duyệt giai đoạn 1: Bước 2 → Bước 5</strong> (Bước 2 là DLR submit, Bước 3 → 5 là 3 cấp duyệt).</li>
+    <li><strong>Phê duyệt giai đoạn 2: Bước 8 → Bước 9</strong> (Bước 8 là DLR submit, Bước 9 là IVC duyệt).</li>
+    <li>Bước 1, 6, 7 không thuộc phê duyệt (DLR tự làm).</li>
+    <li>Từ chối ở <strong>Bước 3, 4, 5 hoặc 9</strong> → Status <code>Rejected</code>.</li>
+  </ul>
+
+  <h3 id="status">1.1. Chuỗi Status</h3>
+  <p class="chain">
+    <code>Planned</code> → <code>DLR Review</code> → <code>IVC Review</code> → <code>Manager Review</code> → <code>Approved</code> → <code>In Progress</code> → <code>Reporting</code> → <code>Completed</code>
+  </p>
+  <p><code>Manager Review</code> hiển thị trên giao diện là <strong>IVC Manager Review</strong>.</p>
+
+  <!-- ============ 2 ============ -->
+  <h2 id="s2">2. Từng bước: ai làm gì</h2>
+  <table class="grid">
+    <thead><tr><th class="c" style="width:7%">Bước</th><th style="width:26%">Ai</th><th>Làm gì</th><th style="width:17%">Status sau bước</th></tr></thead>
+    <tbody>
+      <tr><td class="c"><strong>1</strong></td><td>DLR CS staff</td><td>Tạo Campaign Event. Mã <code>EVT-xxxxx</code> và Đại lý tự điền.</td><td><code>Planned</code></td></tr>
+      <tr class="phase"><td colspan="4">Phê duyệt giai đoạn 1 – duyệt kế hoạch (process <code>CampaignCRSNew</code>)</td></tr>
+      <tr><td class="c"><strong>2</strong></td><td>DLR CS staff (<strong>chủ record</strong>, chỉ chủ mới submit được)</td><td>Bấm <strong>"Nộp xin Phê Duyệt"</strong>.</td><td><code>DLR Review</code></td></tr>
+      <tr><td class="c"><strong>3</strong></td><td><code>DLR Sales manager</code> (user cố định <code>sales.manager@dlr.com</code>)</td><td>Approve / Reject.</td><td><code>IVC Review</code></td></tr>
+      <tr><td class="c"><strong>4</strong></td><td><strong>Hồ Thiên Quốc</strong> hoặc <strong>Phạm Mai Trinh</strong></td><td>Approve / Reject. Hai người ngang hàng, <strong>1 người duyệt là xong</strong>, người kia tự chuyển <code>No Response</code>.</td><td><code>Manager Review</code></td></tr>
+      <tr><td class="c"><strong>5</strong></td><td><strong>Nguyễn Văn Khôi</strong> (Manager CRS)</td><td>Approve / Reject.</td><td><code>Approved</code></td></tr>
+      <tr class="phase"><td colspan="4">Đại lý tổ chức sự kiện (không thuộc phê duyệt)</td></tr>
+      <tr><td class="c"><strong>6</strong></td><td>DLR</td><td>Tổ chức sự kiện, đổi Status sang <code>In Progress</code> (thủ công trên Path, không có tự động hóa).</td><td><code>In Progress</code></td></tr>
+      <tr><td class="c"><strong>7</strong></td><td>DLR CS staff</td><td>Nhập số người, chi phí. Đính kèm file ở tab <strong>File</strong> (Công văn yêu cầu đại lý xuất service SO, Service SO, Invoice).</td><td><code>In Progress</code></td></tr>
+      <tr class="phase"><td colspan="4">Phê duyệt giai đoạn 2 – duyệt kết quả (process <code>CampaignCRS2</code>)</td></tr>
+      <tr><td class="c"><strong>8</strong></td><td>DLR CS staff</td><td>Bấm <strong>"Nộp xin Phê Duyệt"</strong>. <strong>Thiếu file thì báo lỗi</strong> (mục <a href="#s3">3</a>).</td><td><code>Reporting</code></td></tr>
+      <tr><td class="c"><strong>9</strong></td><td><strong>Hồ Thiên Quốc</strong> hoặc <strong>Phạm Mai Trinh</strong> (1 người là xong)</td><td>Vào <strong>Approval History</strong> → <strong>Approve</strong>. <strong>Thiếu file thì báo lỗi</strong> (mục <a href="#s3">3</a>).</td><td><code>Completed</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 id="rules">2.1. Thông báo &amp; quy tắc khi đang chờ duyệt</h3>
+  <ul>
+    <li>Khi sang <code>Approved</code> (Bước 5) hoặc <code>Rejected</code>, chủ record nhận <strong>thông báo chuông</strong>.</li>
+    <li>Khi sang <code>Completed</code> (Bước 9), chủ record nhận <strong>email chi phí hỗ trợ</strong> (Event Organization Cost, POSM Cost, Supported Cost).</li>
+    <li>Lúc đang chờ duyệt, chỉ admin hoặc approver hiện tại sửa được record.</li>
+    <li><strong>Không có Recall</strong>: đã submit thì không tự rút lại được.</li>
+  </ul>
+
+  <!-- ============ 3 ============ -->
+  <h2 id="s3">3. Kiểm tra file đính kèm (Issue 5770)</h2>
+  <p><strong>Thiếu file</strong> = Campaign chưa có file nào ở tab <strong>File</strong>. Chỉ cần có ít nhất 1 file, không phân biệt loại.</p>
+  <table class="grid">
+    <thead><tr><th style="width:24%">Chặn ở</th><th style="width:22%">Chuyển Status</th><th>Thông báo lỗi</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Bước 8</strong> (DLR submit kết quả)</td><td>→ <code>Reporting</code></td><td><em>Please attach the official letter (Công văn) requesting the dealer to issue the service SO before submitting to IVC.</em></td></tr>
+      <tr><td><strong>Bước 9</strong> (IVC duyệt kết quả)</td><td><code>Reporting</code> → <code>Completed</code></td><td><em>Cannot approve: the dealer has not attached the official letter (Công văn) requesting the service SO.</em></td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout bad">
+    <span class="label">Bước 2 → 5 không kiểm tra file</span>
+    Giai đoạn duyệt kế hoạch hiện <strong>không</strong> có kiểm tra file. Người test ticket 5770 cả 3 lần (8/10, 14/10) đều đi Bước 1 → 5, không đính kèm file, Trinh/Quốc duyệt bình thường ở Bước 4 và không thấy lỗi. Ví dụ Campaign <a href="https://ivcl--partial.sandbox.lightning.force.com/lightning/r/Campaign/701WC00000vAZmhYAG/view"><code>701WC00000vAZmhYAG</code></a>.
+  </div>
+
+  <h3 id="trouble">3.1. Khi user báo "không thấy lỗi"</h3>
+  <ol>
+    <li>Hỏi user đang test ở <strong>Bước mấy</strong>.</li>
+    <li>Đối chiếu <code>ProcessInstance.ProcessDefinition.DeveloperName</code> của Campaign:
+      <ul>
+        <li><code>CampaignCRSNew</code> = Bước 2 → 5 (duyệt kế hoạch, <strong>không</strong> kiểm tra file).</li>
+        <li><code>CampaignCRS2</code> = Bước 8 → 9 (duyệt kết quả, <strong>có</strong> kiểm tra file).</li>
+      </ul>
+    </li>
+  </ol>
+  <div class="callout note">
+    <span class="label">Ghi chú kỹ thuật</span>
+    Code kiểm tra: <code>TriggerCampaignHandler.validateAttachmentRequired</code> (gọi từ <code>onBeforeUpdate</code>).
+  </div>
+
+  <footer class="doc-foot">
+    Issue 5770 · CRS Campaign Event · Phiên bản 2026-10-14
+  </footer>
+
+</main>
+</body>
+</html>

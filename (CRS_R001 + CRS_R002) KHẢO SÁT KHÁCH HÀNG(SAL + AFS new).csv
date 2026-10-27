@@ -1,0 +1,38 @@
+﻿Tên report,Báo cáo khảo sát khách hàng,,,,,,,,,,,,,,,,,
+Filter,SurveyQuestionResponse.Invitation.Type__c,,,,,,,,,,,,,,,,,
+,SurveyQuestionResponse.ResponseValue,,,,,,,,,,,,,,,,,
+,"
+Survey Result.Dealer_Name__r.Search Name",,,,,,,,,,,,,,,,,
+,"SurveyQuestionResponse.Response.CompletionDateTime
+Note: submit survey",(tháng),,,,,,,,,,,,,,,,
+,Đại lý,Đại lý,Ngày khảo sát,Loại Khảo sát,Mức độ hài lòng,Số điện thoại ,Biển số xe,Hành động,Done/Inprogress,Tên Khách hàng,VIN,Số điện thoại 2,Ngày Thăm,Ngày Gọi,"Lý do Khách hàng không hài lòng (Visit)
+phân loại visit (từ visit plan/ từ survey)",Hướng Giải quyết (visit),Lý do Khách hàng không hài lòng (Case),Hướng Giải quyết
+,Khảo sát gửi từ KH của Đại lý nào,Khảo sát gửi từ KH của Đại lý nào,Ngày khảo sát,Sau bán hàng hoặc Sau dịch vụ,"Đánh giá từ 1->5
+1: Rất không hài lòng
+5: rất hài lòng",Thu thập trường này khi loại khảo sát là sau bán hàng,Thu thập trường này khi loại khảo sát là sau dịch vụ,"Trường data này sẽ lấy action từ survey:
+1,2 sao: đi thăm khách
+3 sao: gọi điện cho khách",,"Sau khi gọi hoạc thăm khách, Đại lý cần cập nhật thông tin khách hàng đánh giá thấp vào case",,,,,,,,
+O1 mapping field,"
+Survey Result.Dealer_Name__r.Search Name","
+Survey Result.Dealer_Name__r.Account Name","SurveyQuestionResponse.Response.CompletionDateTime
+Note: submit survey",SurveyQuestionResponse.Invitation.Type__c,SurveyQuestionResponse.ResponseValue,SurveyQuestionResponse.Invitation.Customer_Name__r.Phone,SurveyQuestionResponse.Invitation.Vehicle__r.Vehicle_Registration_Number__c,VALUE(SurveyQuestionResponse.ResponseValue) < 3 → Thăm KH; = 3 → Gọi KH,"1-2: tạo visit => check status visit
+3: case => status case
+check acction
+chưa đóng => inprogress
+Đã đóng => done",SurveyQuestionResponse.Invitation.Customer_Name__r.Name,SurveyQuestionResponse.Invitation.Vehicle__r.Vehicle_Identification_Number__c,,Visit. Plandate,Case.completedate,Thêm field text ghi nhận thông tin này: Lý do thăm khách (Visit reason),Thêm field text ghi nhận thông tin này: Hướng giải quyết (Handling action),Case.Case Reason,Case.Case_Result__c
+Data sample,AK-CTO,,4/1/2026 14:00,Sau dịch vụ,5,,29e-36830,,FALSE,,,,,,,,,
+,DT-DNG,,4/1/2026 14:00,Sau bán hàng,5,0903555688,,,FALSE,,,,,,,,,
+,TP-DNI,,4/1/2026 14:00,Sau bán hàng,5,0921144456,,,FALSE,,,,,,,,,
+,VN-LDG,,4/1/2026 14:00,Sau bán hàng,5,0933764643,,,FALSE,,,,,,,,,
+,TS-QTI,,4/1/2026 14:00,Sau dịch vụ,5,,74C13190,,FALSE,,,,,,,,,
+,TS-QTI,,4/1/2026 14:00,Sau dịch vụ,5,,74C13572,,FALSE,,,,,,,,,
+,TS-QTI,,4/1/2026 14:00,Sau dịch vụ,4,,74C12083,,FALSE,,,,,,,,,
+,TS-QTI,,4/1/2026 14:00,Sau dịch vụ,4,,50H08217,,FALSE,,,,,,,,,
+,TT-CMU,,4/1/2026 14:00,Sau dịch vụ,5,,67H01875,,FALSE,,,,,,,,,
+,VN-BTN,,4/7/2026 14:00,Sau dịch vụ,1,,61E03100,Thăm Khách hàng,TRUE,tam,RLE1MR77HS00001,0908091733,4/24/2026,,,,,
+,TB-HMN,,4/8/2026 7:00,Sau dịch vụ,3,,60H37052,Gọi cho Khách hàng,TRUE,tam,RLE1KR77FS00011,0908091733,4/28/2026,,A,,,
+,TP-DNI,,4/21/2026 0:00,Sau dịch vụ,3,,29C82709,Gọi cho Khách hàng,TRUE,Anh Quyết,MPATFR86JGT003388,0916350188,5/7/2026,,"Đại lý đã liên hệ và Khách hàng trả lời không có vấn đề gì với Dịch vụ tại Tấn Phát, 3 sao là mức hài lòng khách hàng đánh giá.",,,
+,AL-KDV,,5/6/2026 7:00,Sau dịch vụ,3,,62A60281,Gọi cho Khách hàng,TRUE,Anh Hoài Anh,RLE1MR77HS5A02310,0335737917,5/12/2026,,"Khách không có ý kiến đóng góp, dịch vụ tốt, làm nhanh",,,
+,AL-KDV,,5/12/2026 7:00,Sau dịch vụ,3,,62A53254,Gọi cho Khách hàng,TRUE,Anh Hiếu,RLE1MR77HS5A11937,0903301775,5/14/2026,,"khách nói ok, bình thường mà, nên cho 3đ",,,
+,TP-DNI,,5/22/2026 7:00,Sau dịch vụ,3,,51d85145,Gọi cho Khách hàng,TRUE,ANH NGÀ,RLE1MR77HPVA00539,0909618682,5/22/2026,,Khách hàng đánh nhầm sao,,,
+,TT-CMU,,7/25/2026 10:04,Sau bán hàng,1,917804700,,Thăm Khách hàng,FALSE,,,,,,,,,
