@@ -1,0 +1,898 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mapping field báo cáo Case tổng hợp IVC &amp; Đại lý – CRS Case Report</title>
+  <style>
+    :root {
+      --ink: #000000;
+      --muted: #333333;
+      --brand: #1f4e79;
+      --brand-soft: #e8eff7;
+      --line: #c9d1db;
+      --head-bg: #1f4e79;
+      --zebra: #f6f8fb;
+      --note-bg: #eef6ff;
+      --note-bar: #2f80ed;
+      --warn-bg: #fff6e5;
+      --warn-bar: #f2994a;
+      --ok-bg: #edf8f1;
+      --ok-bar: #27ae60;
+      --bad-bg: #fdeeee;
+      --bad-bar: #eb5757;
+      --code-bg: #f3f4f6;
+      --desk: #e5e7eb;
+      --paper: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      background: var(--desk);
+    }
+
+    body {
+      margin: 0;
+      padding: 32px 16px;
+      font-family: Calibri, "Segoe UI", Arial, sans-serif;
+      font-size: 11pt;
+      line-height: 1.5;
+      color: var(--ink);
+    }
+
+    /* ===== Trang giấy A4 ===== */
+    .page {
+      width: 210mm;
+      max-width: 100%;
+      margin: 0 auto;
+      padding: 22mm 20mm;
+      background: var(--paper);
+      box-shadow: 0 2px 14px rgba(0, 0, 0, .18);
+    }
+
+    /* ===== Tiêu đề tài liệu ===== */
+    .doc-eyebrow {
+      margin: 0;
+      font-size: 10pt;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    h1.doc-title {
+      margin: 4pt 0 6pt;
+      font-size: 22pt;
+      line-height: 1.2;
+      color: var(--brand);
+    }
+
+    .doc-sub {
+      margin: 0 0 14pt;
+      font-size: 12pt;
+      color: var(--muted);
+    }
+
+    table.meta {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0 0 6pt;
+      font-size: 10.5pt;
+    }
+
+    table.meta th,
+    table.meta td {
+      padding: 5pt 8pt;
+      border: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    table.meta th {
+      width: 28%;
+      background: var(--brand-soft);
+      color: var(--brand);
+      font-weight: 600;
+    }
+
+    /* ===== Mục lục ===== */
+    nav.toc {
+      margin: 18pt 0 4pt;
+      padding: 12pt 16pt;
+      background: var(--brand-soft);
+      border-left: 4px solid var(--brand);
+    }
+
+    nav.toc h2 {
+      margin: 0 0 6pt;
+      padding: 0;
+      border: 0;
+      font-size: 12pt;
+      color: var(--brand);
+    }
+
+    nav.toc ol {
+      margin: 0;
+      padding-left: 18pt;
+    }
+
+    nav.toc li {
+      margin: 1pt 0;
+    }
+
+    nav.toc a {
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    nav.toc a:hover {
+      text-decoration: underline;
+    }
+
+    /* ===== Heading ===== */
+    h2 {
+      margin: 26pt 0 8pt;
+      padding-bottom: 3pt;
+      font-size: 16pt;
+      color: var(--brand);
+      border-bottom: 2px solid var(--brand);
+    }
+
+    h3 {
+      margin: 18pt 0 6pt;
+      font-size: 13pt;
+      color: var(--brand);
+    }
+
+    h4 {
+      margin: 12pt 0 4pt;
+      font-size: 11.5pt;
+      color: var(--ink);
+    }
+
+    h2,
+    h3,
+    h4 {
+      break-after: avoid;
+    }
+
+    p {
+      margin: 0 0 7pt;
+    }
+
+    ul,
+    ol {
+      margin: 0 0 8pt;
+      padding-left: 20pt;
+    }
+
+    li {
+      margin: 2pt 0;
+    }
+
+    a {
+      color: #1a5fb4;
+    }
+
+    hr {
+      margin: 18pt 0;
+      border: 0;
+      border-top: 1px solid var(--line);
+    }
+
+    /* ===== Inline code / code block ===== */
+    code {
+      padding: 0 3pt;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 9.5pt;
+      background: var(--code-bg);
+      border-radius: 3px;
+      color: #000;
+      word-break: break-word;
+    }
+
+    pre {
+      margin: 6pt 0 10pt;
+      padding: 10pt 12pt;
+      background: var(--code-bg);
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--brand);
+      border-radius: 3px;
+      overflow-x: auto;
+      break-inside: avoid;
+    }
+
+    pre code {
+      padding: 0;
+      background: none;
+      color: var(--ink);
+      font-size: 9pt;
+      line-height: 1.45;
+      word-break: normal;
+    }
+
+    /* ===== Bảng ===== */
+    table.grid {
+      width: 100%;
+      margin: 6pt 0 8pt;
+      border-collapse: collapse;
+      font-size: 10pt;
+    }
+
+    table.grid th,
+    table.grid td {
+      padding: 5pt 7pt;
+      border: 1px solid var(--line);
+      vertical-align: top;
+      text-align: left;
+    }
+
+    table.grid thead th {
+      background: var(--head-bg);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    table.grid tbody tr:nth-child(even) td {
+      background: var(--zebra);
+    }
+
+    table.grid td.c,
+    table.grid th.c {
+      text-align: center;
+    }
+
+    table.grid tr {
+      break-inside: avoid;
+    }
+
+    table.grid thead {
+      display: table-header-group;
+    }
+
+    table.grid td.st,
+    table.grid th.st {
+      white-space: nowrap;
+    }
+
+    table.grid tr.removed td {
+      background: #fff8f8;
+    }
+
+    table.grid tr.removed td:nth-child(2) {
+      color: #777;
+      text-decoration: line-through;
+    }
+
+    /* ===== Tags ===== */
+    .tag-ok,
+    .tag-todo,
+    .tag-ba,
+    .tag-flow,
+    .tag-apex,
+    .tag-new,
+    .tag-del,
+    .tag-formula {
+      display: inline-block;
+      padding: 0 5pt;
+      border-radius: 3px;
+      font-weight: 600;
+      font-size: 9.5pt;
+      white-space: nowrap;
+    }
+
+    .tag-ok {
+      background: var(--ok-bg);
+      color: #1e7a45;
+    }
+
+    .tag-todo {
+      background: var(--bad-bg);
+      color: #b42318;
+    }
+
+    .tag-ba {
+      background: var(--warn-bg);
+      color: #b25e09;
+    }
+
+    .tag-flow {
+      background: #f3eefe;
+      color: #5b3aa8;
+    }
+
+    .tag-apex {
+      background: #fff4e5;
+      color: #9a4b00;
+    }
+
+    .tag-new {
+      background: var(--note-bg);
+      color: #1a5fb4;
+    }
+
+    .tag-del {
+      background: #fdeeee;
+      color: #b42318;
+    }
+
+    .tag-formula {
+      background: #f4ecf7;
+      color: #6c3483;
+    }
+
+    table.grid ul.note {
+      margin: 2pt 0 0;
+      padding-left: 14pt;
+    }
+
+    table.grid ul.note li {
+      margin: 1pt 0;
+    }
+
+    /* ===== Callout ===== */
+    .callout {
+      margin: 8pt 0 10pt;
+      padding: 8pt 12pt;
+      border-left: 4px solid;
+      border-radius: 0 3px 3px 0;
+      break-inside: avoid;
+    }
+
+    .callout> :last-child {
+      margin-bottom: 0;
+    }
+
+    .callout .label {
+      display: block;
+      margin-bottom: 2pt;
+      font-weight: 700;
+      font-size: 10pt;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .callout.note {
+      background: var(--note-bg);
+      border-color: var(--note-bar);
+    }
+
+    .callout.warn {
+      background: var(--warn-bg);
+      border-color: var(--warn-bar);
+    }
+
+    .callout.ok {
+      background: var(--ok-bg);
+      border-color: var(--ok-bar);
+    }
+
+    .callout.bad {
+      background: var(--bad-bg);
+      border-color: var(--bad-bar);
+    }
+
+    footer.doc-foot {
+      margin-top: 26pt;
+      padding-top: 6pt;
+      border-top: 1px solid var(--line);
+      font-size: 9pt;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    /* ===== In / lưu PDF ===== */
+    @page {
+      size: A4;
+      margin: 18mm 16mm;
+    }
+
+    @media print {
+
+      html,
+      body {
+        background: #fff;
+      }
+
+      body {
+        padding: 0;
+        font-size: 10.5pt;
+      }
+
+      .page {
+        width: auto;
+        margin: 0;
+        padding: 0;
+        box-shadow: none;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .page {
+        padding: 16px;
+      }
+
+      h1.doc-title {
+        font-size: 18pt;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+
+    <h1 class="doc-title">CRS Case Report – Báo cáo Case tổng hợp IVC &amp; Đại lý (Unified Case Report)</h1>
+
+    <table class="meta">
+      <tr>
+        <th>Báo cáo</th>
+        <td>CASE REPORT | IVC &amp; DEALER · dạng Tabular, mỗi dòng là một Case, lọc theo tháng tạo / tháng hoàn thành.</td>
+      </tr>
+      <tr>
+        <th>Nguồn thiết kế</th>
+        <td><code>DMS_Unified_Case_Report_Design.xlsx</code> (4 sheet: Unified Case Report, IVC View, Dealer View, Field Rules).</td>
+      </tr>
+      <tr>
+        <th>Report type</th>
+        <td>Đề xuất Custom Report Type <code>Cases with Survey Results</code> (Case + Survey Result "with or without") để lấy được Survey Rating &amp; Survey Type. Nếu không cần 2 cột này, dùng report type chuẩn <code>Cases</code> (<code>CaseList</code>).</td>
+      </tr>
+      <tr>
+        <th>Cơ sở đối chiếu</th>
+        <td>Metadata trong repo (đã retrieve): object Case, Flow <code>Flow_Survey_Question_Response</code>, <code>TriggerCaseHandler</code>, quick action Visit / Customer Basic Data, Approval Process Case. Chưa kiểm tra trực tiếp dữ liệu trên org.</td>
+      </tr>
+    </table>
+
+    <nav class="toc">
+      <h2>Mục lục tài liệu</h2>
+      <ol>
+        <li><a href="#s1">Bảng mapping (21 cột)</a></li>
+        <li><a href="#s2">Bộ lọc (Filter) của báo cáo</a></li>
+        <li><a href="#s3">IVC View &amp; Dealer View</a></li>
+        <li><a href="#s4">Quy tắc nghiệp vụ (Field Rules) &amp; hiện trạng hệ thống</a></li>
+        <li><a href="#s5">Tổng hợp việc cần làm</a></li>
+        <li><a href="#s6">Điểm còn mở</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="s1">Bảng mapping</h2>
+    <p>Ô vàng trong file thiết kế = cột <em>cần tạo thêm field</em>. Sau khi đối chiếu với metadata, một số ô vàng
+      (Related Visit Report, Assigned Department) <strong>field đã tồn tại</strong>, và Survey Type có thể lấy từ
+      Survey Result; phần cần làm thật được liệt kê ở mục 5.</p>
+    <p>Chú thích:
+      <span class="tag-ok">✅ Đã có</span> có sẵn, dùng ngay · <span class="tag-new">⭐ Cần tạo thêm</span> cần tạo / bổ sung · <span class="tag-ba">⚠ Cần chỉnh luồng / cấu hình</span> field có nhưng luồng hoặc cấu hình chưa đủ.</p>
+    <table class="grid">
+      <thead>
+        <tr>
+          <th class="c st">STT</th>
+          <th>Field trên Report</th>
+          <th>Field lấy từ (Object.Field / cách tính)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="c st"><strong>1</strong></td>
+          <td><strong>Case Name</strong><br><small style="color:var(--muted)">(xlsx: Case Number)</small></td>
+          <td>
+            <div><strong>Nguồn dữ liệu:</strong> Field chuẩn, số tự tăng</div>
+            <div style="margin-top:3pt"><strong>Triển khai:</strong> <code>Case.CaseNumber</code> (Mã cột report: <code>CASE_NUMBER</code>)</div>
+            <div style="margin-top:3pt"><strong>Ghi chú:</strong> <span class="tag-ok">✅ Đã có</span>
+              <ul class="note">
+                <li>Cột "Case Name" trên report lấy từ <strong>Case Number</strong> theo file thiết kế.</li>
+                <li><code>Case.Case_Name__c</code> (Text 255, nhập tay) là field khác, <strong>không dùng</strong> cho cột này.</li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="c st"><strong>2</strong></td>
+          <td><strong>Created Date</strong></td>
+          <td>
+            <div><strong>Nguồn dữ liệu:</strong> Field chuẩn</div>
+            <div style="margin-top:3pt"><strong>Triển khai:</strong> <code>Case.CreatedDate</code> (<code>CREATED_DATE</code>)</div>
+            <div style="margin-top:3pt"><strong>Ghi chú:</strong> <span class="tag-ok">✅ Đã có</span>
+              <ul class="note">
+                <li>Dùng làm filter "theo tháng" (Date filter trên report).</li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="c st"><strong>3</strong></td>
+          <td><strong>Case Source</strong></td>
+          <td>
+            <div><strong>Nguồn dữ liệu:</strong> Picklist chuẩn của Case</div>
+            <div style="margin-top:3pt"><strong>Triển khai:</strong> <code>Case.Origin</code> (<code>ORIGIN</code>)</div>
+            <div style="margin-top:3pt"><strong>Ghi chú:</strong> <span class="tag-new">⭐ Cần tạo thêm</span>
+              <ul class="note">
+                <li>Thiết kế có 3 nguồn: <code>Survey</code> / <code>Customer Basic Data</code> / <code>Direct IVC</code>.</li>
+                <li>Hiện picklist chỉ có: Email, Phone, Web, Visit Plan, <strong>Survey</strong>, New Parts Quotation. <strong>Survey đã có</strong>; <strong>Customer Basic Data</strong> và <strong>Direct IVC</strong> cần thêm giá trị.</li>
+                <li>Quick action <code>Customer_Basic_Data__c.NewCase</code> đang gán cứng <code>Origin = Visit Plan</code> &rarr; đổi sang <code>Customer Basic Data</code> để báo cáo phân biệt được nguồn.</li>
+                <li>Case do CRS tự tạo khi IVC nhận khiếu nại trực tiếp: chọn <code>Direct IVC</code>.</li>
+                <li>Thêm giá trị vào StandardValueSet <code>CaseOrigin</code> và vào picklist Origin của Record Type <code>Case</code>.</li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="c st"><strong>4</strong></td>
+          <td><strong>Dealer Name</strong></td>
+          <td>
+            <div><strong>Nguồn dữ liệu:</strong> Lookup Account trên Case</div>
+            <div style="margin-top:3pt"><strong>Triển khai:</strong> <code>Case.Dealer__c</code> (Lookup Account, nhãn Dealer Name) &rarr; cột <code>Dealer__c.Name</code> / <code>Dealer__c.Search_Name__c</code></div>
+            <div style="margin-top:3pt"><strong>Ghi chú:</strong> <span class="tag-ok">✅ Đã có</span>
+              <ul class="note">
+                <li>Case từ Survey: Flow <code>Flow_Survey_Question_Response</code> gán <code>Dealer__c</code> = Dealer trên Survey Invitation.</li>
+                <li>Case từ Visit: <code>TriggerCaseHandler.autoMappingFromVisit</code> lấy từ <code>Visit__c.Dealer_Name__c</code> nếu Dealer đang trống.</li>
+                <li>Case do user Đại lý tạo tay: <code>TriggerCaseHandler.autoMappingForDealer</code> lấy Dealer từ Dealer Location của Contact gắn với user nếu Dealer đang trống.</li>
+                <li>Case IVC tự tạo (không thuộc Đại lý): Dealer trống &rarr; xem mục "Điểm còn mở" (Dealer Code bắt buộc cho phạm vi Đại lý).</li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="c st"><strong>5</strong></td>
+          <td><strong>Customer Name</strong><br><small style="color:var(--muted)">(xlsx: Account Name)</small></td>
+          <td>
+            <div><strong>Nguồn dữ liệu:</strong> Lookup Account trên Case</div>
+            <div style="margin-top:3pt"><strong>Triển khai:</strong> <code>Case.Account.Name</code> (<code>ACCOUNT.NAME</code>)</div>
+            <div style="margin-top:3pt"><strong>Ghi chú:</strong> <span class="tag-ba">⚠ Cần chỉnh luồng / cấu hình</span>
+              <ul class="note">
+                <li>Case tạo từ <strong>Quick Action</strong> (Visit / Customer Basic Data): đã gán <code>AccountId</code> nên cột có dữ liệu.</li>
+                <li><strong>Case tạo từ Survey: Flow đang không gán <code>AccountId</code></strong> (chỉ gán <code>Customer_Name__c</code> là Contact) &rarr; cột Customer Name sẽ <strong>trống</strong>. Cần bổ sung vào 2 element <code>Create_New_Case_Sale</code> / <code>Create_New_Case_Service</code>: <code>AccountId</code> = <code>Invitation.Customer__c</code> (cùng nguồn đang dùng cho <code>Visit.Vendor__c</code>).</li>
+                <li>Lưu ý trùng nhãn: <code>Customer__c</code> (Account) và <code>Customer_Name__c</code> (Contact) đều hiển thị là "Customer Name" &mdash; report dùng <code>Account.Name</code> chuẩn, không dùng 2 field này.</li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="c st"><strong>6</strong></td>
+          <td><strong>Customer Phone</strong><br><small style="color:var(--muted)">(xlsx: Contact Phone)</small></td>
+          <td>
+            <div><strong>Nguồn dữ liệu:</strong> Phone của Contact / Account gắn trên Case</div>
+            <div style="margin-top:3pt"><strong>Triển khai:</strong> <code>Case.ContactPhone</code> (Contact.Phone, <code>CONTACT_PHONE</code>) &mdash; hoặc formula <code>Case.Contact_Phone__c</code></div>
+            <div style="margin-top:3pt"><strong>Ghi chú:</strong> <span class="tag-ba">⚠ Cần chỉnh luồng / cấu hình</span>
+              <ul class="note">
+                <li><code>Case.Contact_Phone__c</code> là formula nhưng lại lấy <code>Account.Phone</code> (không phải Contact), tên field dễ gây hiểu nhầm.</li>
+                <li>Flow Survey không gán <code>ContactId</code> &rarr; <code>ContactPhone</code> trống với Case Survey. Đề xuất bổ sung <code>ContactId</code> = <code>Invitation.Customer_Name__c</code> trong Flow (đồng thời giúp <code>Contact.Phone</code> hiển thị).</li>
+                <li>Thống nhất 1 nguồn: <strong>Contact.Phone</strong> (đúng theo thiết kế "Contact Phone"). Nếu chỉ có Account.Phone thì dùng <code>Contact_Phone__c</code>.</li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="c st"><strong>7</strong></td>
+          <td><strong>VIN / Plate No.</strong></td>
+          <td>
+            <div><strong>Nguồn dữ liệu:</strong> Lookup Vehicle trên Case</div>
+            <div style="margin-top:3pt"><strong>Triển khai:</strong> <code>Case.VIN__c</code> (Lookup <code>Vehicle__c</code>) &rarr; VIN = <code>VIN__r.Name</code>; Biển số = <code>VIN__r.Vehicle_Registration_Number__c</code></div>
+            <div style="margin-top:3pt"><strong>Ghi chú:</strong> <span class="tag-ok">✅ Đã có</span>
+              <ul class="note">
+                <li>Case từ Survey: Flow gán <code>VIN__c</code> = <code>Invitation.Vehicle__c</code>. Case từ Visit: lấy từ <code>Visit__c.VIN__c</code>.</li>
+                <li>Cột gộp "VIN / Plate No." có thể hiển thị thành 2 cột (VIN, Biển số) hoặc gộp bằng Row-Level Formula nếu BA yêu cầu 1 cột.</li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="c st"><strong>8</strong></td>
+          <td><strong>Related Survey ID</strong></td>
+          <td>
+            <div><strong>Nguồn dữ liệu:</strong> Lookup Survey trên Case</div>
+            <div style="margin-top:3pt"><strong>Triển khai:</strong> <code>Case.Survey__c</code> (Lookup <code>Survey</code>)</div>
+            <div style="margin-top:3pt"><strong>Ghi chú:</strong> <span class="tag-ok">✅ Đã có</span>
+              <ul class="note">
+                <li>Chỉ có giá trị khi Case có nguồn Survey (Flow gán <code>Survey__c</code> = Survey của phản hồi).</li>
+                <li><code>Survey__c</code> trỏ tới <strong>Survey (bộ câu hỏi)</strong>, không phải từng lượt khảo sát của khách. Nếu cần định danh từng lượt: dùng <code>Survey_Result__c</code> (cột 10).</li>
+                <li>Quick action <code>Visit__c.New_Case</code> cũng copy <code>Survey__c</code> từ Visit &rarr; Case nguồn Visit Plan vẫn có thể mang Survey ID (xem "Điểm còn mở").</li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="c st"><strong>9</strong></td>
+          <td><strong>Related Visit Report</strong></td>
+          <td>
+            <div><strong>Nguồn dữ liệu:</strong> Lookup Visit trên Case</div>
+            <div style="margin-top:3pt"><strong>Triển khai:</strong> <code>Case.Visit__c</code> (Lookup <code>Visit__c</code>)</div>
+            <div style="margin-top:3pt"><strong>Ghi chú:</strong> <span class="tag-ba">⚠ Cần chỉnh luồng / cấu hình</span>
+              <ul class="note">
+                <li><strong>Field đã tồn tại</strong> (ô vàng trong xlsx nhưng không cần tạo field mới) &mdash; vấn đề là luồng điền dữ liệu.</li>
+                <li>Tạo Case từ nút <code>Visit__c.New_Case</code>: Visit được gắn tự động (Case tạo từ related list của Visit).</li>
+                <li><strong>Tạo Case từ Customer Basic Data</strong> (<code>Customer_Basic_Data__c.NewCase</code>): quick action chưa gán Visit. Bổ sung <code>fieldOverrides</code> <code>Visit__c</code> = <code>Customer_Basic_Data__c.Visit__c</code> để Case trỏ về Visit gốc của CBD.</li>
+                <li>Khi <code>Visit__c</code> có giá trị, <code>autoMappingFromVisit</code> tự điền các field còn trống: Account, Dealer, Contact, VIN, Vehicle Check-in, Survey, Customer Basic Data.</li>
+                <li>Case Survey 3 sao: không có Visit (Visit chỉ sinh khi &lt; 3 sao) &rarr; cột để trống là đúng.</li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="c st"><strong>10</strong></td>
+          <td><strong>Survey Rating</strong></td>
+          <td>
+            <div><strong>Nguồn dữ liệu:</strong> Điểm khảo sát của khách</div>
+            <div style="margin-top:3pt"><strong>Triển khai:</strong> Mặc định thiết kế: <code>Case.Survey_Response__c</code> &mdash; <strong>không dùng được</strong>. Đề xuất: <code>Survey_Result__c.Score__c</code> (liên kết qua <code>Survey_Result__c.Case__c</code>)</div>
+            <div style="margin-top:3pt"><strong>Ghi chú:</strong> <span class="tag-ba">⚠ Cần chỉnh luồng / cấu hình</span>
+              <ul class="note">
+                <li><code>Case.Survey_Response__c</code> (Lookup <code>SurveyResponse</code>) là <strong>field "chết"</strong>: không có Flow/Apex nào điền (đã kiểm tra Flow Survey, trigger Case, quick action) &rarr; luôn trống.</li>
+                <li>Điểm thực tế nằm ở <code>Survey_Result__c.Score__c</code>. Flow Survey tạo Survey Result gắn <code>Case__c</code> (Case vừa tạo) &rarr; đi ngược từ Case sang Survey Result.</li>
+                <li><strong>Cách làm đề xuất:</strong> tạo Custom Report Type <em>Cases with Survey Results</em> (Case là object chính, Survey Result là object con qua <code>Case__c</code>, chọn "A with or without B" để vẫn thấy Case không có Survey). Không cần thêm field trên Case, không cần migrate dữ liệu.</li>
+                <li>Theo rule hiện tại chỉ <strong>đúng 3 sao</strong> mới sinh Case, nên Survey Rating của Case nguồn Survey luôn = 3.</li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="c st"><strong>11</strong></td>
+          <td><strong>Survey Type</strong><br><small style="color:var(--muted)">(Sau bán hàng / Sau dịch vụ)</small></td>
+          <td>
+            <div><strong>Nguồn dữ liệu:</strong> Loại khảo sát</div>
+            <div style="margin-top:3pt"><strong>Triển khai:</strong> <code>Survey_Result__c.Type__c</code> (Picklist: <code>Sale</code> / <code>Service</code>) &mdash; qua Custom Report Type ở cột 10</div>
+            <div style="margin-top:3pt"><strong>Ghi chú:</strong> <span class="tag-new">⭐ Cần tạo thêm</span>
+              <ul class="note">
+                <li>Không cần field mới trên Case nếu dùng Custom Report Type ở cột 10: Flow đã ghi <code>Type__c</code> = Sale / Service trên Survey Result.</li>
+                <li>Phương án thay thế: formula trên Case <code>IF(Origin = 'Survey', IF(NOT(ISBLANK(Vehicle_Check_in__c)), 'Sau dịch vụ', 'Sau bán hàng'), null)</code> &mdash; cùng quy ước với chuông thông báo hiện tại (<code>notifyWhenCaseSurvey</code> phân biệt bằng <code>Vehicle_Check_in__c</code>).</li>
+                <li>Dùng làm filter "Survey Type" trên report.</li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="c st"><strong>12</strong></td>
+          <td><strong>Case reason</strong><br><small style="color:var(--muted)">(xlsx: Subject)</small></td>
+          <td>
+            <div><strong>Nguồn dữ liệu:</strong> Tiêu đề / lý do tạo Case</div>
+            <div style="margin-top:3pt"><strong>Triển khai:</strong> <code>Case.Subject1__c</code> (Text Area, nhãn Subject, bắt buộc)</div>
+            <div style="margin-top:3pt"><strong>Ghi chú:</strong> <span class="tag-ok">✅ Đã có</span>
+              <ul class="note">
+                <li>Theo thiết kế "Case reason" lấy từ <strong>Subject</strong>. Hệ thống đang đồng bộ <code>Subject</code> &harr; <code>Subject1__c</code> (<code>TriggerCaseHandler.syncSubject</code>; Flow Survey gán cả hai).</li>
+                <li>Picklist chuẩn <code>Case.Reason</code> (New problem, Existing problem…) là bộ giá trị mặc định của Salesforce, <strong>không dùng</strong>.</li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="c st"><strong>13</strong></td>
+          <td><strong>Case Description</strong></td>
+          <td>
+            <div><strong>Nguồn dữ liệu:</strong> Field chuẩn</div>
+            <div style="margin-top:3pt"><strong>Triển khai:</strong> <code>Case.Description</code> (<code>DESCRIPTION</code>)</div>
+            <div style="margin-top:3pt"><strong>Ghi chú:</strong> <span class="tag-ok">✅ Đã có</span></div>
+          </td>
+        </tr>
+        <tr>
+          <td class="c st"><strong>14</strong></td>
+          <td><strong>Assigned Department</strong></td>
+          <td>
+            <div><strong>Nguồn dữ liệu:</strong> Formula: phòng ban của người được giao</div>
+            <div style="margin-top:3pt"><strong>Triển khai:</strong> <code>Case.Owner_Department__c</code> (Formula Text: <code>Owner:User.Department</code>)</div>
+            <div style="margin-top:3pt"><strong>Ghi chú:</strong> <span class="tag-ok">✅ Đã có</span>
+              <ul class="note">
+                <li><strong>Field đã tồn tại</strong> (tạo cho CRS_R004) &mdash; không cần tạo mới dù ô vàng trong xlsx.</li>
+                <li>Giá trị = <code>Department</code> trên User đang là Owner. <strong>Để trống</strong> khi Owner là Queue hoặc User chưa khai báo Department &rarr; cần rà soát dữ liệu <code>User.Department</code> trước khi chạy report.</li>
+                <li>Là field Text (không phải picklist): filter dùng "contains / equals" theo đúng chuỗi Department.</li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="c st"><strong>15</strong></td>
+          <td><strong>Assigned PIC</strong></td>
+          <td>
+            <div><strong>Nguồn dữ liệu:</strong> Người phụ trách xử lý Case</div>
+            <div style="margin-top:3pt"><strong>Triển khai:</strong> <code>Case.OwnerId</code> (Case Owner, <code>FULL_NAME</code> / Owner)</div>
+            <div style="margin-top:3pt"><strong>Ghi chú:</strong> <span class="tag-ba">⚠ Cần chỉnh luồng / cấu hình</span>
+              <ul class="note">
+                <li>Thiết kế ghi "User được assign &mdash; look up user, check khi đổi có noti không". <strong>Đề xuất dùng Case Owner</strong> làm PIC, không tạo lookup User riêng (tránh 2 nguồn sự thật Owner vs PIC); Owner Department ở cột 14 cũng dựa trên Owner.</li>
+                <li><strong>Thông báo khi đổi người xử lý:</strong> chưa có Flow/Apex riêng thông báo khi đổi Owner của Case (chỉ có thông báo khi Case Approved/Rejected: <code>TriggerCaseHandler.sendNotiApproval</code>). Khi đổi Owner bằng UI, Salesforce có hộp "Send notification email"; nếu cần chuông/email theo yêu cầu thì phải làm thêm.</li>
+                <li>Case Survey do Guest User của site tạo: Owner phụ thuộc cấu hình Case Assignment / Default Case Owner &mdash; cần kiểm tra trên org.</li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="c st"><strong>16</strong></td>
+          <td><strong>Case Status</strong></td>
+          <td>
+            <div><strong>Nguồn dữ liệu:</strong> Picklist chuẩn</div>
+            <div style="margin-top:3pt"><strong>Triển khai:</strong> <code>Case.Status</code> (<code>STATUS</code>)</div>
+            <div style="margin-top:3pt"><strong>Ghi chú:</strong> <span class="tag-ba">⚠ Cần chỉnh luồng / cấu hình</span>
+              <ul class="note">
+                <li>Thiết kế dùng 4 giá trị: <code>New</code>, <code>In Progress</code>, <code>Submitted</code>, <code>Completed</code>. Hệ thống đã có đủ giá trị trong value set.</li>
+                <li>Business Process của Record Type <code>Case</code> hiện chỉ gồm <code>New</code>, <code>In Progress</code>, <code>Following</code>, <code>Completed</code> &rarr; <strong><code>Submitted</code> chưa được bật cho Record Type Case</strong>.</li>
+                <li>Approval Process <code>Case Customer Data</code>: bấm Submit &rarr; Status = <code>In Progress</code> (field update tên "Submitted Support"), duyệt xong &rarr; <code>Completed</code>, từ chối &rarr; <code>In Progress</code>.</li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="c st"><strong>17</strong></td>
+          <td><strong>Due Date</strong><br><small style="color:var(--muted)">(SLA)</small></td>
+          <td>
+            <div><strong>Nguồn dữ liệu:</strong> Field custom Date</div>
+            <div style="margin-top:3pt"><strong>Triển khai:</strong> <code>Case.Due_Date__c</code> (Date)</div>
+            <div style="margin-top:3pt"><strong>Ghi chú:</strong> <span class="tag-ok">✅ Đã có</span>
+              <ul class="note">
+                <li>Dùng cho filter "SLA Due Date" ở IVC View / Dealer View.</li>
+                <li>Flow Survey chưa gán Due Date khi tạo Case &rarr; Case Survey mới tạo sẽ trống cho đến khi CRS nhập. Nếu muốn mặc định (ví dụ +N ngày) cần BA chốt quy tắc.</li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="c st"><strong>18</strong></td>
+          <td><strong>Resolution</strong><br><small style="color:var(--muted)">(xlsx: Case result)</small></td>
+          <td>
+            <div><strong>Nguồn dữ liệu:</strong> Field custom Text</div>
+            <div style="margin-top:3pt"><strong>Triển khai:</strong> <code>Case.Case_Result__c</code> (Text 115)</div>
+            <div style="margin-top:3pt"><strong>Ghi chú:</strong> <span class="tag-ok">✅ Đã có</span>
+              <ul class="note">
+                <li>Giới hạn 115 ký tự. Nếu nội dung xử lý dài hơn, cần đổi sang Long Text (khi đó không hiển thị được trên report dạng cột).</li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="c st"><strong>19</strong></td>
+          <td><strong>Last Updated Date</strong></td>
+          <td>
+            <div><strong>Nguồn dữ liệu:</strong> Field chuẩn</div>
+            <div style="margin-top:3pt"><strong>Triển khai:</strong> <code>Case.LastModifiedDate</code> (<code>LAST_UPDATE</code>)</div>
+            <div style="margin-top:3pt"><strong>Ghi chú:</strong> <span class="tag-ok">✅ Đã có</span>
+              <ul class="note">
+                <li>Thiết kế ghi "Lastmodified by": nếu cần thêm người sửa cuối thì thêm cột <code>LastModifiedBy</code> (<code>LAST_UPDATE_BY</code>).</li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="c st"><strong>20</strong></td>
+          <td><strong>Completed Date</strong><br><small style="color:var(--muted)">(xlsx: ngày approved)</small></td>
+          <td>
+            <div><strong>Nguồn dữ liệu:</strong> Field chuẩn</div>
+            <div style="margin-top:3pt"><strong>Triển khai:</strong> <code>Case.ClosedDate</code> (<code>CLOSED_DATE</code>)</div>
+            <div style="margin-top:3pt"><strong>Ghi chú:</strong> <span class="tag-ok">✅ Đã có</span>
+              <ul class="note">
+                <li><code>Completed</code> là Status loại "Closed" nên Salesforce tự ghi <code>ClosedDate</code> khi chuyển sang Completed. Với Case đi qua Approval Process <code>Case Customer Data</code>, bước duyệt cuối đặt Status = Completed &rarr; <code>ClosedDate</code> chính là <strong>ngày duyệt</strong>.</li>
+                <li>Dùng làm filter "theo tháng". Case chưa Completed thì để trống; mở lại Case rồi đóng lại sẽ ghi đè ngày.</li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="c st"><strong>21</strong></td>
+          <td><strong>Approval By</strong><br><small style="color:var(--muted)">(Người approve)</small></td>
+          <td>
+            <div><strong>Nguồn dữ liệu:</strong> Người duyệt bước cuối của Approval Process</div>
+            <div style="margin-top:3pt"><strong>Triển khai:</strong> Chưa có field trên Case. Đề xuất: <code>Case.Approved_By__c</code> (Lookup User)</div>
+            <div style="margin-top:3pt"><strong>Ghi chú:</strong> <span class="tag-new">⭐ Cần tạo thêm</span>
+              <ul class="note">
+                <li>Người duyệt chỉ lưu ở <code>ProcessInstanceStep.ActorId</code> &mdash; không kéo trực tiếp lên Case report được.</li>
+                <li>Đề xuất: khi Case chuyển sang <code>Completed</code> qua duyệt, Apex/Flow đọc <code>ProcessInstanceStep</code> mới nhất (Status = Approved) và ghi <code>ActorId</code> vào <code>Approved_By__c</code>.</li>
+                <li>Bước duyệt hiện tại là "Duyệt CRS" (1 bước, 1 approver cố định trong Approval Process). Thiết kế còn ghi "IVC HOD hoặc CRS tuỳ workflow; chưa chốt đóng Case Survey" &rarr; xem "Điểm còn mở".</li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 id="s2">Bộ lọc (Filter) của báo cáo</h2>
+    <table class="grid">
+      <thead>
+        <tr>
+          <th class="c st">STT</th>
+          <th>Filter</th>
+          <th>Field</th>
+          <th>Ghi chú</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="c st">1</td><td><strong>Created Date</strong></td><td><code>Case.CreatedDate</code></td><td>Theo tháng (Date filter: Range = tháng cần xem).</td></tr>
+        <tr><td class="c st">2</td><td><strong>Case Source</strong></td><td><code>Case.Origin</code></td><td>Survey / Customer Basic Data / Direct IVC (sau khi bổ sung giá trị).</td></tr>
+        <tr><td class="c st">3</td><td><strong>Dealer Name</strong></td><td><code>Case.Dealer__c</code></td><td>Chỉ có ý nghĩa ở IVC View (Dealer View chỉ thấy Case của chính Đại lý).</td></tr>
+        <tr><td class="c st">4</td><td><strong>Survey Type</strong></td><td><code>Survey_Result__c.Type__c</code></td><td>Sale / Service. Cần Custom Report Type (xem cột 10 &amp; 11).</td></tr>
+        <tr><td class="c st">5</td><td><strong>Case Status</strong></td><td><code>Case.Status</code></td><td>New / In Progress / Submitted / Completed.</td></tr>
+        <tr><td class="c st">6</td><td><strong>Assigned Department</strong></td><td><code>Case.Owner_Department__c</code></td><td>Text, filter bằng "equals" hoặc "contains".</td></tr>
+        <tr><td class="c st">7</td><td><strong>Completed Date</strong></td><td><code>Case.ClosedDate</code></td><td>Theo tháng.</td></tr>
+        <tr><td class="c st">8</td><td><strong>SLA Due Date</strong></td><td><code>Case.Due_Date__c</code></td><td>Có trong IVC View / Dealer View (sheet View), không có trong khung filter của sheet chính.</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="s3">IVC View &amp; Dealer View</h2>
+    <table class="grid">
+      <thead>
+        <tr>
+          <th style="width:16%">Hạng mục</th>
+          <th style="width:42%">IVC View</th>
+          <th style="width:42%">Dealer View</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Phạm vi</strong></td><td>Toàn bộ Case của IVC và tất cả Đại lý.</td><td>Chỉ Case thuộc Đại lý của user đăng nhập.</td></tr>
+        <tr><td><strong>Filter</strong></td><td>Dealer, Case Source, Status, Assigned Department, SLA Due Date.</td><td>Case Source, Status, Assigned Department, SLA Due Date.</td></tr>
+        <tr><td><strong>Quyền</strong></td><td>Role IVC được xem tất cả; quyền sửa cần xác nhận riêng.</td><td>Phải chặn theo Dealer ở phía server, không chỉ lọc trên màn hình.</td></tr>
+        <tr><td><strong>Ngoại lệ</strong></td><td>&mdash;</td><td>Cần xác nhận Dealer có thấy khiếu nại IVC được giao cho phòng nội bộ IVC hay không.</td></tr>
+      </tbody>
+    </table>
+    <div class="callout note">
+      <span class="label">Cách đáp ứng trên Salesforce</span>
+      <ul>
+        <li>Báo cáo Salesforce <strong>luôn tuân theo quyền xem bản ghi (sharing)</strong>, nên "chặn ở server" đạt được bằng cách giữ Case ở chế độ Private và cấp quyền xem đúng. Không dựa vào filter Dealer.</li>
+        <li>Hiện <code>Case</code> có OWD = <strong>Private</strong>. Trong repo chỉ thấy sharing rule <code>Case - CRS</code> chia sẻ Record Type <code>Case</code> cho role <code>IVC_General_Director</code> và cấp dưới (Edit). Cách user Đại lý được thấy Case của Đại lý mình (theo Owner / Role / nhóm) <strong>chưa nằm trong repo</strong> &mdash; cần kiểm tra trên org trước khi cam kết Dealer View.</li>
+        <li>Đề xuất: 1 Custom Report Type, 2 báo cáo lưu ở 2 folder: <em>IVC View</em> (chia sẻ cho role IVC) và <em>Dealer View</em> (chia sẻ cho các profile <code>DLR_*</code>). Dealer View không cần cột/filter Dealer.</li>
+      </ul>
+    </div>
+
+    <h2 id="s4">Quy tắc nghiệp vụ (Field Rules) &amp; hiện trạng hệ thống</h2>
+    <table class="grid">
+      <thead>
+        <tr>
+          <th style="width:20%">Quy tắc</th>
+          <th style="width:36%">Yêu cầu trong thiết kế</th>
+          <th style="width:44%">Hiện trạng hệ thống</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Survey 1–2 sao</strong></td><td>Tạo Visit; không tạo Case trừ khi tạo riêng.</td><td><span class="tag-ok">✅ Đã có</span> Flow: điểm &lt; 3 &rarr; tạo <code>Visit__c</code> (Visit Survey), không tạo Case.</td></tr>
+        <tr><td><strong>Survey 3 sao</strong></td><td>Tạo Case; Đại lý tự xử lý nội bộ.</td><td><span class="tag-ok">✅ Đã có</span> Flow: điểm = 3 &rarr; tạo Case (<code>Origin = Survey</code>, <code>Status = New</code>); chuông + email cho CS Staff của Đại lý.</td></tr>
+        <tr><td><strong>Survey 4–5 sao</strong></td><td>Không tự tạo Case.</td><td><span class="tag-ok">✅ Đã có</span> Flow chỉ lưu Survey Result.</td></tr>
+        <tr><td><strong>IVC complaint</strong></td><td>IVC tạo Case và giao phòng liên quan.</td><td><span class="tag-new">⭐ Cần tạo thêm</span> Cần giá trị Origin <code>Direct IVC</code>; giao phòng bằng đổi Owner (Owner Department tự cập nhật).</td></tr>
+        <tr><td><strong>Related Survey ID</strong></td><td>Chỉ điền khi nguồn = Survey.</td><td><span class="tag-ok">✅ Đã có</span> Flow Survey điền. Lưu ý Quick action Visit cũng copy Survey sang Case.</td></tr>
+        <tr><td><strong>Related Visit Report</strong></td><td>Chỉ điền khi Case gắn với Visit.</td><td><span class="tag-ba">⚠ Cần chỉnh luồng / cấu hình</span> Chưa điền khi tạo Case từ Customer Basic Data.</td></tr>
+        <tr><td><strong>Survey Rating</strong></td><td>Chỉ điền cho Case Survey.</td><td><span class="tag-ba">⚠ Cần chỉnh luồng / cấu hình</span> Lấy từ Survey Result (cột 10).</td></tr>
+        <tr><td><strong>Dealer Code</strong></td><td>Bắt buộc cho bảo mật theo Đại lý; cần định nghĩa chủ sở hữu cho Case chỉ của IVC.</td><td><span class="tag-ba">⚠ Cần chỉnh luồng / cấu hình</span> <code>Dealer__c</code> không bắt buộc; Case IVC tự tạo có thể trống Dealer.</td></tr>
+        <tr><td><strong>Case Status</strong></td><td>FSD: Open / In Progress / Submitted / Done / Pending.</td><td><span class="tag-ba">⚠ Cần chỉnh luồng / cấu hình</span> Hệ thống dùng New / In Progress / Submitted / Completed (+ Following, On Hold…). Cần đối chiếu tên: Open&nbsp;=&nbsp;New, Done&nbsp;=&nbsp;Completed, Pending&nbsp;=&nbsp;On Hold?</td></tr>
+        <tr><td><strong>Approval</strong></td><td>IVC HOD hoặc CRS tuỳ workflow; chưa xác nhận đóng Case Survey.</td><td><span class="tag-ba">⚠ Cần chỉnh luồng / cấu hình</span> Approval Process <code>Case Customer Data</code> 1 bước "Duyệt CRS".</td></tr>
+        <tr><td><strong>Field status</strong></td><td>Core FSD: Case Name, Related Visit Report, Assigned Department, Case Status, Description, SLA Due Date, Resolution, Reason; các field khác là đề xuất.</td><td>Đã đối chiếu từng cột ở bảng mapping.</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="s5">Tổng hợp việc cần làm</h2>
+    <table class="grid">
+      <thead>
+        <tr>
+          <th class="c st">#</th>
+          <th>Việc</th>
+          <th>Cột liên quan</th>
+          <th>Loại</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="c st">1</td><td>Thêm giá trị <code>Customer Basic Data</code>, <code>Direct IVC</code> vào picklist <code>Case.Origin</code> (value set + Record Type Case).</td><td>3</td><td>Cấu hình picklist</td></tr>
+        <tr><td class="c st">2</td><td>Đổi <code>Origin</code> của quick action <code>Customer_Basic_Data__c.NewCase</code> sang <code>Customer Basic Data</code>; thêm override <code>Visit__c</code> = <code>Customer_Basic_Data__c.Visit__c</code>.</td><td>3, 9</td><td>Quick action</td></tr>
+        <tr><td class="c st">3</td><td>Flow Survey: gán <code>AccountId</code> (= <code>Invitation.Customer__c</code>) và <code>ContactId</code> (= <code>Invitation.Customer_Name__c</code>) khi tạo Case.</td><td>5, 6</td><td>Flow</td></tr>
+        <tr><td class="c st">4</td><td>Tạo Custom Report Type <em>Cases with Survey Results</em> (Case + Survey Result qua <code>Case__c</code>, with or without).</td><td>10, 11</td><td>Report type</td></tr>
+        <tr><td class="c st">5</td><td>Tạo field <code>Case.Approved_By__c</code> (Lookup User) + cơ chế ghi người duyệt cuối; cấp FLS &amp; đưa vào layout.</td><td>21</td><td>Field + Apex/Flow</td></tr>
+        <tr><td class="c st">6</td><td>Bật <code>Submitted</code> cho Business Process của Record Type <code>Case</code> (nếu BA xác nhận dùng trạng thái này).</td><td>16</td><td>Business Process</td></tr>
+        <tr><td class="c st">7</td><td>Rà soát <code>User.Department</code> của nhân sự CRS / Đại lý; kiểm tra Owner mặc định của Case Survey.</td><td>14, 15</td><td>Dữ liệu / cấu hình</td></tr>
+        <tr><td class="c st">8</td><td>Kiểm tra sharing để user Đại lý chỉ thấy Case của Đại lý mình; tạo 2 folder IVC View / Dealer View.</td><td>Dealer View</td><td>Phân quyền</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="s6">Điểm còn mở</h2>
+    <ul>
+      <li>Các Case cũ có Origin <code>Email</code> / <code>Phone</code> / <code>Web</code> / <code>Visit Plan</code> sẽ hiển thị đúng giá trị cũ trên cột Case Source. Cần BA xác nhận có gộp vào 3 nguồn <code>Survey / Customer Basic Data / Direct IVC</code> hay chỉ lọc các Case thuộc 3 nguồn này.</li>
+      <li>Case tạo từ nút <code>Visit__c.New_Case</code> (Origin = <code>Visit Plan</code>) có thuộc 1 trong 3 nguồn không; hiện Case này còn copy <code>Survey__c</code> từ Visit nên cũng kích hoạt chuông / email "Case Survey mới".</li>
+      <li>Case IVC tự tạo (Direct IVC): ai là owner, Dealer có bắt buộc không, và Đại lý có được thấy khi Case giao cho phòng nội bộ IVC không.</li>
+      <li>Quyền sửa Case của role IVC trên báo cáo/bản ghi (thiết kế ghi "cần xác nhận riêng").</li>
+      <li>Ai duyệt / đóng Case Survey (IVC HOD hay CRS); có cần trạng thái <code>Submitted</code> trước khi đóng không.</li>
+    </ul>
+
+  </main>
+</body>
+
+</html>

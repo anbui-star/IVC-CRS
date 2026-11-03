@@ -1,0 +1,980 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kiến thức cốt lõi &amp; Quy trình dữ liệu Case phòng CRS</title>
+  <style>
+    :root {
+      --ink: #000000;
+      --muted: #333333;
+      --brand: #1f4e79;
+      --brand-soft: #e8eff7;
+      --line: #c9d1db;
+      --head-bg: #1f4e79;
+      --zebra: #f6f8fb;
+      --note-bg: #eef6ff;
+      --note-bar: #2f80ed;
+      --warn-bg: #fff6e5;
+      --warn-bar: #f2994a;
+      --ok-bg: #edf8f1;
+      --ok-bar: #27ae60;
+      --bad-bg: #fdeeee;
+      --bad-bar: #eb5757;
+      --code-bg: #f3f4f6;
+      --desk: #e5e7eb;
+      --paper: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      background: var(--desk);
+    }
+
+    body {
+      margin: 0;
+      padding: 32px 16px;
+      font-family: Calibri, "Segoe UI", Arial, sans-serif;
+      font-size: 11pt;
+      line-height: 1.5;
+      color: var(--ink);
+    }
+
+    /* ===== Trang giấy A4 ===== */
+    .page {
+      width: 210mm;
+      max-width: 100%;
+      margin: 0 auto;
+      padding: 22mm 20mm;
+      background: var(--paper);
+      box-shadow: 0 2px 14px rgba(0, 0, 0, .18);
+    }
+
+    /* ===== Tiêu đề tài liệu ===== */
+    .doc-eyebrow {
+      margin: 0;
+      font-size: 10pt;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    h1.doc-title {
+      margin: 4pt 0 6pt;
+      font-size: 22pt;
+      line-height: 1.2;
+      color: var(--brand);
+    }
+
+    .doc-sub {
+      margin: 0 0 14pt;
+      font-size: 12pt;
+      color: var(--muted);
+    }
+
+    table.meta {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0 0 6pt;
+      font-size: 10.5pt;
+    }
+
+    table.meta th,
+    table.meta td {
+      padding: 5pt 8pt;
+      border: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    table.meta th {
+      width: 28%;
+      background: var(--brand-soft);
+      color: var(--brand);
+      font-weight: 600;
+    }
+
+    /* ===== Mục lục ===== */
+    nav.toc {
+      margin: 18pt 0 4pt;
+      padding: 12pt 16pt;
+      background: var(--brand-soft);
+      border-left: 4px solid var(--brand);
+    }
+
+    nav.toc h2 {
+      margin: 0 0 6pt;
+      padding: 0;
+      border: 0;
+      font-size: 12pt;
+      color: var(--brand);
+    }
+
+    nav.toc ol {
+      margin: 0;
+      padding-left: 18pt;
+    }
+
+    nav.toc li {
+      margin: 1pt 0;
+    }
+
+    nav.toc a {
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    nav.toc a:hover {
+      text-decoration: underline;
+    }
+
+    /* ===== Heading ===== */
+    h2 {
+      margin: 26pt 0 8pt;
+      padding-bottom: 3pt;
+      font-size: 16pt;
+      color: var(--brand);
+      border-bottom: 2px solid var(--brand);
+    }
+
+    h3 {
+      margin: 18pt 0 6pt;
+      font-size: 13pt;
+      color: var(--brand);
+    }
+
+    h4 {
+      margin: 12pt 0 4pt;
+      font-size: 11.5pt;
+      color: var(--ink);
+    }
+
+    h2,
+    h3,
+    h4 {
+      break-after: avoid;
+    }
+
+    p {
+      margin: 0 0 7pt;
+    }
+
+    ul,
+    ol {
+      margin: 0 0 8pt;
+      padding-left: 20pt;
+    }
+
+    li {
+      margin: 2pt 0;
+    }
+
+    a {
+      color: #1a5fb4;
+    }
+
+    hr {
+      margin: 18pt 0;
+      border: 0;
+      border-top: 1px solid var(--line);
+    }
+
+    /* ===== Inline code / code block ===== */
+    code {
+      padding: 0 3pt;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 9.5pt;
+      background: var(--code-bg);
+      border-radius: 3px;
+      color: #000;
+      word-break: break-word;
+    }
+
+    pre {
+      margin: 6pt 0 10pt;
+      padding: 10pt 12pt;
+      background: var(--code-bg);
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--brand);
+      border-radius: 3px;
+      overflow-x: auto;
+      break-inside: avoid;
+    }
+
+    pre code {
+      padding: 0;
+      background: none;
+      color: var(--ink);
+      font-size: 9pt;
+      line-height: 1.45;
+      word-break: normal;
+    }
+
+    /* ===== Bảng ===== */
+    table.grid {
+      width: 100%;
+      margin: 6pt 0 8pt;
+      border-collapse: collapse;
+      font-size: 10pt;
+    }
+
+    table.grid th,
+    table.grid td {
+      padding: 5pt 7pt;
+      border: 1px solid var(--line);
+      vertical-align: top;
+      text-align: left;
+    }
+
+    table.grid thead th {
+      background: var(--head-bg);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    table.grid tbody tr:nth-child(even) td {
+      background: var(--zebra);
+    }
+
+    table.grid td.c,
+    table.grid th.c {
+      text-align: center;
+    }
+
+    table.grid tr {
+      break-inside: avoid;
+    }
+
+    table.grid thead {
+      display: table-header-group;
+    }
+
+    table.grid td.st,
+    table.grid th.st {
+      white-space: nowrap;
+    }
+
+    table.grid tr.removed td {
+      background: #fff8f8;
+    }
+
+    table.grid tr.removed td:nth-child(2) {
+      color: #777;
+      text-decoration: line-through;
+    }
+
+    /* ===== Tags ===== */
+    .tag-ok,
+    .tag-todo,
+    .tag-ba,
+    .tag-flow,
+    .tag-apex,
+    .tag-new,
+    .tag-del,
+    .tag-formula {
+      display: inline-block;
+      padding: 0 5pt;
+      border-radius: 3px;
+      font-weight: 600;
+      font-size: 9.5pt;
+      white-space: nowrap;
+    }
+
+    .tag-ok {
+      background: var(--ok-bg);
+      color: #1e7a45;
+    }
+
+    .tag-todo {
+      background: var(--bad-bg);
+      color: #b42318;
+    }
+
+    .tag-ba {
+      background: var(--warn-bg);
+      color: #b25e09;
+    }
+
+    .tag-flow {
+      background: #f3eefe;
+      color: #5b3aa8;
+    }
+
+    .tag-apex {
+      background: #fff4e5;
+      color: #9a4b00;
+    }
+
+    .tag-new {
+      background: var(--note-bg);
+      color: #1a5fb4;
+    }
+
+    .tag-del {
+      background: #fdeeee;
+      color: #b42318;
+    }
+
+    .tag-formula {
+      background: #f4ecf7;
+      color: #6c3483;
+    }
+
+    table.grid ul.note {
+      margin: 2pt 0 0;
+      padding-left: 14pt;
+    }
+
+    table.grid ul.note li {
+      margin: 1pt 0;
+    }
+
+    /* ===== Callout ===== */
+    .callout {
+      margin: 8pt 0 10pt;
+      padding: 8pt 12pt;
+      border-left: 4px solid;
+      border-radius: 0 3px 3px 0;
+      break-inside: avoid;
+    }
+
+    .callout> :last-child {
+      margin-bottom: 0;
+    }
+
+    .callout .label {
+      display: block;
+      margin-bottom: 2pt;
+      font-weight: 700;
+      font-size: 10pt;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .callout.note {
+      background: var(--note-bg);
+      border-color: var(--note-bar);
+    }
+
+    .callout.warn {
+      background: var(--warn-bg);
+      border-color: var(--warn-bar);
+    }
+
+    .callout.ok {
+      background: var(--ok-bg);
+      border-color: var(--ok-bar);
+    }
+
+    .callout.bad {
+      background: var(--bad-bg);
+      border-color: var(--bad-bar);
+    }
+
+    footer.doc-foot {
+      margin-top: 26pt;
+      padding-top: 6pt;
+      border-top: 1px solid var(--line);
+      font-size: 9pt;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    /* ===== In / lưu PDF ===== */
+    @page {
+      size: A4;
+      margin: 18mm 16mm;
+    }
+
+    @media print {
+
+      html,
+      body {
+        background: #fff;
+      }
+
+      body {
+        padding: 0;
+        font-size: 10.5pt;
+      }
+
+      .page {
+        width: auto;
+        margin: 0;
+        padding: 0;
+        box-shadow: none;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .page {
+        padding: 16px;
+      }
+
+      h1.doc-title {
+        font-size: 18pt;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+
+    <h1 class="doc-title">Kiến thức cốt lõi &amp; Quy trình dữ liệu Case phòng CRS</h1>
+    <p class="doc-sub">Khái niệm về Case, Survey, Visit, Customer Basic Data và mối quan hệ tương hỗ</p>
+
+    <table class="meta">
+      <tr>
+        <th>Phạm vi áp dụng</th>
+        <td>Phòng CRS &ndash; IVC và các Đại lý (CS Staff) xử lý phản hồi, khiếu nại và khảo sát khách hàng.</td>
+      </tr>
+      <tr>
+        <th>Hệ sinh thái áp dụng</th>
+        <td>Tài liệu tham chiếu cho nhóm báo cáo CRS (CRS_R001 &ndash; CRS_R004 và Unified Case Report).</td>
+      </tr>
+      <tr>
+        <th>Đối tượng dữ liệu</th>
+        <td><code>Case</code>, <code>Survey</code> / <code>SurveyInvitation</code> / <code>Survey_Result__c</code>, <code>Visit__c</code>,
+          <code>Customer_Basic_Data__c</code>, <code>Vehicle__c</code> / <code>Vehicle_Check_in__c</code>, <code>Account</code>, <code>Contact</code>.
+        </td>
+      </tr>
+      <tr>
+        <th>Mục đích tài liệu</th>
+        <td>Làm rõ bản chất dữ liệu, nguồn sinh Case, luồng xử lý và quy tắc ghi nhận số liệu trên báo cáo CRS.</td>
+      </tr>
+      <tr>
+        <th>Cơ sở</th>
+        <td>Metadata trong repo (object Case, Flow <code>Flow_Survey_Question_Response</code>, <code>TriggerCaseHandler</code>, quick action, Approval Process). Chưa đối chiếu dữ liệu thực tế trên org.</td>
+      </tr>
+    </table>
+
+    <nav class="toc">
+      <h2>Mục lục tài liệu</h2>
+      <ol>
+        <li><a href="#s1">1. Khái niệm cốt lõi 6 đối tượng theo góc nhìn phòng CRS</a></li>
+        <li><a href="#s2">2. Đặc tả ý nghĩa các trường dữ liệu trên đối tượng Case</a></li>
+        <li><a href="#s3">3. Đặc tả các trường liên quan: Survey Result, Visit, Customer Basic Data</a></li>
+        <li><a href="#s4">4. Mối quan hệ tương hỗ &amp; cơ chế sinh Case</a></li>
+        <li><a href="#s5">5. Nguyên tắc phân loại &amp; đối soát số liệu trên báo cáo Case</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="s1">1. Khái niệm cốt lõi 6 đối tượng theo góc nhìn phòng CRS</h2>
+    <p>Trong quy trình chăm sóc khách hàng sau bán hàng / sau dịch vụ của phòng CRS, 6 đối tượng dưới đây là mắt xích
+      từ lúc khảo sát khách hàng đến khi xử lý xong phản hồi:</p>
+
+    <table class="grid">
+      <thead>
+        <tr>
+          <th style="width:18%">Đối tượng</th>
+          <th style="width:28%">Định nghĩa trong CRS</th>
+          <th style="width:34%">Vai trò nghiệp vụ</th>
+          <th style="width:20%">Trạng thái tiêu biểu</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Case</strong><br><small style="color:var(--muted)">(Yêu cầu / khiếu nại)</small></td>
+          <td>Phiếu ghi nhận một vấn đề cần xử lý của khách hàng: từ khảo sát chưa hài lòng, từ hồ sơ khách hàng
+            (Customer Basic Data), hoặc khiếu nại gửi trực tiếp tới IVC.</td>
+          <td>Là <strong>đơn vị theo dõi xử lý</strong>: có người phụ trách (Owner), phòng ban, hạn xử lý (Due Date), kết
+            quả (Case Result) và luồng phê duyệt. Là đối tượng chính của Unified Case Report.</td>
+          <td><code>New</code>, <code>In Progress</code>, <code>Following</code>, <code>Completed</code></td>
+        </tr>
+        <tr>
+          <td><strong>Survey</strong><br><small style="color:var(--muted)">(Khảo sát)</small></td>
+          <td>Bộ câu hỏi đánh giá mức độ hài lòng, gửi cho khách qua email: <em>Sau bán hàng</em> (từ Sales Order Item) hoặc
+            <em>Sau dịch vụ</em> (từ Vehicle Check-in). Mỗi lượt gửi là một <code>SurveyInvitation</code>; kết quả lưu ở
+            <code>Survey_Result__c</code>.</td>
+          <td><strong>Nguồn thu thập phản hồi</strong> và là điểm khởi đầu của luồng: điểm sao quyết định tạo Case hay
+            Visit, hoặc chỉ ghi nhận CSAT.</td>
+          <td>Invitation: đã gửi / đã hoàn thành; Result: Score 1&ndash;5, Type <code>Sale</code> / <code>Service</code></td>
+        </tr>
+        <tr>
+          <td><strong>Visit</strong><br><small style="color:var(--muted)">(Viếng thăm / Báo cáo thăm khách)</small></td>
+          <td>Lượt thăm khách hàng của CRS/IVC, lập theo kế hoạch hoặc sinh tự động khi khách chấm dưới 3 sao.</td>
+          <td>Ghi nhận nhu cầu, phản hồi trực tiếp của khách; có thể phát sinh Case xử lý (nút <em>New Case</em> trên Visit).</td>
+          <td><code>Plan</code>, <code>In Progress</code>, <code>Completed</code>, <code>Cancelled</code></td>
+        </tr>
+        <tr>
+          <td><strong>Customer Basic Data</strong><br><small style="color:var(--muted)">(Hồ sơ thông tin khách hàng)</small></td>
+          <td>Hồ sơ khảo sát khách hàng ghi nhận trong lần thăm: quy mô đội xe, nhu cầu, mức độ hài lòng, xếp hạng khách.</td>
+          <td>Nguồn thông tin để CRS tạo Case xử lý các yêu cầu khách đưa ra (nút <em>New Case</em> trên CBD).</td>
+          <td>Theo <code>Report_Status__c</code></td>
+        </tr>
+        <tr>
+          <td><strong>Vehicle / Vehicle Check-in</strong><br><small style="color:var(--muted)">(Xe / Lượt vào xưởng)</small></td>
+          <td><code>Vehicle__c</code> là hồ sơ xe (VIN, biển số, Contact Using); <code>Vehicle_Check_in__c</code> là một lượt đưa xe vào xưởng dịch vụ.</td>
+          <td>Xác định <strong>khách nào, xe nào, lượt dịch vụ nào</strong> bị khảo sát; có Check-in = khảo sát Sau dịch vụ.</td>
+          <td>Check-in: <code>Completed</code> khi Check Out</td>
+        </tr>
+        <tr>
+          <td><strong>Account / Contact</strong><br><small style="color:var(--muted)">(Khách hàng, Đại lý, Người liên hệ)</small></td>
+          <td><code>Account</code> vừa là khách hàng vừa là Đại lý (Dealer); <code>Contact</code> là người liên hệ / người dùng xe; Contact của nhân sự Đại lý gắn với User và Dealer Location.</td>
+          <td>Cơ sở <strong>phân quyền và thông báo theo Đại lý</strong>: Case thuộc Dealer nào thì User của Dealer đó nhận chuông / email.</td>
+          <td>&mdash;</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout note">
+      <span class="label">Tóm tắt ngắn gọn quy trình</span>
+      <p>Khách mua xe / dùng dịch vụ ➜ hệ thống tự gửi <strong>Survey</strong> ➜ khách chấm sao ➜
+        <strong>= 3 sao</strong>: tạo <strong>Case</strong> cho Đại lý xử lý · <strong>&lt; 3 sao</strong>: tạo
+        <strong>Visit</strong> để CRS thăm khách · <strong>&gt; 3 sao</strong>: chỉ ghi nhận điểm. Ngoài khảo sát, Case còn
+        được tạo từ <strong>Visit</strong>, <strong>Customer Basic Data</strong> hoặc do IVC nhận khiếu nại trực tiếp.</p>
+    </div>
+
+    <h2 id="s2">2. Đặc tả ý nghĩa các trường dữ liệu trên đối tượng Case</h2>
+    <p>Đối tượng <code>Case</code> lưu toàn bộ thông tin tiếp nhận và xử lý. Bảng dưới đây phân loại các trường mà phòng
+      CRS dùng cho báo cáo:</p>
+
+    <table class="grid">
+      <thead>
+        <tr>
+          <th style="width:24%">Tên trường (API Name)</th>
+          <th style="width:18%">Nhãn hiển thị</th>
+          <th style="width:15%">Kiểu dữ liệu</th>
+          <th style="width:43%">Ý nghĩa nghiệp vụ &amp; Quy tắc sử dụng</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="background:var(--brand-soft)">
+          <td colspan="4"><strong style="color:var(--brand)">Nhóm 1: Nhận diện, Nguồn &amp; Phân loại</strong></td>
+        </tr>
+        <tr>
+          <td><code>CaseNumber</code></td>
+          <td>Case Number</td>
+          <td>Auto Number</td>
+          <td>Số Case tự tăng; là định danh hiển thị trên báo cáo (cột "Case Name" của Unified Case Report).</td>
+        </tr>
+        <tr>
+          <td><code>RecordTypeId</code></td>
+          <td>Record Type</td>
+          <td>Record Type</td>
+          <td>Object Case dùng chung nhiều phòng: <code>Case</code> (CRS), <code>AFS</code> (phụ tùng), <code>FLS Support</code>, <code>Khiếu nại kỹ thuật</code>, <code>Request Quotation</code>. Phần CRS dùng Record Type <code>Case</code>; khi làm báo cáo CRS cần lọc đúng Record Type này để không lẫn Case của phòng khác.</td>
+        </tr>
+        <tr>
+          <td><code>Origin</code></td>
+          <td>Case Origin</td>
+          <td>Picklist</td>
+          <td>Nguồn tạo Case. Giá trị hiện có: Email, Phone, Web, <code>Visit Plan</code>, <code>Survey</code>, New Parts Quotation. Case từ khảo sát luôn là <code>Survey</code>. Thiết kế báo cáo mới còn cần <code>Customer Basic Data</code> và <code>Direct IVC</code> (chưa có).</td>
+        </tr>
+        <tr>
+          <td><code>Subject1__c / Subject</code></td>
+          <td>Subject</td>
+          <td>Text Area / Text</td>
+          <td><code>Subject1__c</code> là Subject bắt buộc trên giao diện; <code>Subject</code> chuẩn được đồng bộ (<code>TriggerCaseHandler.syncSubject</code>). Case Survey có Subject dạng "Đánh giá khảo sát mua xe - 3 sao - [Đại lý]".</td>
+        </tr>
+        <tr>
+          <td><code>Description</code></td>
+          <td>Description</td>
+          <td>Long Text</td>
+          <td>Mô tả chi tiết vấn đề của khách hàng.</td>
+        </tr>
+        <tr>
+          <td><code>Case_Name__c</code></td>
+          <td>Case Name</td>
+          <td>Text(255)</td>
+          <td>Tên Case nhập tay (khác với Case Number). Không phải khoá định danh.</td>
+        </tr>
+        <tr style="background:var(--brand-soft)">
+          <td colspan="4"><strong style="color:var(--brand)">Nhóm 2: Khách hàng, Đại lý &amp; Phương tiện</strong></td>
+        </tr>
+        <tr>
+          <td><code>Dealer__c</code></td>
+          <td>Dealer Name</td>
+          <td>Lookup(Account)</td>
+          <td>Đại lý chịu trách nhiệm xử lý Case. Cơ sở để thông báo (chuông, email) và phân quyền theo Đại lý. Tự điền từ Survey / Visit / Dealer Location của người tạo.</td>
+        </tr>
+        <tr>
+          <td><code>AccountId</code></td>
+          <td>Account Name</td>
+          <td>Lookup(Account)</td>
+          <td>Khách hàng (tổ chức/cá nhân) của Case. Cột "Customer Name" trên báo cáo lấy từ field này.</td>
+        </tr>
+        <tr>
+          <td><code>ContactId</code></td>
+          <td>Contact Name</td>
+          <td>Lookup(Contact)</td>
+          <td>Người liên hệ chuẩn; <code>ContactPhone</code> lấy số điện thoại từ Contact này.</td>
+        </tr>
+        <tr>
+          <td><code>Customer__c</code></td>
+          <td>Customer Name</td>
+          <td>Lookup(Account)</td>
+          <td>Field custom, nhãn trùng với <code>Customer_Name__c</code>. Quick action Customer Basic Data gán field này; dễ nhầm khi chọn cột report.</td>
+        </tr>
+        <tr>
+          <td><code>Customer_Name__c</code></td>
+          <td>Customer Name</td>
+          <td>Lookup(Contact)</td>
+          <td>Người liên hệ (Contact). Flow Survey và quick action Visit gán field này.</td>
+        </tr>
+        <tr>
+          <td><code>Contact_Name__c / Contact_Phone__c</code></td>
+          <td>Contact Name / Contact Phone</td>
+          <td>Formula Text</td>
+          <td>Công thức lấy <code>Account.Name</code> / <code>Account.Phone</code> (không phải từ Contact dù tên field gợi ý).</td>
+        </tr>
+        <tr>
+          <td><code>VIN__c</code></td>
+          <td>VIN</td>
+          <td>Lookup(Vehicle__c)</td>
+          <td>Xe liên quan; VIN là <code>Vehicle__c.Name</code>, biển số là <code>Vehicle__c.Vehicle_Registration_Number__c</code>.</td>
+        </tr>
+        <tr>
+          <td><code>Vehicle_Check_in__c</code></td>
+          <td>Vehicle Check-in</td>
+          <td>Lookup</td>
+          <td>Lượt vào xưởng dịch vụ liên quan. Có giá trị = Case thuộc khảo sát <strong>Sau dịch vụ</strong> (cách hệ thống phân biệt hiện nay trong chuông thông báo).</td>
+        </tr>
+        <tr style="background:var(--brand-soft)">
+          <td colspan="4"><strong style="color:var(--brand)">Nhóm 3: Liên kết nguồn (Survey / Visit / Customer Basic Data)</strong></td>
+        </tr>
+        <tr>
+          <td><code>Survey__c</code></td>
+          <td>Survey</td>
+          <td>Lookup(Survey)</td>
+          <td>Bộ câu hỏi khảo sát (không phải từng lượt khảo sát). Chỉ nên có khi Case sinh ra từ khảo sát.</td>
+        </tr>
+        <tr>
+          <td><code>Survey_Response__c</code></td>
+          <td>Survey Response</td>
+          <td>Lookup(SurveyResponse)</td>
+          <td><strong>Hiện không được hệ thống điền</strong> (Flow Survey, trigger, quick action đều không gán). Không dùng để lấy điểm khảo sát.</td>
+        </tr>
+        <tr>
+          <td><code>Visit__c</code></td>
+          <td>Visit</td>
+          <td>Lookup(Visit__c)</td>
+          <td>Báo cáo viếng thăm liên quan. Khi có giá trị, trigger tự điền các field còn trống từ Visit.</td>
+        </tr>
+        <tr>
+          <td><code>Customer_Basic_Data__c</code></td>
+          <td>Customer Basic Data</td>
+          <td>Lookup</td>
+          <td>Hồ sơ khách hàng (CBD) mà Case phát sinh. Được tự gán theo Visit nếu CBD có <code>Visit__c</code> trùng.</td>
+        </tr>
+        <tr style="background:var(--brand-soft)">
+          <td colspan="4"><strong style="color:var(--brand)">Nhóm 4: Xử lý, Thời hạn &amp; Kết quả</strong></td>
+        </tr>
+        <tr>
+          <td><code>OwnerId</code></td>
+          <td>Case Owner</td>
+          <td>Lookup(User/Queue)</td>
+          <td>Người/hàng đợi đang xử lý (PIC). Đổi Owner = giao việc cho người/phòng khác.</td>
+        </tr>
+        <tr>
+          <td><code>Owner_Department__c</code></td>
+          <td>Owner Department</td>
+          <td>Formula Text</td>
+          <td><code>Owner:User.Department</code>: phòng ban của Owner. Trống nếu Owner là Queue hoặc User chưa khai báo Department.</td>
+        </tr>
+        <tr>
+          <td><code>Status</code></td>
+          <td>Status</td>
+          <td>Picklist</td>
+          <td>Trạng thái xử lý. Record Type <code>Case</code> dùng: <code>New</code>, <code>In Progress</code>, <code>Following</code>, <code>Completed</code>.</td>
+        </tr>
+        <tr>
+          <td><code>Due_Date__c</code></td>
+          <td>Due Date</td>
+          <td>Date</td>
+          <td>Hạn xử lý (SLA). Hiện không tự gán; do CRS nhập.</td>
+        </tr>
+        <tr>
+          <td><code>Case_Result__c</code></td>
+          <td>Case Result</td>
+          <td>Text(115)</td>
+          <td>Kết quả xử lý / Resolution, tối đa 115 ký tự.</td>
+        </tr>
+        <tr>
+          <td><code>Still_Following__c</code></td>
+          <td>Still Following</td>
+          <td>Checkbox</td>
+          <td>Case đã <code>Completed</code> nhưng vẫn cần theo dõi tiếp (CRS040).</td>
+        </tr>
+        <tr>
+          <td><code>ClosedDate</code></td>
+          <td>Closed Date</td>
+          <td>Date/Time</td>
+          <td>Salesforce tự ghi khi Status chuyển sang giá trị "Closed" (<code>Completed</code>, <code>Closed</code>). Dùng làm "Completed Date".</td>
+        </tr>
+        <tr>
+          <td><code>CreatedDate / LastModifiedDate</code></td>
+          <td>Created / Last Modified</td>
+          <td>Date/Time</td>
+          <td>Ngày tạo và ngày cập nhật gần nhất.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout warn">
+      <span class="label">Lưu ý khi chọn cột trên báo cáo</span>
+      <ul>
+        <li>Có <strong>3 field cùng nhãn gần giống</strong>: <code>AccountId</code> (Account Name), <code>Customer__c</code> (Customer Name &ndash; Account) và <code>Customer_Name__c</code> (Customer Name &ndash; Contact). Báo cáo dùng <code>Account.Name</code> chuẩn.</li>
+        <li><code>Contact_Phone__c</code> lấy từ <strong>Account</strong>, không phải Contact. Muốn số của người liên hệ thì dùng <code>ContactPhone</code> chuẩn.</li>
+        <li><code>Survey_Response__c</code> luôn trống &ndash; điểm khảo sát phải lấy từ <code>Survey_Result__c.Score__c</code>.</li>
+      </ul>
+    </div>
+
+    <h2 id="s3">3. Đặc tả các trường liên quan: Survey Result, Visit, Customer Basic Data</h2>
+    <p>Ba đối tượng này là nguồn sinh Case hoặc chứa thông tin Case cần tham chiếu:</p>
+
+    <table class="grid">
+      <thead>
+        <tr>
+          <th style="width:24%">Tên trường (API Name)</th>
+          <th style="width:18%">Nhãn hiển thị</th>
+          <th style="width:15%">Kiểu dữ liệu</th>
+          <th style="width:43%">Ý nghĩa nghiệp vụ &amp; Quy tắc sử dụng</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="background:var(--brand-soft)">
+          <td colspan="4"><strong style="color:var(--brand)">Survey Result (<code>Survey_Result__c</code>) &ndash; kết quả từng phản hồi khảo sát</strong></td>
+        </tr>
+        <tr>
+          <td><code>Score__c</code></td>
+          <td>Score</td>
+          <td>Number</td>
+          <td>Điểm sao khách chấm (1&ndash;5). Quyết định đi nhánh Case hay Visit.</td>
+        </tr>
+        <tr>
+          <td><code>Type__c</code></td>
+          <td>Type</td>
+          <td>Picklist</td>
+          <td><code>Sale</code> (Sau bán hàng) hoặc <code>Service</code> (Sau dịch vụ).</td>
+        </tr>
+        <tr>
+          <td><code>Case__c</code></td>
+          <td>Case</td>
+          <td>Lookup(Case)</td>
+          <td>Case được tạo từ phản hồi này (chỉ có khi điểm = 3).</td>
+        </tr>
+        <tr>
+          <td><code>Visit__c</code></td>
+          <td>Visit</td>
+          <td>Lookup(Visit__c)</td>
+          <td>Visit được tạo từ phản hồi này (chỉ có khi điểm &lt; 3).</td>
+        </tr>
+        <tr>
+          <td><code>Dealer__c / Customer__c / Vehicle__c</code></td>
+          <td>Dealer / Customer / Vehicle</td>
+          <td>Lookup</td>
+          <td>Đại lý, khách hàng, xe của lượt khảo sát.</td>
+        </tr>
+        <tr>
+          <td><code>Sales_Order_Item__c / Vehicle_Check_in__c</code></td>
+          <td>Sales Order Item / Vehicle Check-in</td>
+          <td>Lookup</td>
+          <td>Nguồn phát sinh: dòng đơn hàng (bán xe) hoặc lượt vào xưởng (dịch vụ).</td>
+        </tr>
+        <tr style="background:var(--brand-soft)">
+          <td colspan="4"><strong style="color:var(--brand)">Visit (<code>Visit__c</code>) &ndash; viếng thăm khách hàng</strong></td>
+        </tr>
+        <tr>
+          <td><code>Name</code></td>
+          <td>Visit Name</td>
+          <td>Text</td>
+          <td>Visit sinh từ khảo sát có tên dạng "Sau Bán hàng/Sau Dịch vụ &ndash; [Khách] &ndash; [VIN]".</td>
+        </tr>
+        <tr>
+          <td><code>Vendor__c</code></td>
+          <td>Khách hàng</td>
+          <td>Lookup(Account)</td>
+          <td>Khách hàng được thăm (Account).</td>
+        </tr>
+        <tr>
+          <td><code>Customer_Name__c</code></td>
+          <td>Customer Name</td>
+          <td>Lookup(Contact)</td>
+          <td>Người liên hệ được thăm.</td>
+        </tr>
+        <tr>
+          <td><code>Dealer_Name__c</code></td>
+          <td>Dealer Name</td>
+          <td>Lookup(Account)</td>
+          <td>Đại lý đi cùng / phụ trách Visit.</td>
+        </tr>
+        <tr>
+          <td><code>Survey__c</code></td>
+          <td>Survey</td>
+          <td>Lookup(Survey)</td>
+          <td>Survey gốc nếu Visit sinh từ khảo sát. Được copy sang Case khi tạo Case từ Visit.</td>
+        </tr>
+        <tr>
+          <td><code>Visit_Status__c</code></td>
+          <td>Visit Status</td>
+          <td>Picklist</td>
+          <td><code>Plan</code>, <code>In Progress</code>, <code>Completed</code>, <code>Cancelled</code>.</td>
+        </tr>
+        <tr style="background:var(--brand-soft)">
+          <td colspan="4"><strong style="color:var(--brand)">Customer Basic Data (<code>Customer_Basic_Data__c</code>)</strong></td>
+        </tr>
+        <tr>
+          <td><code>Customer_Name__c / Account__c</code></td>
+          <td>Customer Name / Account</td>
+          <td>Lookup</td>
+          <td>Khách hàng và Đại lý ghi trong hồ sơ. Quick action tạo Case lấy 2 field này làm Customer và Dealer.</td>
+        </tr>
+        <tr>
+          <td><code>Visit__c</code></td>
+          <td>Visit</td>
+          <td>Lookup(Visit__c)</td>
+          <td>Visit tạo ra hồ sơ CBD này. Là cầu nối để Case biết Visit gốc.</td>
+        </tr>
+        <tr>
+          <td><code>Customer_Rank__c</code></td>
+          <td>Customer Rank</td>
+          <td>Picklist</td>
+          <td>Phân hạng khách hàng (Flow <code>Customer_Basic_Data_mapping_Customer_rank</code>).</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 id="s4">4. Mối quan hệ tương hỗ &amp; cơ chế sinh Case</h2>
+
+    <p>Sơ đồ dưới đây minh hoạ luồng dữ liệu giữa các đối tượng trong hệ thống Salesforce IVC:</p>
+
+    <pre><code>  Sales Order Item (Ship out date)      Vehicle Check-in (Check Out)
+              │  (quét mỗi ngày)                │  (ngay khi Check Out)
+              └───────────────┬─────────────────┘
+                              ▼
+                    ┌───────────────────┐
+                    │ SurveyInvitation  │  (Type = Sale / Service, gửi email link khảo sát)
+                    └─────────┬─────────┘
+                              │ khách chấm sao &amp; Submit
+                              ▼
+                    ┌───────────────────┐
+                    │  Survey_Result__c │  (Score__c, Type__c)
+                    └─────────┬─────────┘
+          ┌───────────────────┼─────────────────────┐
+     Score &lt; 3             Score = 3             Score &gt; 3
+          │                   │                     │
+   ┌──────▼──────┐     ┌──────▼──────┐        Chỉ ghi nhận điểm
+   │  Visit__c   │     │    Case     │        (dữ liệu CSAT)
+   │(Visit Survey)│    │(Origin=Survey)│
+   └──────┬──────┘     └──────▲──────┘
+          │  nút New Case      │  nút New Case
+          └───────────────────┤
+   Customer_Basic_Data__c ────┘            + Case do IVC tạo trực tiếp (Direct IVC)</code></pre>
+
+    <h3>4.1. Phân luồng theo điểm khảo sát</h3>
+    <p>Flow <code>Flow_Survey_Question_Response</code> chạy khi khách gửi phản hồi:</p>
+    <ul>
+      <li><strong>= 3 sao:</strong> tạo Case (Record Type <code>Case</code>, <code>Origin = Survey</code>,
+        <code>Status = New</code>), Subject dạng "Đánh giá khảo sát mua xe / dịch vụ &ndash; 3 sao &ndash; [Đại lý]", gán Dealer, VIN, Vehicle
+        Check-in, Survey; đồng thời ghi Survey Result có <code>Case__c</code> = Case vừa tạo.</li>
+      <li><strong>&lt; 3 sao:</strong> tạo Visit (tên "Sau Bán hàng / Sau Dịch vụ &ndash; Khách &ndash; VIN") và ghi Survey Result có
+        <code>Visit__c</code>. <strong>Không</strong> tạo Case.</li>
+      <li><strong>&gt; 3 sao:</strong> chỉ ghi Survey Result.</li>
+      <li>Flow chống trùng: nếu Survey Result đã tồn tại cho cùng lượt khảo sát thì không tạo thêm.</li>
+    </ul>
+
+    <h3>4.2. Case sinh từ Visit và Customer Basic Data</h3>
+    <ul>
+      <li><strong>Nút New Case trên Visit</strong> (<code>Visit__c.New_Case</code>): gán sẵn Account, Contact, Dealer, VIN, Vehicle
+        Check-in, Survey từ Visit; <code>Origin = Visit Plan</code>.</li>
+      <li><strong>Nút New Case trên Customer Basic Data</strong> (<code>Customer_Basic_Data__c.NewCase</code>): gán Account, Customer, Dealer từ
+        CBD; <code>Origin = Visit Plan</code> (chưa tách riêng nguồn Customer Basic Data).</li>
+      <li><strong>Tự động điền khi lưu Case:</strong> nếu Case có <code>Visit__c</code>, trigger
+        <code>TriggerCaseHandler.autoMappingFromVisit</code> điền các field còn trống (Account, Dealer, Contact, VIN, Vehicle Check-in,
+        Survey, Customer Basic Data); nếu Dealer vẫn trống và người tạo là nhân sự Đại lý thì lấy Dealer từ Dealer Location của người đó.</li>
+    </ul>
+
+    <h3>4.3. Vòng đời trạng thái &amp; phê duyệt</h3>
+    <pre><code>New ──► In Progress ──► (Submit phê duyệt "Case Customer Data" – bước "Duyệt CRS")
+                              ├─ Duyệt  ──► Completed   (ClosedDate = ngày duyệt)
+                              └─ Từ chối ─► In Progress
+Following / Still_Following__c = true  ──►  Case đã xử lý nhưng vẫn cần theo dõi tiếp</code></pre>
+    <ul>
+      <li>Business Process của Record Type <code>Case</code> gồm: <code>New</code>, <code>In Progress</code>, <code>Following</code>, <code>Completed</code>.</li>
+      <li><code>Completed</code> là trạng thái "đã đóng" nên Salesforce tự ghi <code>ClosedDate</code>.</li>
+      <li>Approval Process nêu trên chỉ ghi Status và không lưu sẵn người duyệt ở dạng field trên Case.</li>
+    </ul>
+
+    <h3>4.4. Thông báo khi Case sinh từ Survey</h3>
+    <ul>
+      <li><strong>Chuông thông báo</strong> (<code>notifyWhenCaseSurvey</code>): gửi cho mọi User thuộc Dealer của Case,
+        nội dung "Case [số] đã được tạo từ kết quả Khảo sát Sau Bán hàng / Sau Dịch vụ" (phân biệt bằng <code>Vehicle_Check_in__c</code>).</li>
+      <li><strong>Email</strong> (<code>emailCsStaffWhenCaseSurvey</code>): gửi cho User Active của Dealer có Role chứa "CS staff",
+        template <code>Case_Survey_Created_CS_Staff</code>, gửi qua Org-Wide Email Address "IVC CRS Notification".</li>
+      <li>Cả hai điều kiện đều dựa trên <code>Survey__c</code> và <code>Dealer__c</code> khác trống &mdash; nên Case tạo từ Visit có Survey cũng kích hoạt.</li>
+    </ul>
+
+    <h3>4.5. Phân quyền</h3>
+    <ul>
+      <li>Object Case: <strong>OWD = Private</strong> (cả nội bộ và bên ngoài).</li>
+      <li>Sharing rule <code>Case - CRS</code>: chia sẻ Case thuộc Record Type <code>Case</code> cho role <code>IVC_General_Director</code> và cấp dưới (Edit).</li>
+      <li>Báo cáo luôn tuân theo quyền xem bản ghi: user Đại lý chạy cùng một báo cáo sẽ chỉ thấy Case họ được chia sẻ.</li>
+    </ul>
+
+    <h2 id="s5">5. Nguyên tắc phân loại &amp; đối soát số liệu trên báo cáo Case</h2>
+
+    <table class="grid">
+      <thead>
+        <tr>
+          <th style="width:25%">Chỉ số trên Báo cáo</th>
+          <th style="width:35%">Cơ chế trích xuất dữ liệu</th>
+          <th style="width:40%">Ý nghĩa đối soát nghiệp vụ</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Case Source</strong><br>(Nguồn Case)</td>
+          <td>Picklist <code>Case.Origin</code><br>(Survey / Customer Basic Data / Direct IVC)</td>
+          <td>Phân biệt Case sinh từ khảo sát, từ hồ sơ khách hàng hay IVC tạo trực tiếp. Hiện Customer Basic Data và Visit đều đang dùng chung giá trị <code>Visit Plan</code>.</td>
+        </tr>
+        <tr>
+          <td><strong>Survey Rating</strong><br>(Điểm khảo sát)</td>
+          <td><code>Survey_Result__c.Score__c</code> qua <code>Survey_Result__c.Case__c</code></td>
+          <td>Điểm khách chấm khi sinh Case. Case nguồn Survey luôn = 3 sao theo rule hiện tại. Không dùng <code>Case.Survey_Response__c</code>.</td>
+        </tr>
+        <tr>
+          <td><strong>Survey Type</strong><br>(Sau bán hàng / Sau dịch vụ)</td>
+          <td><code>Survey_Result__c.Type__c</code> (<code>Sale</code> / <code>Service</code>)</td>
+          <td>Tách số liệu theo hai mảng khảo sát; Case có <code>Vehicle_Check_in__c</code> thuộc Sau dịch vụ.</td>
+        </tr>
+        <tr>
+          <td><strong>Assigned Department / PIC</strong></td>
+          <td><code>Case.Owner_Department__c</code> / <code>Case.OwnerId</code></td>
+          <td>Phòng ban và người đang xử lý. Case do Queue sở hữu sẽ không có phòng ban &ndash; cần gán Owner là User để thống kê.</td>
+        </tr>
+        <tr>
+          <td><strong>Case Status</strong></td>
+          <td><code>Case.Status</code></td>
+          <td>Đối soát số Case theo trạng thái; Case đã <code>Completed</code> nhưng <code>Still_Following__c</code> = true vẫn cần theo dõi.</td>
+        </tr>
+        <tr>
+          <td><strong>Created Date / Completed Date</strong></td>
+          <td><code>Case.CreatedDate</code> / <code>Case.ClosedDate</code></td>
+          <td>Báo cáo theo tháng tạo và tháng hoàn thành. Case chưa đóng không có Completed Date.</td>
+        </tr>
+        <tr>
+          <td><strong>Due Date (SLA)</strong></td>
+          <td><code>Case.Due_Date__c</code></td>
+          <td>So sánh với ngày hiện tại / Completed Date để xác định quá hạn. Hiện field không tự gán.</td>
+        </tr>
+      </tbody>
+    </table>
+  </main>
+</body>
+
+</html>
