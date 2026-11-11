@@ -460,6 +460,26 @@
     table.grid ul.note li {
       margin: 1pt 0;
     }
+
+    mark {
+      padding: 0 2px;
+      background: #fff176;
+      color: inherit;
+      border-radius: 2px;
+    }
+
+    mark code {
+      background: transparent;
+    }
+
+    .callout.key {
+      background: #fffde7;
+      border-color: #f2c94c;
+    }
+
+    .callout.key ul {
+      margin: 2pt 0 0;
+    }
   </style>
 </head>
 
@@ -525,6 +545,79 @@ Survey_Result__c ──lookup──▶ Account (Dealer__c), Contact (Customer__c
       <li><strong>Kết luận:</strong> báo cáo đi từ <code>Survey_Result__c</code>. Mỗi khảo sát SAL / AFS thật có đúng 1
         Survey Result, đã có sẵn đại lý, khách hàng, xe, loại, điểm (Flow chép từ lời mời) và nay trỏ được tới Visit /
         Case.</li>
+    </ul>
+
+    <h3>Report Type của báo cáo: <code>CRS_R001_R002_Survey_Results</code></h3>
+    <p><strong>Report Type</strong> là "khung" của báo cáo: nó quyết định <mark>một dòng là gì</mark> và <mark>có những
+        cột nào để chọn</mark>. Report chỉ là cách lọc và sắp xếp trong khung đó, nên khung sai thì cột sẽ thiếu hoặc
+      dòng bị nhân đôi.</p>
+
+    <div class="callout key">
+      <span class="label">Cần nhớ</span>
+      <ul>
+        <li>Báo cáo này dùng <mark>Custom Report Type</mark> với <mark>một object chính duy nhất</mark>:
+          <code>Survey_Result__c</code>. Không có object con.</li>
+        <li>Mọi dữ liệu khác (Đại lý, Khách hàng, Xe, Visit, Case) được kéo lên <mark>qua lookup</mark>, nên
+          <mark>1 khảo sát = đúng 1 dòng</mark>.</li>
+        <li>Phải custom vì Report Type mặc định không cho <mark>thêm field qua lookup</mark>, không đặt được
+          <mark>tên cột theo CSV</mark> và không chia được nhóm cột.</li>
+      </ul>
+    </div>
+
+    <h4>Cấu trúc</h4>
+    <pre><code>Survey_Result__c                    ← mỗi dòng báo cáo = 1 khảo sát (1 lượt khách chấm sao)
+ ├─ field của chính nó   → Ngày khảo sát, Loại khảo sát, Mức độ hài lòng, Done/Inprogress
+ ├─ lookup Dealer__c     → Đại lý (Search Name, Name)
+ ├─ lookup Customer__c   → Tên khách hàng, Số điện thoại
+ ├─ lookup Vehicle__c    → Biển số xe, VIN
+ ├─ lookup Visit__c      → Ngày thăm, Lý do không hài lòng, Hướng giải quyết    (lookup mới 28/10/2026)
+ └─ lookup Case__c       → Ngày gọi, Lý do không hài lòng, Hướng giải quyết     (lookup mới 28/10/2026)</code></pre>
+    <ul>
+      <li>Report Type có <strong>24 cột</strong>, chia thành 3 nhóm: <strong>Khảo sát</strong> (14 cột),
+        <strong>Visit (1-2 sao)</strong> (5 cột), <strong>Case (3 sao)</strong> (5 cột).</li>
+      <li><strong>16 cột được tick mặc định</strong>, đều có tên hiển thị đúng tiêu đề cột trong CSV của BA. 8 cột còn
+        lại (ví dụ <code>Visit__c.Name</code>, <code>Case__c.CaseNumber</code>) không tick, chỉ để sẵn nếu cần thêm.</li>
+    </ul>
+
+    <h4>Vì sao phải custom</h4>
+    <table class="grid">
+      <thead>
+        <tr>
+          <th style="width:30%">Cần gì</th>
+          <th style="width:34%">Report Type mặc định của object custom</th>
+          <th style="width:36%">Custom Report Type này</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Lấy field của Đại lý, Khách hàng, Xe, Visit, Case trên cùng một dòng</strong></td>
+          <td>Không cho sửa layout nên không thêm được field qua lookup theo ý muốn.</td>
+          <td>Thêm được field qua lookup, ví dụ <code>Dealer__c.Search_Name__c</code>,
+            <code>Case__c.ClosedDate</code>.</td>
+        </tr>
+        <tr>
+          <td><strong>Tên cột đúng như BA yêu cầu</strong></td>
+          <td>Tên cột là tên field gốc tiếng Anh.</td>
+          <td>Đặt tên hiển thị (<code>displayNameOverride</code>) = tiêu đề cột trong CSV.</td>
+        </tr>
+        <tr>
+          <td><strong>Người làm báo cáo mở ra là có sẵn đúng bộ cột</strong></td>
+          <td>Phải tự chọn từng cột.</td>
+          <td>16 cột tick sẵn, 3 nhóm cột theo khối nghiệp vụ.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h4>Vì sao đi bằng lookup mà không nối object con</h4>
+    <ul>
+      <li><mark>Lookup là quan hệ nhiều-một nên không làm nhân dòng.</mark> Nối theo kiểu cha → con thì một cha có nhiều
+        con sẽ ra nhiều dòng, sai yêu cầu "1 dòng / 1 khảo sát" của CSV.</li>
+      <li><mark>Khảo sát không có Visit hoặc Case vẫn hiện dòng.</mark> Cột lấy qua lookup mà trống thì chỉ để trống, không
+        làm mất dòng. Khảo sát 4–5 sao không sinh Visit hay Case vẫn có trong báo cáo, chỉ trống nhóm cột Visit và
+        Case.</li>
+      <li>Report Type chỉ đi được một đường thẳng cha → con → cháu, không lấy được 2 nhánh song song. Vì vậy các nhánh
+        còn lại (Đại lý, Khách hàng, Xe, Visit, Case) lấy qua lookup trên object gốc, kể cả 2 lookup mới
+        <code>Visit__c</code> / <code>Case__c</code> đã thêm cho báo cáo này.</li>
     </ul>
 
     <h2 id="s1">2. Mapping cột</h2>

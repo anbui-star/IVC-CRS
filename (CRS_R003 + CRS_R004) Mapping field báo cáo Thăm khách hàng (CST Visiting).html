@@ -203,7 +203,9 @@
       <li><a href="#s1">Mapping cột</a></li>
       <li><a href="#s2">Bộ lọc của báo cáo</a></li>
       <li><a href="#s3">Cách lấy dữ liệu</a></li>
-      <li><a href="#s4">Tổng hợp việc chưa xử lý / cần chốt</a></li>
+      <li><a href="#s4">Phân quyền xem dữ liệu IVC Customer Visit Report</a></li>
+      <li><a href="#s5">Phân quyền xem dữ liệu DLR Customer Visit Report</a></li>
+      <li><a href="#s6">Tổng hợp việc chưa xử lý / cần chốt</a></li>
     </ol>
   </nav>
 
@@ -258,7 +260,45 @@
     <li>Visit, CBD đều ở chế độ chia sẻ <strong>Private</strong>: người chạy báo cáo chỉ thấy bản ghi mình có quyền xem (kiểm tra bằng user <code>IVC_CRS_Staff</code> / <code>IVC_CRS_HOD</code> do bạn tự test).</li>
   </ul>
 
-  <h2 id="s4">4. Tổng hợp việc chưa xử lý / cần chốt</h2>
+  <h2 id="s4">4. Phân quyền xem dữ liệu IVC Customer Visit Report</h2>
+  <p><strong>Yêu cầu:</strong> toàn bộ IVC xem được dữ liệu của nhau; báo cáo là dữ liệu thăm khách của toàn IVC, gồm cả Visit do Đại lý (DLR) tạo khi DLR mời IVC đi cùng.
+  <strong>BA giải thích:</strong> chỉ hiển thị dữ liệu do IVC tạo; Visit do DLR tạo thì chỉ hiện trên báo cáo IVC khi có IVC đi cùng, và cột "DLR (Đại lý đi cùng)" vẫn hiển thị.</p>
+  <p><strong>Hiện trạng:</strong> Visit, CBD, Case đều Private; chưa có sharing rule và chưa có nhóm chung cho toàn IVC. Không đổi mức chia sẻ mặc định (Private) để DLR không thấy thêm dữ liệu.</p>
+  <table class="grid">
+    <thead><tr><th class="c st">STT</th><th>Việc cần làm</th><th>Cách làm</th><th>Trạng thái</th></tr></thead>
+    <tbody>
+      <tr><td class="c st"><strong>1</strong></td><td>Toàn IVC xem được Visit của nhau</td><td>Tạo Public Group <code>IVC_All</code> gồm các role IVC. Sharing rule Read Only cho <code>Visit__c</code> và <code>Customer_Basic_Data__c</code>: bản ghi do user IVC sở hữu → chia sẻ cho <code>IVC_All</code>. Case xét sau để cột "Action after visiting" có dữ liệu.</td><td><span class="tag-todo">⏳ Chưa xử lý</span></td></tr>
+      <tr><td class="c st"><strong>2</strong></td><td>Visit do DLR tạo, có IVC đi cùng thì IVC xem được</td><td>Sharing rule theo điều kiện trên <code>Visit__c</code>: field đánh dấu "có IVC tham gia" không rỗng → chia sẻ cho <code>IVC_All</code> (Read Only).</td><td><span class="tag-ba">❓ Cần chốt BA/PI</span> field đánh dấu</td></tr>
+      <tr><td class="c st"><strong>3</strong></td><td>Báo cáo chỉ lấy dữ liệu IVC</td><td>Thêm field công thức (checkbox) <code>Visit__c.Is_IVC_Visit__c</code> = Owner thuộc IVC <strong>hoặc</strong> có IVC đi cùng. Thêm vào report type, report lọc <code>Is_IVC_Visit__c = true</code> (report không lọc được theo profile/role của Owner).</td><td><span class="tag-todo">⏳ Chưa xử lý</span></td></tr>
+      <tr><td class="c st"><strong>4</strong></td><td>Cột IVC PIC với Visit do DLR tạo</td><td>Owner của Visit là user DLR, không phải người IVC đi thăm. Cột "IVC PIC" lấy tên IVC đi cùng khi Owner là DLR (hiện cột này lấy từ <code>Customer_Basic_Data__c.Visit_By__c</code>).</td><td><span class="tag-ba">❓ Cần chốt BA/PI</span></td></tr>
+    </tbody>
+  </table>
+  <ul>
+    <li><strong>Không</strong> dùng điều kiện "cột DLR đi cùng khác rỗng" để nhận biết Visit có IVC đi cùng: Visit do DLR tạo cũng luôn có Đại lý, nên sẽ kéo cả Visit DLR không mời IVC vào báo cáo.</li>
+    <li>Cần chốt: khi DLR mời IVC, hệ thống lưu ở đâu — <code>Member1__c</code>, <code>Member_2__c</code> (user) hay <code>IVC_Member__c</code> (text)? Chưa có dữ liệu thật để kiểm tra, quyết định điều kiện ở dòng 2 và 3.</li>
+  </ul>
+
+  <h2 id="s5">5. Phân quyền xem dữ liệu DLR Customer Visit Report</h2>
+  <p><strong>Yêu cầu:</strong> Đại lý (DLR) chỉ thấy bản ghi của Đại lý mình; trường hợp IVC yêu cầu DLR đi thăm chung thì DLR vẫn thấy Visit đó và Visit đó được ghi nhận trên báo cáo.
+  <strong>Làm rõ:</strong> DLR chỉ thấy Visit do Đại lý tạo; trường hợp IVC tạo thì chỉ thấy khi field <code>Dealer Name</code> (<code>Visit__c.Dealer_Name__c</code>) = Đại lý đó.</p>
+  <p><strong>Báo cáo:</strong> <code>DLR Customer Visit Report</code> (folder DLR Reports, report type <code>DLR_Visits_with_Customer_Basic_Data</code>). Report chạy theo quyền của người xem, nên chỉ cần phân quyền đúng thì mỗi Đại lý tự chỉ thấy dữ liệu của mình; không cần lọc thêm trong report.</p>
+  <p><strong>Hiện trạng:</strong> Visit, CBD, Case đều Private. Role Đại lý có dạng <code>DLR</code> → <code>DLR_&lt;Đại lý&gt;_BOD</code> → manager → staff (20 Đại lý), nên cấp trên thấy Visit của cấp dưới trong cùng Đại lý, nhưng nhân viên ngang cấp không thấy của nhau và DLR chưa thấy Visit do IVC tạo.</p>
+  <table class="grid">
+    <thead><tr><th class="c st">STT</th><th>Việc cần làm</th><th>Cách làm</th><th>Trạng thái</th></tr></thead>
+    <tbody>
+      <tr><td class="c st"><strong>1</strong></td><td>DLR thấy Visit do Đại lý mình tạo, không thấy Đại lý khác</td><td>Sharing rule dạng owner-based cho từng Đại lý (20 rule): Visit do user thuộc <code>DLR_&lt;Đại lý&gt;_BOD</code> và cấp dưới sở hữu → chia sẻ Read Only cho chính nhóm role đó. Làm tương tự cho <code>Customer_Basic_Data__c</code>; Case xét sau.</td><td><span class="tag-todo">⏳ Chưa xử lý</span></td></tr>
+      <tr><td class="c st"><strong>2</strong></td><td>Visit do IVC tạo mà <code>Dealer Name</code> = Đại lý đó thì Đại lý thấy</td><td><code>Dealer_Name__c</code> là lookup Account nên sharing rule theo điều kiện không dùng được. Dùng trigger Apex chia sẻ (<code>Visit__Share</code>, Read) cho nhóm role của Đại lý đó khi tạo Visit hoặc đổi <code>Dealer Name</code>, và thu hồi khi đổi Đại lý. Cùng cách với <code>TriggerVisitHandler</code> đang chia sẻ Visit cho nhóm được thông báo khảo sát.</td><td><span class="tag-ba">❓ Cần chốt BA/PI</span> cách ánh xạ Account Đại lý → role</td></tr>
+      <tr><td class="c st"><strong>3</strong></td><td>DLR mở được report và các field mới</td><td>Folder DLR Reports chia sẻ View cho các profile DLR; kiểm tra quyền đọc Visit, CBD, Case và quyền xem field (gồm "Người tạo Visit") cho profile DLR.</td><td><span class="tag-todo">⏳ Chưa xử lý</span></td></tr>
+      <tr><td class="c st"><strong>4</strong></td><td>Ghi nhận Visit do IVC yêu cầu đi chung trên báo cáo</td><td>Sau bước 2, Visit hiện trong báo cáo của Đại lý; cột "Người tạo Visit" cho biết Visit do IVC hay Đại lý tạo.</td><td><span class="tag-ok">✅ Cột đã có trên Partial</span></td></tr>
+    </tbody>
+  </table>
+  <ul>
+    <li>Cần chốt: Visit do Đại lý tạo luôn có Owner là user của Đại lý đó, và <code>Dealer Name</code> của Visit đó là chính Đại lý đó?</li>
+    <li>Cần chốt: cách xác định nhóm role của Đại lý từ Account <code>Dealer Name</code> (tên Account trùng tên role, hay dùng Contact/Dealer Location đang có).</li>
+    <li>Không đổi mức chia sẻ mặc định (Private), nên Đại lý này không thấy dữ liệu của Đại lý khác.</li>
+  </ul>
+
+  <h2 id="s6">6. Tổng hợp việc chưa xử lý / cần chốt</h2>
   <table class="grid">
     <thead><tr><th class="c st">STT</th><th>Nội dung</th><th>Phần</th><th>Trạng thái</th></tr></thead>
     <tbody>
@@ -266,11 +306,15 @@
       <tr><td class="c st"><strong>2</strong></td><td>Thêm Due Date và Owner Department vào Case Page Layout "Case Layout" (mục Additional Information) – làm tay trong Setup (Partial)</td><td>CRS_R004</td><td><span class="tag-ok">✅ Đã xử lý</span></td></tr>
       <tr><td class="c st"><strong>3</strong></td><td>Subject1: giữ nguyên, report dùng <code>Case.Subject</code> nên không hiện Subject1</td><td>CRS_R004</td><td><span class="tag-ok">✅ Đã xử lý</span></td></tr>
       <tr><td class="c st"><strong>4</strong></td><td>Place: BA xác nhận lấy <code>Visit__c.Province__r.Name</code></td><td>CRS_R003</td><td><span class="tag-ok">✅ Đã xử lý</span></td></tr>
+      <tr><td class="c st"><strong>5</strong></td><td>IVC Customer Visit Report: phân quyền xem toàn IVC (Public Group, sharing rule Visit/CBD/Case), field <code>Is_IVC_Visit__c</code>, lọc báo cáo (xem mục 4)</td><td>Cả hai phần</td><td><span class="tag-todo">⏳ Chưa xử lý</span></td></tr>
+      <tr><td class="c st"><strong>6</strong></td><td>IVC Customer Visit Report: chốt field đánh dấu Visit DLR tạo có IVC đi cùng, và nguồn cột IVC PIC cho Visit DLR tạo (xem mục 4)</td><td>Cả hai phần</td><td><span class="tag-ba">❓ Cần chốt BA/PI</span></td></tr>
+      <tr><td class="c st"><strong>7</strong></td><td>DLR Customer Visit Report: sharing rule theo Đại lý (Visit, CBD), trigger chia sẻ Visit do IVC tạo theo <code>Dealer Name</code>, quyền folder/field cho profile DLR (xem mục 5)</td><td>Cả hai phần</td><td><span class="tag-todo">⏳ Chưa xử lý</span></td></tr>
+      <tr><td class="c st"><strong>8</strong></td><td>DLR Customer Visit Report: chốt Owner/<code>Dealer Name</code> của Visit do Đại lý tạo và cách ánh xạ Account Đại lý → role (xem mục 5)</td><td>Cả hai phần</td><td><span class="tag-ba">❓ Cần chốt BA/PI</span></td></tr>
     </tbody>
   </table>
 
   <footer class="doc-foot">
-    CRS_R003 + CRS_R004 · Mapping field · Phiên bản 2026-10-23
+    CRS_R003 + CRS_R004 · Mapping field · Phiên bản 2026-11-04
   </footer>
 
 </main>

@@ -1,0 +1,2219 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Báo Cáo Kết Quả Import Customer Visit Lên Môi Trường PROD</title>
+  <style>
+    :root {
+      --ink: #000000;
+      --muted: #333333;
+      --brand: #1f4e79;
+      --brand-soft: #e8eff7;
+      --line: #c9d1db;
+      --head-bg: #1f4e79;
+      --zebra: #f6f8fb;
+      --note-bg: #eef6ff;
+      --note-bar: #2f80ed;
+      --warn-bg: #fff6e5;
+      --warn-bar: #f2994a;
+      --ok-bg: #edf8f1;
+      --ok-bar: #27ae60;
+      --bad-bg: #fdeeee;
+      --bad-bar: #eb5757;
+      --code-bg: #f3f4f6;
+      --desk: #e5e7eb;
+      --paper: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      background: var(--desk);
+    }
+
+    body {
+      margin: 0;
+      padding: 32px 16px;
+      font-family: Calibri, "Segoe UI", Arial, sans-serif;
+      font-size: 11pt;
+      line-height: 1.5;
+      color: var(--ink);
+    }
+
+    .page {
+      width: 297mm;
+      max-width: 100%;
+      margin: 0 auto;
+      padding: 18mm 18mm;
+      background: var(--paper);
+      box-shadow: 0 2px 14px rgba(0, 0, 0, .18);
+    }
+
+    .doc-eyebrow {
+      margin: 0;
+      font-size: 10pt;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    h1.doc-title {
+      margin: 4pt 0 6pt;
+      font-size: 22pt;
+      line-height: 1.2;
+      color: var(--brand);
+    }
+
+    .doc-sub {
+      margin: 0 0 14pt;
+      font-size: 12pt;
+      color: var(--muted);
+    }
+
+    table.meta {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0 0 10pt;
+      font-size: 10.5pt;
+    }
+
+    table.meta th,
+    table.meta td {
+      padding: 5pt 8pt;
+      border: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    table.meta th {
+      width: 24%;
+      background: var(--brand-soft);
+      color: var(--brand);
+      font-weight: 600;
+    }
+
+    nav.toc {
+      margin: 16pt 0 8pt;
+      padding: 12pt 16pt;
+      background: var(--brand-soft);
+      border-left: 4px solid var(--brand);
+    }
+
+    nav.toc h2 {
+      margin: 0 0 6pt;
+      padding: 0;
+      border: 0;
+      font-size: 12pt;
+      color: var(--brand);
+    }
+
+    nav.toc ol {
+      margin: 0;
+      padding-left: 18pt;
+    }
+
+    nav.toc li {
+      margin: 2pt 0;
+    }
+
+    nav.toc a {
+      color: var(--ink);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    nav.toc a:hover {
+      text-decoration: underline;
+    }
+
+    h2 {
+      margin: 24pt 0 8pt;
+      padding-bottom: 3pt;
+      font-size: 15pt;
+      color: var(--brand);
+      border-bottom: 2px solid var(--brand);
+    }
+
+    h3 {
+      margin: 16pt 0 6pt;
+      font-size: 12.5pt;
+      color: var(--brand);
+    }
+
+    p {
+      margin: 0 0 7pt;
+    }
+
+    a {
+      color: #1a5fb4;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    code {
+      padding: 1pt 4pt;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 9.5pt;
+      background: var(--code-bg);
+      border-radius: 3px;
+      color: #000;
+    }
+
+    table.grid {
+      width: 100%;
+      margin: 6pt 0 12pt;
+      border-collapse: collapse;
+      font-size: 9.5pt;
+    }
+
+    table.grid th,
+    table.grid td {
+      padding: 5pt 6pt;
+      border: 1px solid var(--line);
+      vertical-align: top;
+      text-align: left;
+    }
+
+    table.grid thead th {
+      background: var(--head-bg);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    table.grid tbody tr:nth-child(even) td {
+      background: var(--zebra);
+    }
+
+    table.grid td.c,
+    table.grid th.c {
+      text-align: center;
+    }
+
+    .callout {
+      margin: 8pt 0 12pt;
+      padding: 8pt 12pt;
+      border-left: 4px solid;
+      border-radius: 0 3px 3px 0;
+    }
+
+    .callout .label {
+      display: block;
+      margin-bottom: 2pt;
+      font-weight: 700;
+      font-size: 10pt;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .callout.ok {
+      background: var(--ok-bg);
+      border-color: var(--ok-bar);
+    }
+
+    .callout.note {
+      background: var(--note-bg);
+      border-color: var(--note-bar);
+    }
+
+    .badge-ok {
+      display: inline-block;
+      padding: 1pt 6pt;
+      background: #27ae60;
+      color: #fff;
+      border-radius: 3px;
+      font-size: 8.5pt;
+      font-weight: 700;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+
+    <h1 class="doc-title">Báo Cáo Kết Quả Import Dữ Liệu Thăm Khách Hàng (Customer Visit) Lên PROD</h1>
+    <nav class="toc">
+      <h2>Mục lục báo cáo</h2>
+      <ol>
+        <li><a href="#sec-1">1. Tổng Quan Kết Quả Thực Thi</a></li>
+        <li><a href="#sec-2">2. Chi Tiết Quy Tắc Mapping Field Trên 3 Object</a></li>
+        <li><a href="#sec-3">3. Danh Sách 36 Bản Ghi <code>Visit_Plan__c</code> Đã Tạo Trên PROD</a></li>
+        <li><a href="#sec-4">4. Danh Sách 101 Bản Ghi <code>Visit__c</code> &amp; <code>Customer_Basic_Data__c</code> Đã
+            Tạo Trên PROD</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="sec-1">1. Tổng Quan Kết Quả Thực Thi</h2>
+    <table class="grid">
+      <thead>
+        <tr>
+          <th class="c" style="width:10%">Bước</th>
+          <th style="width:24%">Object</th>
+          <th class="c" style="width:12%">Số lượng CSV</th>
+          <th class="c" style="width:12%">Thành công</th>
+          <th class="c" style="width:8%">Lỗi</th>
+          <th>Ghi chú</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="c"><strong>Bước 1</strong></td>
+          <td><code>Visit_Plan__c</code></td>
+          <td class="c">36</td>
+          <td class="c"><strong>36</strong></td>
+          <td class="c">0</td>
+          <td>Bao gồm 18 FLS, 9 AFS, 7 PDN, 2 MPR (<code>Status__c = 'Planned'</code>)</td>
+        </tr>
+        <tr>
+          <td class="c"><strong>Bước 2</strong></td>
+          <td><code>Visit__c</code></td>
+          <td class="c">101</td>
+          <td class="c"><strong>101</strong></td>
+          <td class="c">0</td>
+          <td>Đã liên kết <code>Visit_Plan__c</code>, <code>Vendor__c</code> (Khách hàng), <code>Dealer_Name__c</code>
+            (Đại lý)</td>
+        </tr>
+        <tr>
+          <td class="c"><strong>Bước 3</strong></td>
+          <td><code>Customer_Basic_Data__c</code></td>
+          <td class="c">101</td>
+          <td class="c"><strong>101</strong></td>
+          <td class="c">0</td>
+          <td>Đã liên kết <code>Visit__c</code>, <code>Visit_Plan__c</code>, <code>Customer_Name__c</code>,
+            <code>Account__c</code>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 id="sec-2">2. Chi Tiết Quy Tắc Mapping Field Trên 3 Object</h2>
+
+    <h3>2.1. Object 1: <code>Visit_Plan__c</code> (File <code>1. Visit Plan.csv</code> – 36 bản ghi)</h3>
+    <table class="grid">
+      <thead>
+        <tr>
+          <th style="width:25%">Cột trong CSV</th>
+          <th style="width:25%">Field API (<code>Visit_Plan__c</code>)</th>
+          <th style="width:18%">Kiểu dữ liệu</th>
+          <th>Quy tắc chuẩn hóa &amp; Ghi chú</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>*Visit Plan Name</code></td>
+          <td><code>Name</code></td>
+          <td>Text(80)</td>
+          <td>Giữ nguyên tên kế hoạch từ file CSV.</td>
+        </tr>
+        <tr>
+          <td><code>*Start Date</code></td>
+          <td><code>Start_Date__c</code></td>
+          <td>Date</td>
+          <td>Chuyển đổi định dạng ngày (<code>18-thg4-2026</code>, <code>7/31/2026</code>...) sang chuẩn ISO
+            <code>YYYY-MM-DD</code>.
+          </td>
+        </tr>
+        <tr>
+          <td><code>*End Date</code></td>
+          <td><code>End_Date__c</code></td>
+          <td>Date</td>
+          <td>Chuyển sang chuẩn ISO <code>YYYY-MM-DD</code> (nếu trống thì lấy bằng <code>Start_Date__c</code>).</td>
+        </tr>
+        <tr>
+          <td><code>*Visit Plan ID</code></td>
+          <td><code>External_ID__c</code></td>
+          <td>Text(255) (External ID)</td>
+          <td>Lưu mã kế hoạch (<code>PDN_VSP_00001..00007</code>, <code>MPR_VSP_00001..00002</code>,
+            <code>FLS_VSP_00001..00018</code>, <code>AFS_VSP_00001..00009</code>).
+          </td>
+        </tr>
+        <tr>
+          <td><code>Note</code></td>
+          <td><code>Note__c</code></td>
+          <td>Text(255)</td>
+          <td>Ghi chú kế hoạch.</td>
+        </tr>
+        <tr>
+          <td><em>(Mặc định)</em></td>
+          <td><code>Status__c</code></td>
+          <td>Picklist</td>
+          <td>Set nhãn hiển thị <code>Planned</code> (API Value: <code>Duyệt Kế Hoạch</code>).</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>2.2. Object 2: <code>Visit__c</code> (File <code>2.Visits.csv</code> – 101 bản ghi)</h3>
+    <table class="grid">
+      <thead>
+        <tr>
+          <th style="width:25%">Cột trong CSV</th>
+          <th style="width:25%">Field API (<code>Visit__c</code>)</th>
+          <th style="width:18%">Kiểu dữ liệu</th>
+          <th>Quy tắc chuẩn hóa &amp; Ghi chú</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>Visit Plan ID</code></td>
+          <td><code>Visit_Plan__c</code></td>
+          <td>Master-Detail(<code>Visit_Plan__c</code>)</td>
+          <td>Lookup Salesforce ID của bản ghi <code>Visit_Plan__c</code> tương ứng vừa tạo ở Bước 1.</td>
+        </tr>
+        <tr>
+          <td><code>Dealer Name</code> / <code>Dealer Code</code></td>
+          <td><code>Dealer_Name__c</code></td>
+          <td>Lookup(<code>Account</code>)</td>
+          <td>Map sang Salesforce ID của Đại lý trên PROD (để trống nếu là <code>Only IVC</code>).</td>
+        </tr>
+        <tr>
+          <td><code>Customer Name</code></td>
+          <td><code>Vendor__c</code></td>
+          <td>Lookup(<code>Account</code>)</td>
+          <td>Map sang Salesforce ID của Khách hàng (Business Account) trên PROD (nhãn <em>"Khách hàng"</em>).</td>
+        </tr>
+        <tr>
+          <td><code>Visit code</code></td>
+          <td><code>Name</code></td>
+          <td>Text(80)</td>
+          <td>Lưu mã <code>Visit code</code>.</td>
+        </tr>
+        <tr>
+          <td><code>Visit Status</code></td>
+          <td><code>Visit_Status__c</code></td>
+          <td>Picklist</td>
+          <td><code>Completed</code>.</td>
+        </tr>
+        <tr>
+          <td><code>Visit by</code> + <code>Visit member</code></td>
+          <td><code>Note__c</code></td>
+          <td>Text(255)</td>
+          <td>Gộp <code>Visit by</code> và <code>Visit member</code> để hiển thị trên công thức báo cáo
+            <code>Visit_nNote__c</code>.
+          </td>
+        </tr>
+        <tr>
+          <td><code>Planned Date</code></td>
+          <td><code>Planned_Date__c</code></td>
+          <td>Date</td>
+          <td>Chuẩn hóa về <code>YYYY-MM-DD</code>; đồng thời gán <code>Planned_Action__c = 'V'</code>.</td>
+        </tr>
+        <tr>
+          <td><code>Check-In/Out Datetime</code></td>
+          <td><code>Check_In_Datetime__c</code> / <code>Check_Out_Datetime__c</code></td>
+          <td>DateTime</td>
+          <td>Chuẩn hóa về ISO 8601 múi giờ Việt Nam (<code>+07:00</code>), bao gồm quy đổi các giá trị số serial Excel.
+          </td>
+        </tr>
+        <tr>
+          <td><code>Check-In/Out Location</code></td>
+          <td><code>Check_In_Location__c</code> / <code>Check_Out_Location__c</code></td>
+          <td>Text(255)</td>
+          <td>Lưu chuỗi tọa độ GPS Check-in / Check-out.</td>
+        </tr>
+        <tr>
+          <td><code>Visit Type</code></td>
+          <td><code>Visit_Type__c</code></td>
+          <td>Picklist</td>
+          <td><code>CV</code>.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>2.3. Object 3: <code>Customer_Basic_Data__c</code> (File <code>3. Customer Basic Data.csv</code> – 101 bản ghi)
+    </h3>
+    <table class="grid">
+      <thead>
+        <tr>
+          <th style="width:25%">Cột trong CSV</th>
+          <th style="width:28%">Field API (<code>Customer_Basic_Data__c</code>)</th>
+          <th style="width:17%">Kiểu dữ liệu</th>
+          <th>Quy tắc chuẩn hóa &amp; Ghi chú</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>Visit code</code></td>
+          <td><code>Visit__c</code></td>
+          <td>Lookup(<code>Visit__c</code>)</td>
+          <td>Lookup 1-1 tới Salesforce ID của bản ghi <code>Visit__c</code> vừa tạo ở Bước 2.</td>
+        </tr>
+        <tr>
+          <td><code>Visit Plan ID</code></td>
+          <td><code>Visit_Plan__c</code></td>
+          <td>Lookup(<code>Visit_Plan__c</code>)</td>
+          <td>Lookup tới Salesforce ID của bản ghi <code>Visit_Plan__c</code> vừa tạo ở Bước 1.</td>
+        </tr>
+        <tr>
+          <td><code>Customer Name</code></td>
+          <td><code>Customer_Name__c</code> &amp; <code>Name</code></td>
+          <td>Lookup(<code>Account</code>) &amp; Text(80)</td>
+          <td><code>Customer_Name__c</code> lưu ID Account Khách hàng; <code>Name</code> lưu tên khách hàng (tối đa 80
+            ký tự).</td>
+        </tr>
+        <tr>
+          <td><code>Dealer</code></td>
+          <td><code>Account__c</code></td>
+          <td>Lookup(<code>Account</code>)</td>
+          <td>Lookup tới Salesforce ID của Account Đại lý.</td>
+        </tr>
+        <tr>
+          <td><code>Customer Rank</code></td>
+          <td><code>Customer_Rank__c</code></td>
+          <td>Picklist (Restricted)</td>
+          <td>Chuẩn hóa về 4 giá trị hợp lệ trên PROD: <code>FLS Diamond</code>, <code>FLS Platium</code>,
+            <code>FLS Gold</code>, <code>FLS Silver</code>.
+          </td>
+        </tr>
+        <tr>
+          <td><code>Report Status</code></td>
+          <td><code>Report_Status__c</code></td>
+          <td>Picklist (Restricted)</td>
+          <td>Chuẩn hóa từ <code>Completed</code> sang giá trị API hợp lệ <code>Complete</code>.</td>
+        </tr>
+        <tr>
+          <td><code>Check-In (Latitude / Longitude)</code></td>
+          <td><code>Check_In__Latitude__s</code> / <code>Check_In__Longitude__s</code></td>
+          <td>Location</td>
+          <td>Tách cặp tọa độ số thực từ CSV; bỏ qua nếu là <code>#N/A</code> hoặc <code>NA</code>.</td>
+        </tr>
+        <tr>
+          <td>Các trường thông tin khảo sát</td>
+          <td><code>Representative__c</code>, <code>Person_Interviewed__c</code>, <code>Head_Office_Address__c</code>,
+            <code>Established__c</code>, <code>Total_Isuzu__c</code>, <code>Total_Hino__c</code>,
+            <code>Total_Thaco__c</code>, <code>Total_HYD__c</code>, <code>Total_Other__c</code>,
+            <code>Business__c</code>, <code>Office_Shops_Warehouses__c</code>, <code>Capital__c</code>,
+            <code>Annual_Turnover__c</code>, <code>Strategy__c</code>, <code>Staff__c</code>, <code>Driver__c</code>,
+            <code>Cargo_Owner_Partner__c</code>, <code>Operation_Route_Goods__c</code>,
+            <code>Purchase_Plan_Inquiry__c</code>, <code>Maintainance_Repair__c</code>,
+            <code>Customer_Comments__c</code>, <code>Other_Information__c</code>,
+            <code>Customer_satisfaction_on_ISZ_dealer_netw__c</code>,
+            <code>Customer_satisfaction_on_ISZ_product__c</code>, <code>Next_Action__c</code>
+          </td>
+          <td>Text / Number / Date / LongTextArea</td>
+          <td>Chuẩn hóa kiểu số (<code>&gt;40</code> &rarr; <code>40</code>), kiểu ngày và giữ nguyên toàn bộ nội dung
+            báo cáo.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 id="sec-3">3. Danh Sách 36 Bản Ghi <code>Visit_Plan__c</code> Đã Tạo Trên PROD</h2>
+    <table class="grid">
+      <thead>
+        <tr>
+          <th class="c" style="width:5%">STT</th>
+          <th style="width:16%">External ID (<code>External_ID__c</code>)</th>
+          <th style="width:32%">Tên Kế Hoạch (<code>Name</code>)</th>
+          <th class="c" style="width:11%">Start Date</th>
+          <th class="c" style="width:11%">End Date</th>
+          <th class="c" style="width:10%">Status</th>
+          <th style="width:15%">Salesforce ID (<code>Visit_Plan__c</code>)</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr>
+          <td class="c">1</td>
+          <td><code>PDN_VSP_00001</code></td>
+          <td>PDN - CST VISIT - Jul26 - Binh Duong</td>
+          <td class="c">2026-07-28</td>
+          <td class="c">2026-07-28</td>
+          <td class="c">Planned</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu0000089QEnIAM/view"
+              target="_blank"><code>a28Vu0000089QEnIAM</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">2</td>
+          <td><code>PDN_VSP_00002</code></td>
+          <td>PDN - CST VISIT - Sep26 - HCM</td>
+          <td class="c">2026-09-22</td>
+          <td class="c">2026-09-22</td>
+          <td class="c">Planned</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu0000089QEoIAM/view"
+              target="_blank"><code>a28Vu0000089QEoIAM</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">3</td>
+          <td><code>PDN_VSP_00003</code></td>
+          <td>PDN - CST VISIT - Jun26 - Ha Noi</td>
+          <td class="c">2026-06-18</td>
+          <td class="c">2026-06-18</td>
+          <td class="c">Planned</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu0000089QEpIAM/view"
+              target="_blank"><code>a28Vu0000089QEpIAM</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">4</td>
+          <td><code>MPR_VSP_00001</code></td>
+          <td>MPR - CST VISIT - Aug&#x27;26 - HCMC</td>
+          <td class="c">2026-08-19</td>
+          <td class="c">2026-08-19</td>
+          <td class="c">Planned</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu0000089QEqIAM/view"
+              target="_blank"><code>a28Vu0000089QEqIAM</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">5</td>
+          <td><code>MPR_VSP_00002</code></td>
+          <td>MPR - CST VISIT - Aug&#x27;26 - HCMC</td>
+          <td class="c">2026-08-20</td>
+          <td class="c">2026-08-20</td>
+          <td class="c">Planned</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu0000089QErIAM/view"
+              target="_blank"><code>a28Vu0000089QErIAM</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">6</td>
+          <td><code>PDN_VSP_00004</code></td>
+          <td>PDN - CST VISIT - Jun26 - Ha Noi</td>
+          <td class="c">2026-06-18</td>
+          <td class="c">2026-06-18</td>
+          <td class="c">Planned</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu0000089QEsIAM/view"
+              target="_blank"><code>a28Vu0000089QEsIAM</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">7</td>
+          <td><code>PDN_VSP_00005</code></td>
+          <td>PDN - CST VISIT - Aug26 - HCM</td>
+          <td class="c">2026-08-26</td>
+          <td class="c">2026-08-26</td>
+          <td class="c">Planned</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu0000089QEtIAM/view"
+              target="_blank"><code>a28Vu0000089QEtIAM</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">8</td>
+          <td><code>PDN_VSP_00006</code></td>
+          <td>PDN - CST VISIT - Aug26 - HCM</td>
+          <td class="c">2026-08-28</td>
+          <td class="c">2026-08-28</td>
+          <td class="c">Planned</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu0000089QEuIAM/view"
+              target="_blank"><code>a28Vu0000089QEuIAM</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">9</td>
+          <td><code>PDN_VSP_00007</code></td>
+          <td>PDN - CST VISIT - Sep26 - HCM</td>
+          <td class="c">2026-09-18</td>
+          <td class="c">2026-09-18</td>
+          <td class="c">Planned</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu0000089QEvIAM/view"
+              target="_blank"><code>a28Vu0000089QEvIAM</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">10</td>
+          <td><code>FLS_VSP_00001</code></td>
+          <td>FLS - CST VISIT - APR26 - THÁI NGUYÊN</td>
+          <td class="c">2026-04-18</td>
+          <td class="c">2026-04-18</td>
+          <td class="c">Planned</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu0000089QEwIAM/view"
+              target="_blank"><code>a28Vu0000089QEwIAM</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">11</td>
+          <td><code>FLS_VSP_00002</code></td>
+          <td>FLS - CST VISIT - APR26 - HẢI DƯƠNG</td>
+          <td class="c">2026-04-20</td>
+          <td class="c">2026-04-20</td>
+          <td class="c">Planned</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu0000089QExIAM/view"
+              target="_blank"><code>a28Vu0000089QExIAM</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">12</td>
+          <td><code>FLS_VSP_00003</code></td>
+          <td>FLS - CST VISIT - APR26 - HỒ CHÍ MINH</td>
+          <td class="c">2026-02-22</td>
+          <td class="c">2026-02-22</td>
+          <td class="c">Planned</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu0000089QEyIAM/view"
+              target="_blank"><code>a28Vu0000089QEyIAM</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">13</td>
+          <td><code>FLS_VSP_00004</code></td>
+          <td>FLS - CST VISIT - MAY26 - HỒ CHÍ MINH</td>
+          <td class="c">2026-05-14</td>
+          <td class="c">2026-05-14</td>
+          <td class="c">Planned</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu0000089QEzIAM/view"
+              target="_blank"><code>a28Vu0000089QEzIAM</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">14</td>
+          <td><code>FLS_VSP_00005</code></td>
+          <td>FLS - CST VISIT - MAY26 - ĐỒNG NAI</td>
+          <td class="c">2026-05-15</td>
+          <td class="c">2026-05-15</td>
+          <td class="c">Planned</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu0000089QF0IAM/view"
+              target="_blank"><code>a28Vu0000089QF0IAM</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">15</td>
+          <td><code>FLS_VSP_00006</code></td>
+          <td>FLS - CST VISIT - MAY26 - HÀ NỘI</td>
+          <td class="c">2026-05-22</td>
+          <td class="c">2026-05-22</td>
+          <td class="c">Planned</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu0000089QF1IAM/view"
+              target="_blank"><code>a28Vu0000089QF1IAM</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">16</td>
+          <td><code>FLS_VSP_00007</code></td>
+          <td>FLS - CST VISIT - JUN26 - LONG AN</td>
+          <td class="c">2026-06-02</td>
+          <td class="c">2026-06-03</td>
+          <td class="c">Planned</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu0000089QF2IAM/view"
+              target="_blank"><code>a28Vu0000089QF2IAM</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">17</td>
+          <td><code>FLS_VSP_00008</code></td>
+          <td>FLS - CST VISIT - JUN26 - CẦN THƠ</td>
+          <td class="c">2026-06-02</td>
+          <td class="c">2026-06-03</td>
+          <td class="c">Planned</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu0000089QF3IAM/view"
+              target="_blank"><code>a28Vu0000089QF3IAM</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">18</td>
+          <td><code>FLS_VSP_00009</code></td>
+          <td>FLS - CST VISIT - JUN26 - HỒ CHÍ MINH</td>
+          <td class="c">2026-06-09</td>
+          <td class="c">2026-06-30</td>
+          <td class="c">Planned</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu0000089QF4IAM/view"
+              target="_blank"><code>a28Vu0000089QF4IAM</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">19</td>
+          <td><code>FLS_VSP_00010</code></td>
+          <td>FLS - CST VISIT - JUL26 - HÀ NỘI</td>
+          <td class="c">2026-07-08</td>
+          <td class="c">2026-07-10</td>
+          <td class="c">Planned</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu0000089QF5IAM/view"
+              target="_blank"><code>a28Vu0000089QF5IAM</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">20</td>
+          <td><code>FLS_VSP_00011</code></td>
+          <td>FLS - CST VISIT - JUL26 - HỒ CHÍ MINH</td>
+          <td class="c">2026-07-16</td>
+          <td class="c">2026-07-23</td>
+          <td class="c">Planned</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu0000089QF6IAM/view"
+              target="_blank"><code>a28Vu0000089QF6IAM</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">21</td>
+          <td><code>FLS_VSP_00012</code></td>
+          <td>FLS - CST VISIT - JUL26 - TIỀN GIANG</td>
+          <td class="c">2026-07-28</td>
+          <td class="c">2026-07-28</td>
+          <td class="c">Planned</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu0000089QF7IAM/view"
+              target="_blank"><code>a28Vu0000089QF7IAM</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">22</td>
+          <td><code>FLS_VSP_00013</code></td>
+          <td>FLS - CST VISIT - JUL26 - ĐỒNG NAI</td>
+          <td class="c">2026-07-29</td>
+          <td class="c">2026-07-29</td>
+          <td class="c">Planned</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu0000089QF8IAM/view"
+              target="_blank"><code>a28Vu0000089QF8IAM</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">23</td>
+          <td><code>FLS_VSP_00014</code></td>
+          <td>FLS - CST VISIT - AUG26 - HỒ CHÍ MINH</td>
+          <td class="c">2026-08-05</td>
+          <td class="c">2026-08-25</td>
+          <td class="c">Planned</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu0000089QF9IAM/view"
+              target="_blank"><code>a28Vu0000089QF9IAM</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">24</td>
+          <td><code>FLS_VSP_00015</code></td>
+          <td>FLS - CST VISIT - SEP26 - HỒ CHÍ MINH</td>
+          <td class="c">2026-09-04</td>
+          <td class="c">2026-09-18</td>
+          <td class="c">Planned</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu0000089QFAIA2/view"
+              target="_blank"><code>a28Vu0000089QFAIA2</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">25</td>
+          <td><code>FLS_VSP_00016</code></td>
+          <td>FLS - CST VISIT - SEP26 - HÀ NỘI</td>
+          <td class="c">2026-09-09</td>
+          <td class="c">2026-09-11</td>
+          <td class="c">Planned</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu0000089QFBIA2/view"
+              target="_blank"><code>a28Vu0000089QFBIA2</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">26</td>
+          <td><code>FLS_VSP_00017</code></td>
+          <td>FLS - CST VISIT - SEP26 - BẮC NINH</td>
+          <td class="c">2026-09-11</td>
+          <td class="c">2026-09-11</td>
+          <td class="c">Planned</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu0000089QFCIA2/view"
+              target="_blank"><code>a28Vu0000089QFCIA2</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">27</td>
+          <td><code>FLS_VSP_00018</code></td>
+          <td>FLS - CST VISIT - SEP26 - ĐỒNG NAI</td>
+          <td class="c">2026-09-11</td>
+          <td class="c">2026-09-11</td>
+          <td class="c">Planned</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu0000089QFDIA2/view"
+              target="_blank"><code>a28Vu0000089QFDIA2</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">28</td>
+          <td><code>AFS_VSP_00001</code></td>
+          <td>AFS-CST VISIT-MAY26-HCM1</td>
+          <td class="c">2026-05-06</td>
+          <td class="c">2026-05-06</td>
+          <td class="c">Planned</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu0000089QFEIA2/view"
+              target="_blank"><code>a28Vu0000089QFEIA2</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">29</td>
+          <td><code>AFS_VSP_00002</code></td>
+          <td>AFS-CST VISIT-MAY26-HN</td>
+          <td class="c">2026-05-13</td>
+          <td class="c">2026-05-15</td>
+          <td class="c">Planned</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu0000089QFFIA2/view"
+              target="_blank"><code>a28Vu0000089QFFIA2</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">30</td>
+          <td><code>AFS_VSP_00003</code></td>
+          <td>AFS-CST VISIT-MAY26-HCM2</td>
+          <td class="c">2026-05-20</td>
+          <td class="c">2026-05-20</td>
+          <td class="c">Planned</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu0000089QFGIA2/view"
+              target="_blank"><code>a28Vu0000089QFGIA2</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">31</td>
+          <td><code>AFS_VSP_00004</code></td>
+          <td>AFS-CST VISIT-JUN26-HCM1</td>
+          <td class="c">2026-06-09</td>
+          <td class="c">2026-06-11</td>
+          <td class="c">Planned</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu0000089QFHIA2/view"
+              target="_blank"><code>a28Vu0000089QFHIA2</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">32</td>
+          <td><code>AFS_VSP_00005</code></td>
+          <td>AFS-CST VISIT-JUN26-HN</td>
+          <td class="c">2026-07-28</td>
+          <td class="c">2026-07-30</td>
+          <td class="c">Planned</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu0000089QFIIA2/view"
+              target="_blank"><code>a28Vu0000089QFIIA2</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">33</td>
+          <td><code>AFS_VSP_00006</code></td>
+          <td>AFS-CST VISIT-JUN26-HCM2</td>
+          <td class="c">2026-08-10</td>
+          <td class="c">2026-08-14</td>
+          <td class="c">Planned</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu0000089QFJIA2/view"
+              target="_blank"><code>a28Vu0000089QFJIA2</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">34</td>
+          <td><code>AFS_VSP_00007</code></td>
+          <td>AFS-CST VISIT-JUN26-HCM3</td>
+          <td class="c">2026-09-14</td>
+          <td class="c">2026-09-18</td>
+          <td class="c">Planned</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu0000089QFKIA2/view"
+              target="_blank"><code>a28Vu0000089QFKIA2</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">35</td>
+          <td><code>AFS_VSP_00008</code></td>
+          <td>AFS-CST VISIT-APR26-HCM</td>
+          <td class="c">2026-04-22</td>
+          <td class="c">2026-04-22</td>
+          <td class="c">Planned</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu0000089QFLIA2/view"
+              target="_blank"><code>a28Vu0000089QFLIA2</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">36</td>
+          <td><code>AFS_VSP_00009</code></td>
+          <td>AFS-CST VISIT-JUN26-HCM3</td>
+          <td class="c">2026-06-24</td>
+          <td class="c">2026-06-24</td>
+          <td class="c">Planned</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu0000089QFMIA2/view"
+              target="_blank"><code>a28Vu0000089QFMIA2</code></a></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 id="sec-4">4. Danh Sách 101 Bản Ghi <code>Visit__c</code> &amp; <code>Customer_Basic_Data__c</code> Đã Tạo Trên
+      PROD</h2>
+    <table class="grid">
+      <thead>
+        <tr>
+          <th class="c" style="width:4%">STT</th>
+          <th style="width:12%">Plan ID</th>
+          <th style="width:13%">Visit Code</th>
+          <th style="width:25%">Khách Hàng (<code>Name</code>)</th>
+          <th class="c" style="width:9%">Ngày Thăm</th>
+          <th style="width:12%"><code>Visit__c</code> ID</th>
+          <th style="width:13%"><code>Customer_Basic_Data__c</code> ID</th>
+          <th style="width:12%"><code>Account</code> KH ID</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr>
+          <td class="c">1</td>
+          <td><code>PDN_VSP_00001</code></td>
+          <td><code>PDN_VSP_00001</code></td>
+          <td>CÔNG TY TNHH VẬN TẢI TRÍ THANH</td>
+          <td class="c">2026-07-28</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXxxIAG/view"
+              target="_blank"><code>a29Vu000005YXxxIAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNK1MAP/view"
+              target="_blank"><code>a0OVu00000CMNK1MAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4LVUIA2/view"
+              target="_blank"><code>001Vu00002g4LVUIA2</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">2</td>
+          <td><code>PDN_VSP_00002</code></td>
+          <td><code>PDN_VSP_00002</code></td>
+          <td>CÔNG TY TNHH THƯƠNG MẠI - DỊCH VỤ - XUẤT NHẬP KHẨU AN PHA VIỆT</td>
+          <td class="c">2026-09-22</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXxyIAG/view"
+              target="_blank"><code>a29Vu000005YXxyIAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNK2MAP/view"
+              target="_blank"><code>a0OVu00000CMNK2MAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g5Nt7IAE/view"
+              target="_blank"><code>001Vu00002g5Nt7IAE</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">3</td>
+          <td><code>PDN_VSP_00003</code></td>
+          <td><code>PDN_VSP_00003</code></td>
+          <td>CÔNG TY TNHH ĐẦU TƯ THƯƠNG MẠI VÀ VẬN TẢI Á ĐÔNG</td>
+          <td class="c">2026-06-18</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXxzIAG/view"
+              target="_blank"><code>a29Vu000005YXxzIAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNK3MAP/view"
+              target="_blank"><code>a0OVu00000CMNK3MAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g46WgIAI/view"
+              target="_blank"><code>001Vu00002g46WgIAI</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">4</td>
+          <td><code>MPR_VSP_00001</code></td>
+          <td><code>MPR_Visit_00004</code></td>
+          <td>CÔNG TY CỔ PHẦN VẬN TẢI BƯU CHÍNH VIỆT NAM</td>
+          <td class="c">2026-08-19</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXy0IAG/view"
+              target="_blank"><code>a29Vu000005YXy0IAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNK4MAP/view"
+              target="_blank"><code>a0OVu00000CMNK4MAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fhOZaIAM/view"
+              target="_blank"><code>001Vu00002fhOZaIAM</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">5</td>
+          <td><code>MPR_VSP_00002</code></td>
+          <td><code>MPR_Visit_00005</code></td>
+          <td>CÔNG TY TNHH DỊCH VỤ VẬN TẢI KHIÊM NGUYỄN</td>
+          <td class="c">2026-08-19</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXy1IAG/view"
+              target="_blank"><code>a29Vu000005YXy1IAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNK5MAP/view"
+              target="_blank"><code>a0OVu00000CMNK5MAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4GAiIAM/view"
+              target="_blank"><code>001Vu00002g4GAiIAM</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">6</td>
+          <td><code>MPR_VSP_00002</code></td>
+          <td><code>MPR_Visit_00006</code></td>
+          <td>CÔNG TY TNHH GIAO NHẬN VẬN TẢI TRƯỜNG THỌ</td>
+          <td class="c">2026-08-20</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXy2IAG/view"
+              target="_blank"><code>a29Vu000005YXy2IAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNK6MAP/view"
+              target="_blank"><code>a0OVu00000CMNK6MAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4955IAA/view"
+              target="_blank"><code>001Vu00002g4955IAA</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">7</td>
+          <td><code>MPR_VSP_00002</code></td>
+          <td><code>MPR_Visit_00007</code></td>
+          <td>CHI NHÁNH TP.HCM - CÔNG TY CP TIẾP VẬN HÒA PHÁT</td>
+          <td class="c">2026-08-20</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXy3IAG/view"
+              target="_blank"><code>a29Vu000005YXy3IAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNK7MAP/view"
+              target="_blank"><code>a0OVu00000CMNK7MAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4BEAIA2/view"
+              target="_blank"><code>001Vu00002g4BEAIA2</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">8</td>
+          <td><code>PDN_VSP_00004</code></td>
+          <td><code>PDN_VSP_00008</code></td>
+          <td>CÔNG TY TNHH THƯƠNG MẠI VÀ VẬN TẢI QUANG VINH</td>
+          <td class="c">2026-06-18</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXy4IAG/view"
+              target="_blank"><code>a29Vu000005YXy4IAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNK8MAP/view"
+              target="_blank"><code>a0OVu00000CMNK8MAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g45wPIAQ/view"
+              target="_blank"><code>001Vu00002g45wPIAQ</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">9</td>
+          <td><code>PDN_VSP_00005</code></td>
+          <td><code>PDN_VSP_00009</code></td>
+          <td>CÔNG TY TNHH TM-DV KHANG GIA PHÁT</td>
+          <td class="c">2026-08-26</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXy5IAG/view"
+              target="_blank"><code>a29Vu000005YXy5IAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNK9MAP/view"
+              target="_blank"><code>a0OVu00000CMNK9MAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002hjC28IAE/view"
+              target="_blank"><code>001Vu00002hjC28IAE</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">10</td>
+          <td><code>PDN_VSP_00006</code></td>
+          <td><code>PDN_VSP_00010</code></td>
+          <td>CÔNG TY TNHH HẢI ĐĂNG SOFA</td>
+          <td class="c">2026-08-26</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXy6IAG/view"
+              target="_blank"><code>a29Vu000005YXy6IAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKAMA5/view"
+              target="_blank"><code>a0OVu00000CMNKAMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g50mSIAQ/view"
+              target="_blank"><code>001Vu00002g50mSIAQ</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">11</td>
+          <td><code>PDN_VSP_00007</code></td>
+          <td><code>PDN_VSP_00011</code></td>
+          <td>CÔNG TY TNHH SẢN XUẤT THƯƠNG MẠI LINH GIANG</td>
+          <td class="c">2026-09-18</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXy7IAG/view"
+              target="_blank"><code>a29Vu000005YXy7IAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKBMA5/view"
+              target="_blank"><code>a0OVu00000CMNKBMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fRfbMIAS/view"
+              target="_blank"><code>001Vu00002fRfbMIAS</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">12</td>
+          <td><code>FLS_VSP_00001</code></td>
+          <td><code>FLS_Visit_000001</code></td>
+          <td>MEC THAI NGUYEN CO., LTD</td>
+          <td class="c">2026-04-18</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXy8IAG/view"
+              target="_blank"><code>a29Vu000005YXy8IAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKCMA5/view"
+              target="_blank"><code>a0OVu00000CMNKCMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002hMVQTIA4/view"
+              target="_blank"><code>001Vu00002hMVQTIA4</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">13</td>
+          <td><code>FLS_VSP_00002</code></td>
+          <td><code>FLS_Visit_000002</code></td>
+          <td>ANT (HN) CO., LTD</td>
+          <td class="c">2026-04-20</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXy9IAG/view"
+              target="_blank"><code>a29Vu000005YXy9IAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKDMA5/view"
+              target="_blank"><code>a0OVu00000CMNKDMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fhOapIAE/view"
+              target="_blank"><code>001Vu00002fhOapIAE</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">14</td>
+          <td><code>FLS_VSP_00003</code></td>
+          <td><code>FLS_Visit_000003</code></td>
+          <td>BHX</td>
+          <td class="c">2026-04-22</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXyAIAW/view"
+              target="_blank"><code>a29Vu000005YXyAIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKEMA5/view"
+              target="_blank"><code>a0OVu00000CMNKEMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g49GhIAI/view"
+              target="_blank"><code>001Vu00002g49GhIAI</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">15</td>
+          <td><code>FLS_VSP_00004</code></td>
+          <td><code>FLS_Visit_000004</code></td>
+          <td>GHN</td>
+          <td class="c">2026-05-14</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXyBIAW/view"
+              target="_blank"><code>a29Vu000005YXyBIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKFMA5/view"
+              target="_blank"><code>a0OVu00000CMNKFMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g468eIAA/view"
+              target="_blank"><code>001Vu00002g468eIAA</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">16</td>
+          <td><code>FLS_VSP_00005</code></td>
+          <td><code>FLS_Visit_000005</code></td>
+          <td>TAXI TRẦN HỒ</td>
+          <td class="c">2026-05-15</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXyCIAW/view"
+              target="_blank"><code>a29Vu000005YXyCIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKGMA5/view"
+              target="_blank"><code>a0OVu00000CMNKGMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4Ke3IAE/view"
+              target="_blank"><code>001Vu00002g4Ke3IAE</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">17</td>
+          <td><code>FLS_VSP_00005</code></td>
+          <td><code>FLS_Visit_000006</code></td>
+          <td>THỊNH GIA BẢO</td>
+          <td class="c">2026-05-15</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXyDIAW/view"
+              target="_blank"><code>a29Vu000005YXyDIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKHMA5/view"
+              target="_blank"><code>a0OVu00000CMNKHMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fPwP6IAK/view"
+              target="_blank"><code>001Vu00002fPwP6IAK</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">18</td>
+          <td><code>FLS_VSP_00006</code></td>
+          <td><code>FLS_Visit_000007</code></td>
+          <td>LOGITHEM VIETNAM CORPORATION</td>
+          <td class="c">2026-05-22</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXyEIAW/view"
+              target="_blank"><code>a29Vu000005YXyEIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKIMA5/view"
+              target="_blank"><code>a0OVu00000CMNKIMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fTC4SIAW/view"
+              target="_blank"><code>001Vu00002fTC4SIAW</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">19</td>
+          <td><code>FLS_VSP_00007</code></td>
+          <td><code>FLS_Visit_000008</code></td>
+          <td>CÔNG TY TNHH HOÁ SINH CỬU LONG</td>
+          <td class="c">2026-06-02</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXyFIAW/view"
+              target="_blank"><code>a29Vu000005YXyFIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKJMA5/view"
+              target="_blank"><code>a0OVu00000CMNKJMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4EgSIAU/view"
+              target="_blank"><code>001Vu00002g4EgSIAU</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">20</td>
+          <td><code>FLS_VSP_00008</code></td>
+          <td><code>FLS_Visit_000009</code></td>
+          <td>CÔNG TY TNHH VT 365</td>
+          <td class="c">2026-06-02</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXyGIAW/view"
+              target="_blank"><code>a29Vu000005YXyGIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKKMA5/view"
+              target="_blank"><code>a0OVu00000CMNKKMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g5NMwIAM/view"
+              target="_blank"><code>001Vu00002g5NMwIAM</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">21</td>
+          <td><code>FLS_VSP_00008</code></td>
+          <td><code>FLS_Visit_000010</code></td>
+          <td>CÔNG TY TNHH VT HƯNG THỊNH</td>
+          <td class="c">2026-06-02</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXyHIAW/view"
+              target="_blank"><code>a29Vu000005YXyHIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKLMA5/view"
+              target="_blank"><code>a0OVu00000CMNKLMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4GaDIAU/view"
+              target="_blank"><code>001Vu00002g4GaDIAU</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">22</td>
+          <td><code>FLS_VSP_00008</code></td>
+          <td><code>FLS_Visit_000011</code></td>
+          <td>CÔNG TY TNHH XĂNG DẦU CHÁNH NGHIỆP</td>
+          <td class="c">2026-06-03</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXyIIAW/view"
+              target="_blank"><code>a29Vu000005YXyIIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKMMA5/view"
+              target="_blank"><code>a0OVu00000CMNKMMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4DlxIAE/view"
+              target="_blank"><code>001Vu00002g4DlxIAE</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">23</td>
+          <td><code>FLS_VSP_00008</code></td>
+          <td><code>FLS_Visit_000012</code></td>
+          <td>CÔNG TY CP NICOTEX CẦN THƠ</td>
+          <td class="c">2026-06-03</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXyJIAW/view"
+              target="_blank"><code>a29Vu000005YXyJIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKNMA5/view"
+              target="_blank"><code>a0OVu00000CMNKNMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4C3iIAE/view"
+              target="_blank"><code>001Vu00002g4C3iIAE</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">24</td>
+          <td><code>FLS_VSP_00009</code></td>
+          <td><code>FLS_Visit_000013</code></td>
+          <td>IMAE RBM</td>
+          <td class="c">2026-06-09</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXyKIAW/view"
+              target="_blank"><code>a29Vu000005YXyKIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKOMA5/view"
+              target="_blank"><code>a0OVu00000CMNKOMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4IWlIAM/view"
+              target="_blank"><code>001Vu00002g4IWlIAM</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">25</td>
+          <td><code>FLS_VSP_00009</code></td>
+          <td><code>FLS_Visit_000014</code></td>
+          <td>THANH KIM RBM</td>
+          <td class="c">2026-06-09</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXyLIAW/view"
+              target="_blank"><code>a29Vu000005YXyLIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKPMA5/view"
+              target="_blank"><code>a0OVu00000CMNKPMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g0944IAA/view"
+              target="_blank"><code>001Vu00002g0944IAA</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">26</td>
+          <td><code>FLS_VSP_00009</code></td>
+          <td><code>FLS_Visit_000015</code></td>
+          <td>LOGITHEM VIETNAM CORPORATION</td>
+          <td class="c">2026-06-12</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXyMIAW/view"
+              target="_blank"><code>a29Vu000005YXyMIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKQMA5/view"
+              target="_blank"><code>a0OVu00000CMNKQMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fTC4SIAW/view"
+              target="_blank"><code>001Vu00002fTC4SIAW</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">27</td>
+          <td><code>FLS_VSP_00009</code></td>
+          <td><code>FLS_Visit_000016</code></td>
+          <td>VINATRANS</td>
+          <td class="c">2026-06-12</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXyNIAW/view"
+              target="_blank"><code>a29Vu000005YXyNIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKRMA5/view"
+              target="_blank"><code>a0OVu00000CMNKRMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g49e7IAA/view"
+              target="_blank"><code>001Vu00002g49e7IAA</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">28</td>
+          <td><code>FLS_VSP_00009</code></td>
+          <td><code>FLS_Visit_000017</code></td>
+          <td>HUNG DONG TRANSPORTATION DV COMPANY LIMITED</td>
+          <td class="c">2026-06-16</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXyOIAW/view"
+              target="_blank"><code>a29Vu000005YXyOIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKSMA5/view"
+              target="_blank"><code>a0OVu00000CMNKSMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g486ZIAQ/view"
+              target="_blank"><code>001Vu00002g486ZIAQ</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">29</td>
+          <td><code>FLS_VSP_00009</code></td>
+          <td><code>FLS_Visit_000018</code></td>
+          <td>PHUC HAO PRODUCING AND TRADING CO.LTD</td>
+          <td class="c">2026-06-16</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXyPIAW/view"
+              target="_blank"><code>a29Vu000005YXyPIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKTMA5/view"
+              target="_blank"><code>a0OVu00000CMNKTMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fTC3wIAG/view"
+              target="_blank"><code>001Vu00002fTC3wIAG</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">30</td>
+          <td><code>FLS_VSP_00009</code></td>
+          <td><code>FLS_Visit_000019</code></td>
+          <td>NIPPON KONPO</td>
+          <td class="c">2026-06-17</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXyQIAW/view"
+              target="_blank"><code>a29Vu000005YXyQIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKUMA5/view"
+              target="_blank"><code>a0OVu00000CMNKUMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4BosIAE/view"
+              target="_blank"><code>001Vu00002g4BosIAE</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">31</td>
+          <td><code>FLS_VSP_00009</code></td>
+          <td><code>FLS_Visit_000020</code></td>
+          <td>UV JOINT STOCK COMPANY</td>
+          <td class="c">2026-06-17</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXyRIAW/view"
+              target="_blank"><code>a29Vu000005YXyRIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKVMA5/view"
+              target="_blank"><code>a0OVu00000CMNKVMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g464tIAA/view"
+              target="_blank"><code>001Vu00002g464tIAA</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">32</td>
+          <td><code>FLS_VSP_00009</code></td>
+          <td><code>FLS_Visit_000021</code></td>
+          <td>Heo Vang Transport Joint Stock Company</td>
+          <td class="c">2026-06-17</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXySIAW/view"
+              target="_blank"><code>a29Vu000005YXySIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKWMA5/view"
+              target="_blank"><code>a0OVu00000CMNKWMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g5NcLIAU/view"
+              target="_blank"><code>001Vu00002g5NcLIAU</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">33</td>
+          <td><code>FLS_VSP_00009</code></td>
+          <td><code>FLS_Visit_000022</code></td>
+          <td>CÔNG TY TNHH DV TM VT YẾN VIỆT</td>
+          <td class="c">2026-06-19</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXyTIAW/view"
+              target="_blank"><code>a29Vu000005YXyTIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKXMA5/view"
+              target="_blank"><code>a0OVu00000CMNKXMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4HFlIAM/view"
+              target="_blank"><code>001Vu00002g4HFlIAM</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">34</td>
+          <td><code>FLS_VSP_00009</code></td>
+          <td><code>FLS_Visit_000023</code></td>
+          <td>CÔNG TY TNHH CƠ NHIỆT GREENBOILER</td>
+          <td class="c">2026-06-19</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXyUIAW/view"
+              target="_blank"><code>a29Vu000005YXyUIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKYMA5/view"
+              target="_blank"><code>a0OVu00000CMNKYMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g5NCKIA2/view"
+              target="_blank"><code>001Vu00002g5NCKIA2</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">35</td>
+          <td><code>FLS_VSP_00009</code></td>
+          <td><code>FLS_Visit_000024</code></td>
+          <td>CÔNG TY TNHH SX TM LINH GIANG</td>
+          <td class="c">2026-06-24</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXyVIAW/view"
+              target="_blank"><code>a29Vu000005YXyVIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKZMA5/view"
+              target="_blank"><code>a0OVu00000CMNKZMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fRfbMIAS/view"
+              target="_blank"><code>001Vu00002fRfbMIAS</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">36</td>
+          <td><code>FLS_VSP_00009</code></td>
+          <td><code>FLS_Visit_000025</code></td>
+          <td>TRUNG TÂM GIÁO DỤC NGHỀ NGHIỆP LÁI XE THÀNH CÔNG</td>
+          <td class="c">2026-06-26</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXyWIAW/view"
+              target="_blank"><code>a29Vu000005YXyWIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKaMAP/view"
+              target="_blank"><code>a0OVu00000CMNKaMAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4DqVIAU/view"
+              target="_blank"><code>001Vu00002g4DqVIAU</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">37</td>
+          <td><code>FLS_VSP_00009</code></td>
+          <td><code>FLS_Visit_000026</code></td>
+          <td>CÔNG TY TNHH THƯƠNG MẠI DỊCH VỤ VT TẤN THÀNH</td>
+          <td class="c">2026-06-26</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXyXIAW/view"
+              target="_blank"><code>a29Vu000005YXyXIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKbMAP/view"
+              target="_blank"><code>a0OVu00000CMNKbMAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g46VXIAY/view"
+              target="_blank"><code>001Vu00002g46VXIAY</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">38</td>
+          <td><code>FLS_VSP_00009</code></td>
+          <td><code>FLS_Visit_000027</code></td>
+          <td>CÔNG TY CỔ PHẦN VẬN TẢI LAM ĐẠT</td>
+          <td class="c">2026-06-26</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXyYIAW/view"
+              target="_blank"><code>a29Vu000005YXyYIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKcMAP/view"
+              target="_blank"><code>a0OVu00000CMNKcMAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4EW6IAM/view"
+              target="_blank"><code>001Vu00002g4EW6IAM</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">39</td>
+          <td><code>FLS_VSP_00009</code></td>
+          <td><code>FLS_Visit_000028</code></td>
+          <td>CTY TNHH TM DV VẬN TẢI TDL</td>
+          <td class="c">2026-06-26</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXyZIAW/view"
+              target="_blank"><code>a29Vu000005YXyZIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKdMAP/view"
+              target="_blank"><code>a0OVu00000CMNKdMAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fOYdQIAW/view"
+              target="_blank"><code>001Vu00002fOYdQIAW</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">40</td>
+          <td><code>FLS_VSP_00009</code></td>
+          <td><code>FLS_Visit_000029</code></td>
+          <td>CÔNG TY TNHH KIỂM SOÁT CÔN TRÙNG SAO VIỆT</td>
+          <td class="c">2026-06-29</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXyaIAG/view"
+              target="_blank"><code>a29Vu000005YXyaIAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKeMAP/view"
+              target="_blank"><code>a0OVu00000CMNKeMAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g5NCpIAM/view"
+              target="_blank"><code>001Vu00002g5NCpIAM</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">41</td>
+          <td><code>FLS_VSP_00009</code></td>
+          <td><code>FLS_Visit_000030</code></td>
+          <td>CÔNG TY TNHH CÔNG NGHỆ GIGA-NET</td>
+          <td class="c">2026-06-30</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXybIAG/view"
+              target="_blank"><code>a29Vu000005YXybIAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKfMAP/view"
+              target="_blank"><code>a0OVu00000CMNKfMAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g5NCAIA2/view"
+              target="_blank"><code>001Vu00002g5NCAIA2</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">42</td>
+          <td><code>FLS_VSP_00010</code></td>
+          <td><code>FLS_Visit_000031</code></td>
+          <td>CÔNG TY TNHH VẬN TẢI YÊN THÀNH 247</td>
+          <td class="c">2026-07-09</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXycIAG/view"
+              target="_blank"><code>a29Vu000005YXycIAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKgMAP/view"
+              target="_blank"><code>a0OVu00000CMNKgMAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002hD8u5IAC/view"
+              target="_blank"><code>001Vu00002hD8u5IAC</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">43</td>
+          <td><code>FLS_VSP_00010</code></td>
+          <td><code>FLS_Visit_000032</code></td>
+          <td>CÔNG TY TNHH VẬN TẢI THUẬN HOÀ</td>
+          <td class="c">2026-07-09</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXydIAG/view"
+              target="_blank"><code>a29Vu000005YXydIAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKhMAP/view"
+              target="_blank"><code>a0OVu00000CMNKhMAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g48umIAA/view"
+              target="_blank"><code>001Vu00002g48umIAA</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">44</td>
+          <td><code>FLS_VSP_00010</code></td>
+          <td><code>FLS_Visit_000033</code></td>
+          <td>TRƯỜNG TRUNG CẤP NGỌC HÀ - CHI NHÁNH CÔNG TY TNHH XÂY DỰNG VÀ THƯƠNG MẠI NGỌC HÀ</td>
+          <td class="c">2026-07-09</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXyeIAG/view"
+              target="_blank"><code>a29Vu000005YXyeIAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKiMAP/view"
+              target="_blank"><code>a0OVu00000CMNKiMAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002h46jiIAA/view"
+              target="_blank"><code>001Vu00002h46jiIAA</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">45</td>
+          <td><code>FLS_VSP_00010</code></td>
+          <td><code>FLS_Visit_000034</code></td>
+          <td>CÔNG TY TNHH DU LỊCH X.E VIỆT NAM</td>
+          <td class="c">2026-07-10</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXyfIAG/view"
+              target="_blank"><code>a29Vu000005YXyfIAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKjMAP/view"
+              target="_blank"><code>a0OVu00000CMNKjMAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4H5BIAU/view"
+              target="_blank"><code>001Vu00002g4H5BIAU</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">46</td>
+          <td><code>FLS_VSP_00010</code></td>
+          <td><code>FLS_Visit_000035</code></td>
+          <td>FIRE FIGHTING DRIVING SCHOOL - MOP</td>
+          <td class="c">2026-07-10</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXygIAG/view"
+              target="_blank"><code>a29Vu000005YXygIAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKkMAP/view"
+              target="_blank"><code>a0OVu00000CMNKkMAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4ExJIAU/view"
+              target="_blank"><code>001Vu00002g4ExJIAU</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">47</td>
+          <td><code>FLS_VSP_00011</code></td>
+          <td><code>FLS_Visit_000036</code></td>
+          <td>Konoike Vinatrans</td>
+          <td class="c">2026-07-16</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXyhIAG/view"
+              target="_blank"><code>a29Vu000005YXyhIAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKlMAP/view"
+              target="_blank"><code>a0OVu00000CMNKlMAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fTC4PIAW/view"
+              target="_blank"><code>001Vu00002fTC4PIAW</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">48</td>
+          <td><code>FLS_VSP_00011</code></td>
+          <td><code>FLS_Visit_000037</code></td>
+          <td>Sagawa Vietnam</td>
+          <td class="c">2026-07-23</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXyiIAG/view"
+              target="_blank"><code>a29Vu000005YXyiIAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKmMAP/view"
+              target="_blank"><code>a0OVu00000CMNKmMAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fSoB5IAK/view"
+              target="_blank"><code>001Vu00002fSoB5IAK</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">49</td>
+          <td><code>FLS_VSP_00012</code></td>
+          <td><code>FLS_Visit_000038</code></td>
+          <td>QUOC PHONG RBM</td>
+          <td class="c">2026-07-28</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXyjIAG/view"
+              target="_blank"><code>a29Vu000005YXyjIAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKnMAP/view"
+              target="_blank"><code>a0OVu00000CMNKnMAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4C3hIAE/view"
+              target="_blank"><code>001Vu00002g4C3hIAE</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">50</td>
+          <td><code>FLS_VSP_00013</code></td>
+          <td><code>FLS_Visit_000039</code></td>
+          <td>Dai RBM ( Worshop)</td>
+          <td class="c">2026-07-29</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXykIAG/view"
+              target="_blank"><code>a29Vu000005YXykIAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKoMAP/view"
+              target="_blank"><code>a0OVu00000CMNKoMAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00003GRr5VIAT/view"
+              target="_blank"><code>001Vu00003GRr5VIAT</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">51</td>
+          <td><code>FLS_VSP_00014</code></td>
+          <td><code>FLS_Visit_000040</code></td>
+          <td>Ryobi Vietnam</td>
+          <td class="c">2026-08-05</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXylIAG/view"
+              target="_blank"><code>a29Vu000005YXylIAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKpMAP/view"
+              target="_blank"><code>a0OVu00000CMNKpMAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00003GRVoJIAX/view"
+              target="_blank"><code>001Vu00003GRVoJIAX</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">52</td>
+          <td><code>FLS_VSP_00014</code></td>
+          <td><code>FLS_Visit_000041</code></td>
+          <td>CÔNG TY TNHH THƯƠNG MẠI DỊCH VỤ NHÍ MOTORS</td>
+          <td class="c">2026-08-11</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXymIAG/view"
+              target="_blank"><code>a29Vu000005YXymIAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKqMAP/view"
+              target="_blank"><code>a0OVu00000CMNKqMAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g5NPzIAM/view"
+              target="_blank"><code>001Vu00002g5NPzIAM</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">53</td>
+          <td><code>FLS_VSP_00014</code></td>
+          <td><code>FLS_Visit_000042</code></td>
+          <td>Sankyu Vietnam</td>
+          <td class="c">2026-08-12</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXynIAG/view"
+              target="_blank"><code>a29Vu000005YXynIAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKrMAP/view"
+              target="_blank"><code>a0OVu00000CMNKrMAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4CL0IAM/view"
+              target="_blank"><code>001Vu00002g4CL0IAM</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">54</td>
+          <td><code>FLS_VSP_00014</code></td>
+          <td><code>FLS_Visit_000043</code></td>
+          <td>TRUNG TÂM GIÁO DỤC NGHỀ NGHIỆP VÀ SÁT HẠCH LÁI XE TƯ THỤC TỈNH BÌNH PHƯỚC</td>
+          <td class="c">2026-08-24</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXyoIAG/view"
+              target="_blank"><code>a29Vu000005YXyoIAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKsMAP/view"
+              target="_blank"><code>a0OVu00000CMNKsMAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002hjC2IIAU/view"
+              target="_blank"><code>001Vu00002hjC2IIAU</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">55</td>
+          <td><code>FLS_VSP_00014</code></td>
+          <td><code>FLS_Visit_000044</code></td>
+          <td>CÔNG TY CỔ PHẦN VẬN TẢI HEO VÀNG (HEO VANG TRANSPORT JOINT STOCK COMPANY)</td>
+          <td class="c">2026-08-24</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXypIAG/view"
+              target="_blank"><code>a29Vu000005YXypIAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKtMAP/view"
+              target="_blank"><code>a0OVu00000CMNKtMAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g5NcLIAU/view"
+              target="_blank"><code>001Vu00002g5NcLIAU</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">56</td>
+          <td><code>FLS_VSP_00014</code></td>
+          <td><code>FLS_Visit_000045</code></td>
+          <td>EVN HCMC</td>
+          <td class="c">2026-08-25</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXyqIAG/view"
+              target="_blank"><code>a29Vu000005YXyqIAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKuMAP/view"
+              target="_blank"><code>a0OVu00000CMNKuMAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002h45mBIAQ/view"
+              target="_blank"><code>001Vu00002h45mBIAQ</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">57</td>
+          <td><code>FLS_VSP_00014</code></td>
+          <td><code>FLS_Visit_000046</code></td>
+          <td>QUYỀN AUTO</td>
+          <td class="c">2026-08-25</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXyrIAG/view"
+              target="_blank"><code>a29Vu000005YXyrIAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKvMAP/view"
+              target="_blank"><code>a0OVu00000CMNKvMAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g480SIAQ/view"
+              target="_blank"><code>001Vu00002g480SIAQ</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">58</td>
+          <td><code>FLS_VSP_00015</code></td>
+          <td><code>FLS_Visit_000047</code></td>
+          <td>EVN South Power Copr</td>
+          <td class="c">2026-09-04</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXysIAG/view"
+              target="_blank"><code>a29Vu000005YXysIAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKwMAP/view"
+              target="_blank"><code>a0OVu00000CMNKwMAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g48KFIAY/view"
+              target="_blank"><code>001Vu00002g48KFIAY</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">59</td>
+          <td><code>FLS_VSP_00016</code></td>
+          <td><code>FLS_Visit_000048</code></td>
+          <td>EVN Power Grid Ha Noi</td>
+          <td class="c">2026-09-09</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXytIAG/view"
+              target="_blank"><code>a29Vu000005YXytIAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKxMAP/view"
+              target="_blank"><code>a0OVu00000CMNKxMAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g45UqIAI/view"
+              target="_blank"><code>001Vu00002g45UqIAI</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">60</td>
+          <td><code>FLS_VSP_00016</code></td>
+          <td><code>FLS_Visit_000049</code></td>
+          <td>EVN Service Ha Noi</td>
+          <td class="c">2026-09-09</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXyuIAG/view"
+              target="_blank"><code>a29Vu000005YXyuIAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKyMAP/view"
+              target="_blank"><code>a0OVu00000CMNKyMAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g5NG8IAM/view"
+              target="_blank"><code>001Vu00002g5NG8IAM</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">61</td>
+          <td><code>FLS_VSP_00016</code></td>
+          <td><code>FLS_Visit_000050</code></td>
+          <td>Cao Thanh Dat</td>
+          <td class="c">2026-09-10</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXyvIAG/view"
+              target="_blank"><code>a29Vu000005YXyvIAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNKzMAP/view"
+              target="_blank"><code>a0OVu00000CMNKzMAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fR0RBIA0/view"
+              target="_blank"><code>001Vu00002fR0RBIA0</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">62</td>
+          <td><code>FLS_VSP_00016</code></td>
+          <td><code>FLS_Visit_000051</code></td>
+          <td>Vu Linh</td>
+          <td class="c">2026-09-10</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXywIAG/view"
+              target="_blank"><code>a29Vu000005YXywIAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNL0MAP/view"
+              target="_blank"><code>a0OVu00000CMNL0MAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4AWNIA2/view"
+              target="_blank"><code>001Vu00002g4AWNIA2</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">63</td>
+          <td><code>FLS_VSP_00016</code></td>
+          <td><code>FLS_Visit_000052</code></td>
+          <td>YAMATO LOGISTICS</td>
+          <td class="c">2026-09-11</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXyxIAG/view"
+              target="_blank"><code>a29Vu000005YXyxIAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNL1MAP/view"
+              target="_blank"><code>a0OVu00000CMNL1MAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00003GRtdZIAT/view"
+              target="_blank"><code>001Vu00003GRtdZIAT</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">64</td>
+          <td><code>FLS_VSP_00016</code></td>
+          <td><code>FLS_Visit_000053</code></td>
+          <td>NIPPON KONPO VIETNAM</td>
+          <td class="c">2026-09-11</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXyyIAG/view"
+              target="_blank"><code>a29Vu000005YXyyIAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNL2MAP/view"
+              target="_blank"><code>a0OVu00000CMNL2MAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4CSsIAM/view"
+              target="_blank"><code>001Vu00002g4CSsIAM</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">65</td>
+          <td><code>FLS_VSP_00015</code></td>
+          <td><code>FLS_Visit_000054</code></td>
+          <td>CÔNG TY TNHH MỘT THÀNH VIÊN THƯƠNG MẠI VÀ DỊCH VỤ HƯNG THỊNH CONTAINER</td>
+          <td class="c">2026-09-11</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXyzIAG/view"
+              target="_blank"><code>a29Vu000005YXyzIAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNL3MAP/view"
+              target="_blank"><code>a0OVu00000CMNL3MAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fR2bRIAS/view"
+              target="_blank"><code>001Vu00002fR2bRIAS</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">66</td>
+          <td><code>FLS_VSP_00015</code></td>
+          <td><code>FLS_Visit_000055</code></td>
+          <td>SAN HA COMPANY LIMITED</td>
+          <td class="c">2026-09-18</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXz0IAG/view"
+              target="_blank"><code>a29Vu000005YXz0IAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNL4MAP/view"
+              target="_blank"><code>a0OVu00000CMNL4MAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g5N9AIAU/view"
+              target="_blank"><code>001Vu00002g5N9AIAU</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">67</td>
+          <td><code>FLS_VSP_00015</code></td>
+          <td><code>FLS_Visit_000056</code></td>
+          <td>Bee Logistics - HCM branch</td>
+          <td class="c">2026-09-18</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXz1IAG/view"
+              target="_blank"><code>a29Vu000005YXz1IAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNL5MAP/view"
+              target="_blank"><code>a0OVu00000CMNL5MAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4BoBIAU/view"
+              target="_blank"><code>001Vu00002g4BoBIAU</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">68</td>
+          <td><code>FLS_VSP_00015</code></td>
+          <td><code>FLS_Visit_000057</code></td>
+          <td>PHUONG CHAU LOGISTIC COMPANY</td>
+          <td class="c">2026-09-22</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXz2IAG/view"
+              target="_blank"><code>a29Vu000005YXz2IAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNL6MAP/view"
+              target="_blank"><code>a0OVu00000CMNL6MAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g48NnIAI/view"
+              target="_blank"><code>001Vu00002g48NnIAI</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">69</td>
+          <td><code>FLS_VSP_00015</code></td>
+          <td><code>FLS_Visit_000058</code></td>
+          <td>ATM IMPORT EXPORT SERVICE COMMERCE COMPANY LIMITED</td>
+          <td class="c">2026-09-22</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXz3IAG/view"
+              target="_blank"><code>a29Vu000005YXz3IAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNL7MAP/view"
+              target="_blank"><code>a0OVu00000CMNL7MAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g47SpIAI/view"
+              target="_blank"><code>001Vu00002g47SpIAI</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">70</td>
+          <td><code>FLS_VSP_00015</code></td>
+          <td><code>FLS_Visit_000059</code></td>
+          <td>3S COOLTRANS</td>
+          <td class="c">2026-09-22</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXz4IAG/view"
+              target="_blank"><code>a29Vu000005YXz4IAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNL8MAP/view"
+              target="_blank"><code>a0OVu00000CMNL8MAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g49yCIAQ/view"
+              target="_blank"><code>001Vu00002g49yCIAQ</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">71</td>
+          <td><code>FLS_VSP_00016</code></td>
+          <td><code>FLS_Visit_000060</code></td>
+          <td>SG MOTORS</td>
+          <td class="c">2026-09-11</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXz5IAG/view"
+              target="_blank"><code>a29Vu000005YXz5IAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNL9MAP/view"
+              target="_blank"><code>a0OVu00000CMNL9MAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00003GRgweIAD/view"
+              target="_blank"><code>001Vu00003GRgweIAD</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">72</td>
+          <td><code>FLS_VSP_00017</code></td>
+          <td><code>FLS_Visit_000061</code></td>
+          <td>CÔNG TY TNHH THƯƠNG MẠI VẬN TẢI THỦY THẮNG</td>
+          <td class="c">2026-09-11</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXz6IAG/view"
+              target="_blank"><code>a29Vu000005YXz6IAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNLAMA5/view"
+              target="_blank"><code>a0OVu00000CMNLAMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g5NfnIAE/view"
+              target="_blank"><code>001Vu00002g5NfnIAE</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">73</td>
+          <td><code>AFS_VSP_00001</code></td>
+          <td><code>AFS_Visit_00001</code></td>
+          <td>Công ty Cổ phần Giao Hàng Tiết Kiệm</td>
+          <td class="c">2026-05-06</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXz7IAG/view"
+              target="_blank"><code>a29Vu000005YXz7IAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNLBMA5/view"
+              target="_blank"><code>a0OVu00000CMNLBMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g46WQIAY/view"
+              target="_blank"><code>001Vu00002g46WQIAY</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">74</td>
+          <td><code>AFS_VSP_00002</code></td>
+          <td><code>AFS_Visit_00002</code></td>
+          <td>Tổng Công ty Bưu điện Việt Nam</td>
+          <td class="c">2026-05-13</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXz8IAG/view"
+              target="_blank"><code>a29Vu000005YXz8IAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNLCMA5/view"
+              target="_blank"><code>a0OVu00000CMNLCMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4CtnIAE/view"
+              target="_blank"><code>001Vu00002g4CtnIAE</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">75</td>
+          <td><code>AFS_VSP_00002</code></td>
+          <td><code>AFS_Visit_00003</code></td>
+          <td>Tổng Công ty Cổ phần Bưu chính Viettel</td>
+          <td class="c">2026-05-13</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXz9IAG/view"
+              target="_blank"><code>a29Vu000005YXz9IAG</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNLDMA5/view"
+              target="_blank"><code>a0OVu00000CMNLDMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fhObAIAU/view"
+              target="_blank"><code>001Vu00002fhObAIAU</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">76</td>
+          <td><code>AFS_VSP_00002</code></td>
+          <td><code>AFS_Visit_00004</code></td>
+          <td>Công ty Cổ phần H-Trucking VN</td>
+          <td class="c">2026-05-14</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXzAIAW/view"
+              target="_blank"><code>a29Vu000005YXzAIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNLEMA5/view"
+              target="_blank"><code>a0OVu00000CMNLEMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4FEyIAM/view"
+              target="_blank"><code>001Vu00002g4FEyIAM</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">77</td>
+          <td><code>AFS_VSP_00002</code></td>
+          <td><code>AFS_Visit_00005</code></td>
+          <td>Công ty Cổ phần Dịch vụ Giao Hàng Nhanh</td>
+          <td class="c">2026-05-14</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXzBIAW/view"
+              target="_blank"><code>a29Vu000005YXzBIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNLFMA5/view"
+              target="_blank"><code>a0OVu00000CMNLFMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g468eIAA/view"
+              target="_blank"><code>001Vu00002g468eIAA</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">78</td>
+          <td><code>AFS_VSP_00002</code></td>
+          <td><code>AFS_Visit_00006</code></td>
+          <td>Công ty TNHH Một thành viên Chuyển phát nhanh Thuận Phong</td>
+          <td class="c">2026-05-15</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXzCIAW/view"
+              target="_blank"><code>a29Vu000005YXzCIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNLGMA5/view"
+              target="_blank"><code>a0OVu00000CMNLGMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002h47KZIAY/view"
+              target="_blank"><code>001Vu00002h47KZIAY</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">79</td>
+          <td><code>AFS_VSP_00002</code></td>
+          <td><code>AFS_Visit_00007</code></td>
+          <td>Công ty Cổ phần Giao Hàng Tiết Kiệm</td>
+          <td class="c">2026-05-15</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXzDIAW/view"
+              target="_blank"><code>a29Vu000005YXzDIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNLHMA5/view"
+              target="_blank"><code>a0OVu00000CMNLHMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g46WQIAY/view"
+              target="_blank"><code>001Vu00002g46WQIAY</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">80</td>
+          <td><code>AFS_VSP_00003</code></td>
+          <td><code>AFS_Visit_00008</code></td>
+          <td>Công ty TNHH Một thành viên Giao nhận Vận tải Khánh Châu</td>
+          <td class="c">2026-05-20</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXzEIAW/view"
+              target="_blank"><code>a29Vu000005YXzEIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNLIMA5/view"
+              target="_blank"><code>a0OVu00000CMNLIMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fTC3eIAG/view"
+              target="_blank"><code>001Vu00002fTC3eIAG</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">81</td>
+          <td><code>AFS_VSP_00003</code></td>
+          <td><code>AFS_Visit_00009</code></td>
+          <td>CÔNG TY CỔ PHẦN GIẢI PHÁP THƯƠNG MẠI A BA</td>
+          <td class="c">2026-05-20</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXzFIAW/view"
+              target="_blank"><code>a29Vu000005YXzFIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNLJMA5/view"
+              target="_blank"><code>a0OVu00000CMNLJMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fSoBBIA0/view"
+              target="_blank"><code>001Vu00002fSoBBIA0</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">82</td>
+          <td><code>AFS_VSP_00004</code></td>
+          <td><code>AFS_Visit_00010</code></td>
+          <td>Công ty Cổ phần Võ Gia Logistics</td>
+          <td class="c">2026-06-09</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXzGIAW/view"
+              target="_blank"><code>a29Vu000005YXzGIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNLKMA5/view"
+              target="_blank"><code>a0OVu00000CMNLKMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002q9cA7IAI/view"
+              target="_blank"><code>001Vu00002q9cA7IAI</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">83</td>
+          <td><code>AFS_VSP_00004</code></td>
+          <td><code>AFS_Visit_00011</code></td>
+          <td>Công ty TNHH Thương mại Sản xuất Khánh Phong</td>
+          <td class="c">2026-06-10</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXzHIAW/view"
+              target="_blank"><code>a29Vu000005YXzHIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNLLMA5/view"
+              target="_blank"><code>a0OVu00000CMNLLMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fQjwFIAS/view"
+              target="_blank"><code>001Vu00002fQjwFIAS</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">84</td>
+          <td><code>AFS_VSP_00004</code></td>
+          <td><code>AFS_Visit_00012</code></td>
+          <td>Công ty Cổ phần Minh Phương Logistics</td>
+          <td class="c">2026-06-11</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXzIIAW/view"
+              target="_blank"><code>a29Vu000005YXzIIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNLMMA5/view"
+              target="_blank"><code>a0OVu00000CMNLMMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fhOayIAE/view"
+              target="_blank"><code>001Vu00002fhOayIAE</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">85</td>
+          <td><code>AFS_VSP_00005</code></td>
+          <td><code>AFS_Visit_00013</code></td>
+          <td>Trung tâm giáo dục nghề nghiệp đào tạo lái xe Hùng Vương</td>
+          <td class="c">2026-07-28</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXzJIAW/view"
+              target="_blank"><code>a29Vu000005YXzJIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNLNMA5/view"
+              target="_blank"><code>a0OVu00000CMNLNMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fQKKxIAO/view"
+              target="_blank"><code>001Vu00002fQKKxIAO</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">86</td>
+          <td><code>AFS_VSP_00005</code></td>
+          <td><code>AFS_Visit_00014</code></td>
+          <td>Trường Cao đẳng Than – Khoáng sản Việt Nam</td>
+          <td class="c">2026-07-30</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXzKIAW/view"
+              target="_blank"><code>a29Vu000005YXzKIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNLOMA5/view"
+              target="_blank"><code>a0OVu00000CMNLOMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4JIbIAM/view"
+              target="_blank"><code>001Vu00002g4JIbIAM</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">87</td>
+          <td><code>AFS_VSP_00005</code></td>
+          <td><code>AFS_Visit_00015</code></td>
+          <td>Công ty Cổ phần Tiếp vận Hoà Phát</td>
+          <td class="c">2026-07-28</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXzLIAW/view"
+              target="_blank"><code>a29Vu000005YXzLIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNLPMA5/view"
+              target="_blank"><code>a0OVu00000CMNLPMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4BEAIA2/view"
+              target="_blank"><code>001Vu00002g4BEAIA2</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">88</td>
+          <td><code>AFS_VSP_00005</code></td>
+          <td><code>AFS_Visit_00016</code></td>
+          <td>Công ty Cổ phần Đầu tư Phát triển Thương mại Nhất Tín</td>
+          <td class="c">2026-07-30</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXzMIAW/view"
+              target="_blank"><code>a29Vu000005YXzMIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNLQMA5/view"
+              target="_blank"><code>a0OVu00000CMNLQMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4IpjIAE/view"
+              target="_blank"><code>001Vu00002g4IpjIAE</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">89</td>
+          <td><code>AFS_VSP_00005</code></td>
+          <td><code>AFS_Visit_00017</code></td>
+          <td>Công ty Cổ phần Vận tải Thương mại và Đầu tư An Việt</td>
+          <td class="c">2026-07-29</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXzNIAW/view"
+              target="_blank"><code>a29Vu000005YXzNIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNLRMA5/view"
+              target="_blank"><code>a0OVu00000CMNLRMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fhOZbIAM/view"
+              target="_blank"><code>001Vu00002fhOZbIAM</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">90</td>
+          <td><code>AFS_VSP_00006</code></td>
+          <td><code>AFS_Visit_00018</code></td>
+          <td>Công ty Trách nhiệm hữu hạn Bình Minh Tải</td>
+          <td class="c">2026-08-10</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXzOIAW/view"
+              target="_blank"><code>a29Vu000005YXzOIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNLSMA5/view"
+              target="_blank"><code>a0OVu00000CMNLSMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g5NurIAE/view"
+              target="_blank"><code>001Vu00002g5NurIAE</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">91</td>
+          <td><code>AFS_VSP_00006</code></td>
+          <td><code>AFS_Visit_00019</code></td>
+          <td>Công ty Liên doanh TNHH Nippon Express (Việt Nam)</td>
+          <td class="c">2026-08-10</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXzPIAW/view"
+              target="_blank"><code>a29Vu000005YXzPIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNLTMA5/view"
+              target="_blank"><code>a0OVu00000CMNLTMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g49jxIAA/view"
+              target="_blank"><code>001Vu00002g49jxIAA</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">92</td>
+          <td><code>AFS_VSP_00006</code></td>
+          <td><code>AFS_Visit_00020</code></td>
+          <td>Công ty TNHH Giải pháp Vận tải Quang Tường</td>
+          <td class="c">2026-08-11</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXzQIAW/view"
+              target="_blank"><code>a29Vu000005YXzQIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNLUMA5/view"
+              target="_blank"><code>a0OVu00000CMNLUMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fhOZsIAM/view"
+              target="_blank"><code>001Vu00002fhOZsIAM</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">93</td>
+          <td><code>AFS_VSP_00006</code></td>
+          <td><code>AFS_Visit_00021</code></td>
+          <td>CÔNG TY VẬN CHUYỂN VÀ KHO VẬN BƯU ĐIỆN - TỔNG CÔNG TY BƯU ĐIỆN VIỆT NAM</td>
+          <td class="c">2026-08-11</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXzRIAW/view"
+              target="_blank"><code>a29Vu000005YXzRIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNLVMA5/view"
+              target="_blank"><code>a0OVu00000CMNLVMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fhObFIAU/view"
+              target="_blank"><code>001Vu00002fhObFIAU</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">94</td>
+          <td><code>AFS_VSP_00006</code></td>
+          <td><code>AFS_Visit_00022</code></td>
+          <td>Công ty Cổ phần Dịch vụ Giao Hàng Nhanh</td>
+          <td class="c">2026-08-12</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXzSIAW/view"
+              target="_blank"><code>a29Vu000005YXzSIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNLWMA5/view"
+              target="_blank"><code>a0OVu00000CMNLWMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g468eIAA/view"
+              target="_blank"><code>001Vu00002g468eIAA</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">95</td>
+          <td><code>AFS_VSP_00007</code></td>
+          <td><code>AFS_Visit_00023</code></td>
+          <td>CÔNG TY TRÁCH NHIỆM HỮU HẠN LOGITEM VIỆT NAM</td>
+          <td class="c">2026-09-14</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXzTIAW/view"
+              target="_blank"><code>a29Vu000005YXzTIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNLXMA5/view"
+              target="_blank"><code>a0OVu00000CMNLXMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fTC4SIAW/view"
+              target="_blank"><code>001Vu00002fTC4SIAW</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">96</td>
+          <td><code>AFS_VSP_00007</code></td>
+          <td><code>AFS_Visit_00024</code></td>
+          <td>Công ty Cổ phần Chăn nuôi C.P. Việt Nam</td>
+          <td class="c">2026-09-15</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXzUIAW/view"
+              target="_blank"><code>a29Vu000005YXzUIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNLYMA5/view"
+              target="_blank"><code>a0OVu00000CMNLYMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4DgSIAU/view"
+              target="_blank"><code>001Vu00002g4DgSIAU</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">97</td>
+          <td><code>AFS_VSP_00007</code></td>
+          <td><code>AFS_Visit_00025</code></td>
+          <td>Công ty TNHH SG Sagawa Việt Nam</td>
+          <td class="c">2026-09-16</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXzVIAW/view"
+              target="_blank"><code>a29Vu000005YXzVIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNLZMA5/view"
+              target="_blank"><code>a0OVu00000CMNLZMA5</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4FjYIAU/view"
+              target="_blank"><code>001Vu00002g4FjYIAU</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">98</td>
+          <td><code>AFS_VSP_00007</code></td>
+          <td><code>AFS_Visit_00026</code></td>
+          <td>Công ty Cổ phần Đầu tư Phát triển Thương mại Nhất Tín</td>
+          <td class="c">2026-09-16</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXzWIAW/view"
+              target="_blank"><code>a29Vu000005YXzWIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNLaMAP/view"
+              target="_blank"><code>a0OVu00000CMNLaMAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4IpjIAE/view"
+              target="_blank"><code>001Vu00002g4IpjIAE</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">99</td>
+          <td><code>AFS_VSP_00007</code></td>
+          <td><code>AFS_Visit_00027</code></td>
+          <td>Công ty TNHH Một thành viên Chuyển phát nhanh Thuận Phong</td>
+          <td class="c">2026-09-17</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXzXIAW/view"
+              target="_blank"><code>a29Vu000005YXzXIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNLbMAP/view"
+              target="_blank"><code>a0OVu00000CMNLbMAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002h47KZIAY/view"
+              target="_blank"><code>001Vu00002h47KZIAY</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">100</td>
+          <td><code>AFS_VSP_00008</code></td>
+          <td><code>AFS_Visit_00028</code></td>
+          <td>Công ty Cổ phần Thương mại Bách Hóa Xanh</td>
+          <td class="c">2026-04-22</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXzYIAW/view"
+              target="_blank"><code>a29Vu000005YXzYIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNLcMAP/view"
+              target="_blank"><code>a0OVu00000CMNLcMAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g49GhIAI/view"
+              target="_blank"><code>001Vu00002g49GhIAI</code></a></td>
+        </tr>
+        <tr>
+          <td class="c">101</td>
+          <td><code>AFS_VSP_00009</code></td>
+          <td><code>AFS_Visit_00029</code></td>
+          <td>CÔNG TY TNHH SẢN XUẤT THƯƠNG MẠI LINH GIANG</td>
+          <td class="c">2026-06-24</td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu000005YXzZIAW/view"
+              target="_blank"><code>a29Vu000005YXzZIAW</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CMNLdMAP/view"
+              target="_blank"><code>a0OVu00000CMNLdMAP</code></a></td>
+          <td><a href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fRfbMIAS/view"
+              target="_blank"><code>001Vu00002fRfbMIAS</code></a></td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+</body>
+
+</html>
