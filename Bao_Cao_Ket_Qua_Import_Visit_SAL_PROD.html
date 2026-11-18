@@ -1,0 +1,1654 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Báo Cáo Kết Quả Import Customer Visit SAL Lên Môi Trường PROD</title>
+<style>
+  :root {
+    --ink: #000000;
+    --muted: #333333;
+    --brand: #1f4e79;
+    --brand-soft: #e8eff7;
+    --line: #c9d1db;
+    --head-bg: #1f4e79;
+    --zebra: #f6f8fb;
+    --note-bg: #eef6ff;  --note-bar: #2f80ed;
+    --warn-bg: #fff6e5;  --warn-bar: #f2994a;
+    --ok-bg:   #edf8f1;  --ok-bar:   #27ae60;
+    --bad-bg:  #fdeeee;  --bad-bar:  #eb5757;
+    --code-bg: #f3f4f6;
+    --desk: #e5e7eb;
+    --paper: #ffffff;
+  }
+
+  * { box-sizing: border-box; }
+  html { background: var(--desk); }
+  body {
+    margin: 0;
+    padding: 32px 16px;
+    font-family: Calibri, "Segoe UI", Arial, sans-serif;
+    font-size: 11pt;
+    line-height: 1.5;
+    color: var(--ink);
+  }
+
+  .page {
+    width: 297mm;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 18mm 18mm;
+    background: var(--paper);
+    box-shadow: 0 2px 14px rgba(0, 0, 0, .18);
+  }
+
+  .doc-eyebrow {
+    margin: 0;
+    font-size: 10pt;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  h1.doc-title {
+    margin: 4pt 0 6pt;
+    font-size: 22pt;
+    line-height: 1.2;
+    color: var(--brand);
+  }
+  .doc-sub { margin: 0 0 14pt; font-size: 12pt; color: var(--muted); }
+
+  table.meta { width: 100%; border-collapse: collapse; margin: 0 0 10pt; font-size: 10.5pt; }
+  table.meta th, table.meta td { padding: 5pt 8pt; border: 1px solid var(--line); text-align: left; vertical-align: top; }
+  table.meta th { width: 24%; background: var(--brand-soft); color: var(--brand); font-weight: 600; }
+
+  nav.toc { margin: 16pt 0 8pt; padding: 12pt 16pt; background: var(--brand-soft); border-left: 4px solid var(--brand); }
+  nav.toc h2 { margin: 0 0 6pt; padding: 0; border: 0; font-size: 12pt; color: var(--brand); }
+  nav.toc ol { margin: 0; padding-left: 18pt; }
+  nav.toc li { margin: 2pt 0; }
+  nav.toc a { color: var(--ink); text-decoration: none; font-weight: 600; }
+  nav.toc a:hover { text-decoration: underline; }
+
+  h2 {
+    margin: 24pt 0 8pt;
+    padding-bottom: 3pt;
+    font-size: 15pt;
+    color: var(--brand);
+    border-bottom: 2px solid var(--brand);
+  }
+  h3 { margin: 14pt 0 4pt; font-size: 12.5pt; color: var(--brand); }
+
+  table.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8pt 0 14pt;
+    font-size: 10pt;
+  }
+  table.data-table th, table.data-table td {
+    padding: 5pt 6pt;
+    border: 1px solid var(--line);
+    text-align: left;
+    vertical-align: top;
+  }
+  table.data-table th {
+    background: var(--head-bg);
+    color: #fff;
+    font-weight: 600;
+  }
+  table.data-table tr:nth-child(even) td { background: var(--zebra); }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 7px;
+    border-radius: 3px;
+    font-size: 9pt;
+    font-weight: 700;
+    text-align: center;
+  }
+  .badge-ok { background: var(--ok-bar); color: #fff; }
+  .badge-warn { background: var(--warn-bar); color: #fff; }
+  .badge-info { background: var(--brand); color: #fff; }
+
+  .callout {
+    margin: 10pt 0;
+    padding: 8pt 12pt;
+    border-left: 4px solid var(--brand);
+    background: var(--note-bg);
+    font-size: 10.5pt;
+  }
+  .callout-ok { border-left-color: var(--ok-bar); background: var(--ok-bg); }
+  .callout-warn { border-left-color: var(--warn-bar); background: var(--warn-bg); }
+
+  code {
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 9.5pt;
+    background: var(--code-bg);
+    padding: 1px 4px;
+    border-radius: 3px;
+  }
+
+  a.sf-link {
+    color: var(--brand);
+    text-decoration: none;
+    font-weight: 600;
+  }
+  a.sf-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="doc-eyebrow">Isuzu Vietnam CRM &bull; Module CRS</div>
+  <h1 class="doc-title">Báo Cáo Kết Quả Import Customer Visit SAL Lên Môi Trường PROD</h1>
+  <div class="doc-sub">Kế hoạch thăm khách hàng SAL (CST Visit FY2026) &bull; Khảo sát &amp; Dữ liệu cơ bản khách hàng</div>
+
+  <table class="meta">
+    <tr>
+      <th>Môi Trường Đích (Target Org)</th>
+      <td><strong>PROD</strong> (Instance: <code>https://ivcl.my.salesforce.com</code> &bull; Org ID: <code>00Dfm000006LuZTEA0</code>)</td>
+    </tr>
+    <tr>
+      <th>Phân Hệ &amp; Nguồn Dữ Liệu</th>
+      <td><strong>SAL (Sales)</strong> &bull; Các file CSV tại: <code>docs\Import Visit\</code><br>
+        &bull; <code>1. Visit Plan_SAL.csv</code> (32 Visit Plans)<br>
+        &bull; <code>2.Visits_SAL.csv</code> (104 Visits)<br>
+        &bull; <code>3. Customer Basic Data_SAL.csv</code> (104 Customer Basic Data)
+      </td>
+    </tr>
+    <tr>
+      <th>Thời Gian Thực Thi</th>
+      <td>18/11/2026 &bull; Thực thi tự động qua Salesforce Composite SObjects API (v68.0)</td>
+    </tr>
+    <tr>
+      <th>Kết Quả Tổng Thể</th>
+      <td>
+        <span class="badge badge-ok">100% THÀNH CÔNG GIAI ĐOẠN 1</span> &bull; 
+        <strong>32/32</strong> Visit Plans (100%) &bull; 
+        <strong>90/90</strong> Visits hợp lệ (100%) &bull; 
+        <strong>90/90</strong> Customer Basic Data hợp lệ (100%)<br>
+        <small style="color: #666;">(14 dòng thiếu Account trên PROD được tách thành file danh sách riêng để bổ sung sau theo chỉ đạo)</small>
+      </td>
+    </tr>
+  </table>
+
+  <nav class="toc">
+    <h2>Mục Lục Báo Cáo</h2>
+    <ol>
+      <li><a href="#sec1">Tổng Quan Kết Quả Thực Thi</a></li>
+      <li><a href="#sec2">Danh Sách 32 Kế Hoạch Thăm Khách Hàng (Visit_Plan__c)</a></li>
+      <li><a href="#sec3">Chi Tiết 90 Bản Ghi Thăm Khách Hàng (Visit__c) &amp; Customer Basic Data (Customer_Basic_Data__c)</a></li>
+      <li><a href="#sec4">Danh Sách 14 Khách Hàng Tạm Hoãn Chờ Bổ Sung Account ID</a></li>
+      <li><a href="#sec5">Xác Nhận Kỹ Thuật, Mối Quan Hệ &amp; Công Thức Tự Động</a></li>
+    </ol>
+  </nav>
+
+  <h2 id="sec1">1. Tổng Quan Kết Quả Thực Thi</h2>
+  <p>Toàn bộ 32 Kế hoạch thăm khách hàng (<code>Visit_Plan__c</code>) đã được tạo đầy đủ trên môi trường PROD. Với 104 lượt viếng thăm (<code>Visit__c</code>) và 104 hồ sơ khách hàng (<code>Customer_Basic_Data__c</code>), hệ thống đã thực hiện xác thực và phân loại thành 2 nhóm: <strong>90 bản ghi hợp lệ</strong> đã import thành công 100%, và <strong>14 bản ghi</strong> cần bổ sung Account ID trên PROD.</p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th style="width: 5%;">STT</th>
+        <th style="width: 25%;">Đối Tượng (Salesforce Object)</th>
+        <th style="width: 15%; text-align: center;">Tổng File Nguồn</th>
+        <th style="width: 15%; text-align: center;">Đã Tạo Trên PROD</th>
+        <th style="width: 15%; text-align: center;">Tạm Hoãn Bổ Sung</th>
+        <th style="width: 15%; text-align: center;">Tỷ Lệ Hoàn Thành</th>
+        <th style="width: 10%; text-align: center;">Trạng Thái</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="text-align: center;">1</td>
+        <td><strong>Kế Hoạch Thăm (Visit_Plan__c)</strong></td>
+        <td style="text-align: center;">32</td>
+        <td style="text-align: center; font-weight: bold; color: var(--brand);">32</td>
+        <td style="text-align: center;">0</td>
+        <td style="text-align: center;">100.0%</td>
+        <td style="text-align: center;"><span class="badge badge-ok">Planned</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">2</td>
+        <td><strong>Lượt Thăm Khách Hàng (Visit__c)</strong></td>
+        <td style="text-align: center;">104</td>
+        <td style="text-align: center; font-weight: bold; color: var(--brand);">90</td>
+        <td style="text-align: center; color: #e67e22; font-weight: bold;">14</td>
+        <td style="text-align: center;">86.5%</td>
+        <td style="text-align: center;"><span class="badge badge-ok">Completed</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">3</td>
+        <td><strong>Dữ Liệu Khách Hàng (Customer_Basic_Data__c)</strong></td>
+        <td style="text-align: center;">104</td>
+        <td style="text-align: center; font-weight: bold; color: var(--brand);">90</td>
+        <td style="text-align: center; color: #e67e22; font-weight: bold;">14</td>
+        <td style="text-align: center;">86.5%</td>
+        <td style="text-align: center;"><span class="badge badge-ok">Complete</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">4</td>
+        <td><strong>Tài Khoản Đại Lý (Dealer Accounts)</strong></td>
+        <td style="text-align: center;">10 đại lý</td>
+        <td style="text-align: center; font-weight: bold; color: var(--brand);">10 đại lý</td>
+        <td style="text-align: center;">0</td>
+        <td style="text-align: center;">100.0%</td>
+        <td style="text-align: center;"><span class="badge badge-ok">Resolved</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout callout-ok">
+    <strong>Ghi chú:</strong> Theo yêu cầu, trường <code>Status__c</code> của toàn bộ 32 bản ghi <code>Visit_Plan__c</code> trên hệ thống được thiết lập giá trị chuẩn Salesforce <code>'Duyệt Kế Hoạch'</code> (hiển thị UI là <strong>Planned</strong>). 14 bản ghi chưa có Account trên PROD đã được xuất ra 2 file CSV để gửi BA/User bổ sung.
+  </div>
+
+  <h2 id="sec2">2. Danh Sách 32 Kế Hoạch Thăm Khách Hàng (Visit_Plan__c)</h2>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th style="width: 5%; text-align: center;">STT</th>
+        <th style="width: 15%;">External ID</th>
+        <th style="width: 35%;">Tên Kế Hoạch (Plan Name)</th>
+        <th style="width: 12%; text-align: center;">Ngày Bắt Đầu</th>
+        <th style="width: 12%; text-align: center;">Ngày Kết Thúc</th>
+        <th style="width: 10%; text-align: center;">Trạng Thái</th>
+        <th style="width: 11%; text-align: center;">Salesforce ID</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="text-align: center;">1</td>
+        <td><code>SAL_VSP_00001</code></td>
+        <td><strong>SAL - CST VISIT - MAY26 - TP.HCM - 15May</strong></td>
+        <td style="text-align: center;">2026-05-15</td>
+        <td style="text-align: center;">2026-05-21</td>
+        <td style="text-align: center;"><span class="badge badge-info">Planned</span></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu000008Ay9ZIAS/view" target="_blank"><code>a28Vu000008Ay9ZIAS</code></a></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">2</td>
+        <td><code>SAL_VSP_00002</code></td>
+        <td><strong>SAL - CST VISIT - MAY26 - HÀ NỘI - 21MAY</strong></td>
+        <td style="text-align: center;">2026-05-21</td>
+        <td style="text-align: center;">2026-05-21</td>
+        <td style="text-align: center;"><span class="badge badge-info">Planned</span></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu000008Ay9aIAC/view" target="_blank"><code>a28Vu000008Ay9aIAC</code></a></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">3</td>
+        <td><code>SAL_VSP_00003</code></td>
+        <td><strong>SAL - CST VISIT - MAY26 - TP.HCM - 22MAY</strong></td>
+        <td style="text-align: center;">2026-05-22</td>
+        <td style="text-align: center;">2026-05-22</td>
+        <td style="text-align: center;"><span class="badge badge-info">Planned</span></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu000008Ay9bIAC/view" target="_blank"><code>a28Vu000008Ay9bIAC</code></a></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">4</td>
+        <td><code>SAL_VSP_00004</code></td>
+        <td><strong>SAL - CST VISIT - MAY26 - HÀ NỘI - 22MAY</strong></td>
+        <td style="text-align: center;">2026-05-22</td>
+        <td style="text-align: center;">2026-05-22</td>
+        <td style="text-align: center;"><span class="badge badge-info">Planned</span></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu000008Ay9cIAC/view" target="_blank"><code>a28Vu000008Ay9cIAC</code></a></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">5</td>
+        <td><code>SAL_VSP_00005</code></td>
+        <td><strong>SAL - CST VISIT - MAY26 - ĐẮK LẮK</strong></td>
+        <td style="text-align: center;">2026-05-27</td>
+        <td style="text-align: center;">2026-05-27</td>
+        <td style="text-align: center;"><span class="badge badge-info">Planned</span></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu000008Ay9dIAC/view" target="_blank"><code>a28Vu000008Ay9dIAC</code></a></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">6</td>
+        <td><code>SAL_VSP_00006</code></td>
+        <td><strong>SAL - CST VISIT - JUN26 - ĐỒNG NAI</strong></td>
+        <td style="text-align: center;">2026-06-11</td>
+        <td style="text-align: center;">2026-06-24</td>
+        <td style="text-align: center;"><span class="badge badge-info">Planned</span></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu000008Ay9eIAC/view" target="_blank"><code>a28Vu000008Ay9eIAC</code></a></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">7</td>
+        <td><code>SAL_VSP_00007</code></td>
+        <td><strong>SAL - CST VISIT - JUN26 - TP.HCM</strong></td>
+        <td style="text-align: center;">2026-06-16</td>
+        <td style="text-align: center;">2026-06-19</td>
+        <td style="text-align: center;"><span class="badge badge-info">Planned</span></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu000008Ay9fIAC/view" target="_blank"><code>a28Vu000008Ay9fIAC</code></a></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">8</td>
+        <td><code>SAL_VSP_00008</code></td>
+        <td><strong>SAL - CST VISIT - JUN26 - HÀ NỘI - 16JUN</strong></td>
+        <td style="text-align: center;">2026-06-16</td>
+        <td style="text-align: center;">2026-06-16</td>
+        <td style="text-align: center;"><span class="badge badge-info">Planned</span></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu000008Ay9gIAC/view" target="_blank"><code>a28Vu000008Ay9gIAC</code></a></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">9</td>
+        <td><code>SAL_VSP_00009</code></td>
+        <td><strong>SAL - CST VISIT - JUN26 - HÀ NỘI - 17JUN</strong></td>
+        <td style="text-align: center;">2026-06-17</td>
+        <td style="text-align: center;">2026-06-17</td>
+        <td style="text-align: center;"><span class="badge badge-info">Planned</span></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu000008Ay9hIAC/view" target="_blank"><code>a28Vu000008Ay9hIAC</code></a></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">10</td>
+        <td><code>SAL_VSP_00010</code></td>
+        <td><strong>SAL - CST VISIT - JUN26 - ĐỒNG THÁP</strong></td>
+        <td style="text-align: center;">2026-06-18</td>
+        <td style="text-align: center;">2026-06-19</td>
+        <td style="text-align: center;"><span class="badge badge-info">Planned</span></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu000008Ay9iIAC/view" target="_blank"><code>a28Vu000008Ay9iIAC</code></a></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">11</td>
+        <td><code>SAL_VSP_00011</code></td>
+        <td><strong>SAL - CST VISIT - JUN26 - HÀ NỘI - 18JUN</strong></td>
+        <td style="text-align: center;">2026-06-18</td>
+        <td style="text-align: center;">2026-06-18</td>
+        <td style="text-align: center;"><span class="badge badge-info">Planned</span></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu000008Ay9jIAC/view" target="_blank"><code>a28Vu000008Ay9jIAC</code></a></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">12</td>
+        <td><code>SAL_VSP_00012</code></td>
+        <td><strong>SAL - CST VISIT - JUN26 - HÀ NỘI - 19JUN</strong></td>
+        <td style="text-align: center;">2026-06-19</td>
+        <td style="text-align: center;">2026-06-19</td>
+        <td style="text-align: center;"><span class="badge badge-info">Planned</span></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu000008Ay9kIAC/view" target="_blank"><code>a28Vu000008Ay9kIAC</code></a></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">13</td>
+        <td><code>SAL_VSP_00013</code></td>
+        <td><strong>SAL - CST VISIT - JUN26 - HÀ NỘI - 22JUN</strong></td>
+        <td style="text-align: center;">2026-06-22</td>
+        <td style="text-align: center;">2026-06-22</td>
+        <td style="text-align: center;"><span class="badge badge-info">Planned</span></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu000008Ay9lIAC/view" target="_blank"><code>a28Vu000008Ay9lIAC</code></a></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">14</td>
+        <td><code>SAL_VSP_00014</code></td>
+        <td><strong>SAL - CST VISIT - JUN26 - ĐẮK LẮK</strong></td>
+        <td style="text-align: center;">2026-06-23</td>
+        <td style="text-align: center;">2026-06-24</td>
+        <td style="text-align: center;"><span class="badge badge-info">Planned</span></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu000008Ay9mIAC/view" target="_blank"><code>a28Vu000008Ay9mIAC</code></a></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">15</td>
+        <td><code>SAL_VSP_00015</code></td>
+        <td><strong>SAL - CST VISIT - JUN26 - HÀ NỘI - 23JUN</strong></td>
+        <td style="text-align: center;">2026-06-23</td>
+        <td style="text-align: center;">2026-06-23</td>
+        <td style="text-align: center;"><span class="badge badge-info">Planned</span></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu000008Ay9nIAC/view" target="_blank"><code>a28Vu000008Ay9nIAC</code></a></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">16</td>
+        <td><code>SAL_VSP_00016</code></td>
+        <td><strong>SAL - CST VISIT - JUN26 - HÀ NỘI</strong></td>
+        <td style="text-align: center;">2026-06-24</td>
+        <td style="text-align: center;">2026-06-26</td>
+        <td style="text-align: center;"><span class="badge badge-info">Planned</span></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu000008Ay9oIAC/view" target="_blank"><code>a28Vu000008Ay9oIAC</code></a></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">17</td>
+        <td><code>SAL_VSP_00017</code></td>
+        <td><strong>SAL - CST VISIT - JUN26 - ĐÀ NẴNG</strong></td>
+        <td style="text-align: center;">2026-06-29</td>
+        <td style="text-align: center;">2026-06-29</td>
+        <td style="text-align: center;"><span class="badge badge-info">Planned</span></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu000008Ay9pIAC/view" target="_blank"><code>a28Vu000008Ay9pIAC</code></a></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">18</td>
+        <td><code>SAL_VSP_00018</code></td>
+        <td><strong>SAL - CST VISIT - JUN26 - QUẢNG NAM</strong></td>
+        <td style="text-align: center;">2026-06-29</td>
+        <td style="text-align: center;">2026-06-29</td>
+        <td style="text-align: center;"><span class="badge badge-info">Planned</span></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu000008Ay9qIAC/view" target="_blank"><code>a28Vu000008Ay9qIAC</code></a></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">19</td>
+        <td><code>SAL_VSP_00019</code></td>
+        <td><strong>SAL - CST VISIT - JUL26 - GIA LAI</strong></td>
+        <td style="text-align: center;">2026-07-17</td>
+        <td style="text-align: center;">2026-07-17</td>
+        <td style="text-align: center;"><span class="badge badge-info">Planned</span></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu000008Ay9rIAC/view" target="_blank"><code>a28Vu000008Ay9rIAC</code></a></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">20</td>
+        <td><code>SAL_VSP_00020</code></td>
+        <td><strong>SAL - CST VISIT - JUL26 - HÀ NỘI - 30JUL</strong></td>
+        <td style="text-align: center;">2026-07-30</td>
+        <td style="text-align: center;">2026-07-30</td>
+        <td style="text-align: center;"><span class="badge badge-info">Planned</span></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu000008Ay9sIAC/view" target="_blank"><code>a28Vu000008Ay9sIAC</code></a></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">21</td>
+        <td><code>SAL_VSP_00021</code></td>
+        <td><strong>SAL - CST VISIT - JUL26 - ĐÀ NẴNG</strong></td>
+        <td style="text-align: center;">2026-07-31</td>
+        <td style="text-align: center;">2026-07-31</td>
+        <td style="text-align: center;"><span class="badge badge-info">Planned</span></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu000008Ay9tIAC/view" target="_blank"><code>a28Vu000008Ay9tIAC</code></a></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">22</td>
+        <td><code>SAL_VSP_00022</code></td>
+        <td><strong>SAL - CST VISIT - AUG26 - GIA LAI</strong></td>
+        <td style="text-align: center;">2026-08-19</td>
+        <td style="text-align: center;">2026-08-19</td>
+        <td style="text-align: center;"><span class="badge badge-info">Planned</span></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu000008Ay9uIAC/view" target="_blank"><code>a28Vu000008Ay9uIAC</code></a></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">23</td>
+        <td><code>SAL_VSP_00023</code></td>
+        <td><strong>SAL - CST VISIT - AUG26 - HÀ NỘI - 27AUG</strong></td>
+        <td style="text-align: center;">2026-08-27</td>
+        <td style="text-align: center;">2026-08-27</td>
+        <td style="text-align: center;"><span class="badge badge-info">Planned</span></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu000008Ay9vIAC/view" target="_blank"><code>a28Vu000008Ay9vIAC</code></a></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">24</td>
+        <td><code>SAL_VSP_00024</code></td>
+        <td><strong>SAL - CST VISIT - SEP26 - HÀ NỘI - 10SEP</strong></td>
+        <td style="text-align: center;">2026-09-10</td>
+        <td style="text-align: center;">2026-09-10</td>
+        <td style="text-align: center;"><span class="badge badge-info">Planned</span></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu000008Ay9wIAC/view" target="_blank"><code>a28Vu000008Ay9wIAC</code></a></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">25</td>
+        <td><code>SAL_VSP_00025</code></td>
+        <td><strong>SAL - CST VISIT - SEP26 - ĐẮK LẮK</strong></td>
+        <td style="text-align: center;">2026-09-24</td>
+        <td style="text-align: center;">2026-09-24</td>
+        <td style="text-align: center;"><span class="badge badge-info">Planned</span></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu000008Ay9xIAC/view" target="_blank"><code>a28Vu000008Ay9xIAC</code></a></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">26</td>
+        <td><code>SAL_VSP_00026</code></td>
+        <td><strong>SAL - CST VISIT - SEP26 - HÀ NỘI - 25SEP</strong></td>
+        <td style="text-align: center;">2026-09-25</td>
+        <td style="text-align: center;">2026-09-25</td>
+        <td style="text-align: center;"><span class="badge badge-info">Planned</span></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu000008Ay9yIAC/view" target="_blank"><code>a28Vu000008Ay9yIAC</code></a></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">27</td>
+        <td><code>SAL_VSP_00027</code></td>
+        <td><strong>SAL - CST VISIT - SEP26 - ĐÀ NẴNG</strong></td>
+        <td style="text-align: center;">2026-09-28</td>
+        <td style="text-align: center;">2026-09-29</td>
+        <td style="text-align: center;"><span class="badge badge-info">Planned</span></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu000008Ay9zIAC/view" target="_blank"><code>a28Vu000008Ay9zIAC</code></a></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">28</td>
+        <td><code>SAL_VSP_00028</code></td>
+        <td><strong>SAL - CST VISIT - SEP26 - WEST</strong></td>
+        <td style="text-align: center;">2026-09-28</td>
+        <td style="text-align: center;">2026-09-29</td>
+        <td style="text-align: center;"><span class="badge badge-info">Planned</span></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu000008AyA0IAK/view" target="_blank"><code>a28Vu000008AyA0IAK</code></a></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">29</td>
+        <td><code>SAL_VSP_00029</code></td>
+        <td><strong>SAL - CST VISIT - SEP26 - HÀ NỘI - 28SEP</strong></td>
+        <td style="text-align: center;">2026-09-28</td>
+        <td style="text-align: center;">2026-09-28</td>
+        <td style="text-align: center;"><span class="badge badge-info">Planned</span></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu000008AyA1IAK/view" target="_blank"><code>a28Vu000008AyA1IAK</code></a></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">30</td>
+        <td><code>SAL_VSP_00030</code></td>
+        <td><strong>SAL - CST VISIT - SEP26 - TP.HCM - 28-29SEP</strong></td>
+        <td style="text-align: center;">2026-09-28</td>
+        <td style="text-align: center;">2026-09-29</td>
+        <td style="text-align: center;"><span class="badge badge-info">Planned</span></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu000008AyA2IAK/view" target="_blank"><code>a28Vu000008AyA2IAK</code></a></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">31</td>
+        <td><code>SAL_VSP_00031</code></td>
+        <td><strong>SAL - CST VISIT - OCT26 - HÀ NỘI - 15OCT</strong></td>
+        <td style="text-align: center;">2026-10-15</td>
+        <td style="text-align: center;">2026-10-15</td>
+        <td style="text-align: center;"><span class="badge badge-info">Planned</span></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu000008AyA3IAK/view" target="_blank"><code>a28Vu000008AyA3IAK</code></a></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">32</td>
+        <td><code>SAL_VSP_00032</code></td>
+        <td><strong>SAL - CST VISIT - OCT26 - HÀ NỘI</strong></td>
+        <td style="text-align: center;">2026-10-21</td>
+        <td style="text-align: center;">2026-10-22</td>
+        <td style="text-align: center;"><span class="badge badge-info">Planned</span></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit_Plan__c/a28Vu000008AyA4IAK/view" target="_blank"><code>a28Vu000008AyA4IAK</code></a></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 id="sec3">3. Chi Tiết 90 Bản Ghi Thăm Khách Hàng (Visit__c) &amp; Customer Basic Data (Customer_Basic_Data__c)</h2>
+  <p>Toàn bộ 90 bản ghi đã được liên kết chính xác 3 cấp: <code>Visit_Plan__c</code> &rarr; <code>Visit__c</code> &rarr; <code>Customer_Basic_Data__c</code> và gắn với đúng Account Khách hàng và Đại lý trên PROD.</p>
+  
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th style="width: 4%; text-align: center;">Dòng</th>
+        <th style="width: 12%;">Mã Lượt Thăm</th>
+        <th style="width: 10%;">Plan ID</th>
+        <th style="width: 26%;">Tên Khách Hàng</th>
+        <th style="width: 12%;">Mã KH (Account ID)</th>
+        <th style="width: 12%; text-align: center;">Visit ID (SF)</th>
+        <th style="width: 12%; text-align: center;">CBD ID (SF)</th>
+        <th style="width: 12%; text-align: center;">Trạng Thái</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="text-align: center;">1</td>
+        <td><code>SAL_Visit_000001</code></td>
+        <td><code>SAL_VSP_00001</code></td>
+        <td>CÔNG TY TNHH FUREVA VIỆT NAM</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g5N7kIAE/view" target="_blank"><code>001Vu00002g5N7kIAE</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063x9lIAA/view" target="_blank"><code>a29Vu0000063x9lIAA</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJsjMAH/view" target="_blank"><code>a0OVu00000CUJsjMAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">2</td>
+        <td><code>SAL_Visit_000002</code></td>
+        <td><code>SAL_VSP_00001</code></td>
+        <td>CÔNG TY TNHH THƯƠNG MẠI LỘC NÔNG</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4Fj6IAE/view" target="_blank"><code>001Vu00002g4Fj6IAE</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063x9mIAA/view" target="_blank"><code>a29Vu0000063x9mIAA</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJskMAH/view" target="_blank"><code>a0OVu00000CUJskMAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">3</td>
+        <td><code>SAL_Visit_000003</code></td>
+        <td><code>SAL_VSP_00001</code></td>
+        <td>Đoàn Thị Hoàng Phin</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4P7cIAE/view" target="_blank"><code>001Vu00002g4P7cIAE</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063x9nIAA/view" target="_blank"><code>a29Vu0000063x9nIAA</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJslMAH/view" target="_blank"><code>a0OVu00000CUJslMAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">4</td>
+        <td><code>SAL_Visit_000004</code></td>
+        <td><code>SAL_VSP_00001</code></td>
+        <td>CÔNG TY TNHH THƯƠNG MẠI - DỊCH VỤ - SẢN XUẤT RỰC SÁNG</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fhOaHIAU/view" target="_blank"><code>001Vu00002fhOaHIAU</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063x9oIAA/view" target="_blank"><code>a29Vu0000063x9oIAA</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJsmMAH/view" target="_blank"><code>a0OVu00000CUJsmMAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">5</td>
+        <td><code>SAL_Visit_000005</code></td>
+        <td><code>SAL_VSP_00001</code></td>
+        <td>CÔNG TY CỔ PHẦN LOGISTICS NPL</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fhObmIAE/view" target="_blank"><code>001Vu00002fhObmIAE</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063x9pIAA/view" target="_blank"><code>a29Vu0000063x9pIAA</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJsnMAH/view" target="_blank"><code>a0OVu00000CUJsnMAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">6</td>
+        <td><code>SAL_Visit_000006</code></td>
+        <td><code>SAL_VSP_00001</code></td>
+        <td>CÔNG TY TNHH KIM KIM SƠN</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4IkfIAE/view" target="_blank"><code>001Vu00002g4IkfIAE</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063x9qIAA/view" target="_blank"><code>a29Vu0000063x9qIAA</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJsoMAH/view" target="_blank"><code>a0OVu00000CUJsoMAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">7</td>
+        <td><code>SAL_Visit_000007</code></td>
+        <td><code>SAL_VSP_00001</code></td>
+        <td>CÔNG TY CỔ PHẦN DỊCH VỤ THƯƠNG MẠI VÀ ĐẦU TƯ DŨNG UY</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fRJaiIAG/view" target="_blank"><code>001Vu00002fRJaiIAG</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063x9rIAA/view" target="_blank"><code>a29Vu0000063x9rIAA</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJspMAH/view" target="_blank"><code>a0OVu00000CUJspMAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">8</td>
+        <td><code>SAL_Visit_000008</code></td>
+        <td><code>SAL_VSP_00001</code></td>
+        <td>CÔNG TY TNHH THƯƠNG MẠI DỊCH VỤ VẬN TẢI NGUYỄN HOÀNG LONG</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g49q4IAA/view" target="_blank"><code>001Vu00002g49q4IAA</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063x9sIAA/view" target="_blank"><code>a29Vu0000063x9sIAA</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJsqMAH/view" target="_blank"><code>a0OVu00000CUJsqMAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">9</td>
+        <td><code>SAL_Visit_000009</code></td>
+        <td><code>SAL_VSP_00001</code></td>
+        <td>CÔNG TY CỔ PHẦN VẬN TẢI CHUYỂN PHÁT NHANH PHONG MÃ</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fP18iIAC/view" target="_blank"><code>001Vu00002fP18iIAC</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063x9tIAA/view" target="_blank"><code>a29Vu0000063x9tIAA</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJsrMAH/view" target="_blank"><code>a0OVu00000CUJsrMAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">10</td>
+        <td><code>SAL_Visit_000010</code></td>
+        <td><code>SAL_VSP_00002</code></td>
+        <td>CÔNG TY CỔ PHẦN THƯƠNG MẠI VÀ DỊCH VỤ THS QUỐC TẾ</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fhObyIAE/view" target="_blank"><code>001Vu00002fhObyIAE</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063x9uIAA/view" target="_blank"><code>a29Vu0000063x9uIAA</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJssMAH/view" target="_blank"><code>a0OVu00000CUJssMAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">11</td>
+        <td><code>SAL_Visit_000011</code></td>
+        <td><code>SAL_VSP_00002</code></td>
+        <td>CÔNG TY TNHH DỊCH VỤ THƯƠNG MẠI VÀ VẬN TẢI MÊ LINH</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g45xcIAA/view" target="_blank"><code>001Vu00002g45xcIAA</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063x9vIAA/view" target="_blank"><code>a29Vu0000063x9vIAA</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJstMAH/view" target="_blank"><code>a0OVu00000CUJstMAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">12</td>
+        <td><code>SAL_Visit_000012</code></td>
+        <td><code>SAL_VSP_00003</code></td>
+        <td>CÔNG TY TNHH THƯƠNG MẠI HOÀNG KIM PHÁT</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4I8qIAE/view" target="_blank"><code>001Vu00002g4I8qIAE</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063x9wIAA/view" target="_blank"><code>a29Vu0000063x9wIAA</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJsuMAH/view" target="_blank"><code>a0OVu00000CUJsuMAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">13</td>
+        <td><code>SAL_Visit_000013</code></td>
+        <td><code>SAL_VSP_00004</code></td>
+        <td>CÔNG TY CỔ PHẦN ĐẦU TƯ VÀ PHÁT TRIỂN NGÂN LỰC</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4Fz5IAE/view" target="_blank"><code>001Vu00002g4Fz5IAE</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063x9xIAA/view" target="_blank"><code>a29Vu0000063x9xIAA</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJsvMAH/view" target="_blank"><code>a0OVu00000CUJsvMAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">14</td>
+        <td><code>SAL_Visit_000014</code></td>
+        <td><code>SAL_VSP_00004</code></td>
+        <td>CÔNG TY TNHH TIẾP VẬN VIỆT</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g48uHIAQ/view" target="_blank"><code>001Vu00002g48uHIAQ</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063x9yIAA/view" target="_blank"><code>a29Vu0000063x9yIAA</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJswMAH/view" target="_blank"><code>a0OVu00000CUJswMAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">15</td>
+        <td><code>SAL_Visit_000015</code></td>
+        <td><code>SAL_VSP_00005</code></td>
+        <td>CÔNG TY TNHH MỘT THÀNH VIÊN CHUYỂN PHÁT NHANH THUẬN PHONG - CHI NHÁNH TÂY NGUYÊN</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4HGeIAM/view" target="_blank"><code>001Vu00002g4HGeIAM</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063x9zIAA/view" target="_blank"><code>a29Vu0000063x9zIAA</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJsxMAH/view" target="_blank"><code>a0OVu00000CUJsxMAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">16</td>
+        <td><code>SAL_Visit_000016</code></td>
+        <td><code>SAL_VSP_00006</code></td>
+        <td>CÔNG TY TNHH XÂY DỰNG THƯƠNG MẠI DỊCH VỤ AN HÙNG VƯƠNG</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g5NWyIAM/view" target="_blank"><code>001Vu00002g5NWyIAM</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xA0IAI/view" target="_blank"><code>a29Vu0000063xA0IAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJsyMAH/view" target="_blank"><code>a0OVu00000CUJsyMAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">17</td>
+        <td><code>SAL_Visit_000017</code></td>
+        <td><code>SAL_VSP_00006</code></td>
+        <td>CÔNG TY TNHH CÔNG NGHỆ ĐỒNG NAI</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g5NWTIA2/view" target="_blank"><code>001Vu00002g5NWTIA2</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xA1IAI/view" target="_blank"><code>a29Vu0000063xA1IAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJszMAH/view" target="_blank"><code>a0OVu00000CUJszMAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">18</td>
+        <td><code>SAL_Visit_000018</code></td>
+        <td><code>SAL_VSP_00006</code></td>
+        <td>CÔNG TY TNHH DỊCH VỤ VẬN TẢI MAI THƯƠNG</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4DCgIAM/view" target="_blank"><code>001Vu00002g4DCgIAM</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xA2IAI/view" target="_blank"><code>a29Vu0000063xA2IAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJt0MAH/view" target="_blank"><code>a0OVu00000CUJt0MAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">19</td>
+        <td><code>SAL_Visit_000019</code></td>
+        <td><code>SAL_VSP_00006</code></td>
+        <td>CÔNG TY TNHH MỘT THÀNH VIÊN VẬN TẢI TRẦN GIA PHÁT</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fRLXkIAO/view" target="_blank"><code>001Vu00002fRLXkIAO</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xA3IAI/view" target="_blank"><code>a29Vu0000063xA3IAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJt1MAH/view" target="_blank"><code>a0OVu00000CUJt1MAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">20</td>
+        <td><code>SAL_Visit_000020</code></td>
+        <td><code>SAL_VSP_00007</code></td>
+        <td>CÔNG TY TNHH DỊCH VỤ VẬN TẢI PHƯƠNG BẮC</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g468XIAQ/view" target="_blank"><code>001Vu00002g468XIAQ</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xA4IAI/view" target="_blank"><code>a29Vu0000063xA4IAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJt2MAH/view" target="_blank"><code>a0OVu00000CUJt2MAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">21</td>
+        <td><code>SAL_Visit_000021</code></td>
+        <td><code>SAL_VSP_00007</code></td>
+        <td>CÔNG TY CỔ PHẦN CHUYỂN PHÁT ĐỒNG TÂM</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fQVxmIAG/view" target="_blank"><code>001Vu00002fQVxmIAG</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xA5IAI/view" target="_blank"><code>a29Vu0000063xA5IAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJt3MAH/view" target="_blank"><code>a0OVu00000CUJt3MAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">22</td>
+        <td><code>SAL_Visit_000022</code></td>
+        <td><code>SAL_VSP_00007</code></td>
+        <td>CÔNG TY TNHH AN CƯ</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fQxpUIAS/view" target="_blank"><code>001Vu00002fQxpUIAS</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xA6IAI/view" target="_blank"><code>a29Vu0000063xA6IAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJt4MAH/view" target="_blank"><code>a0OVu00000CUJt4MAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">23</td>
+        <td><code>SAL_Visit_000023</code></td>
+        <td><code>SAL_VSP_00007</code></td>
+        <td>CÔNG TY TNHH DỊCH VỤ VẬN TẢI DU LỊCH NGUYỄN DŨNG</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g5NCkIAM/view" target="_blank"><code>001Vu00002g5NCkIAM</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xA7IAI/view" target="_blank"><code>a29Vu0000063xA7IAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJt5MAH/view" target="_blank"><code>a0OVu00000CUJt5MAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">24</td>
+        <td><code>SAL_Visit_000024</code></td>
+        <td><code>SAL_VSP_00007</code></td>
+        <td>CÔNG TY TNHH HOMIS LOGISTICS</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g46nLIAQ/view" target="_blank"><code>001Vu00002g46nLIAQ</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xA8IAI/view" target="_blank"><code>a29Vu0000063xA8IAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJt6MAH/view" target="_blank"><code>a0OVu00000CUJt6MAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">25</td>
+        <td><code>SAL_Visit_000025</code></td>
+        <td><code>SAL_VSP_00007</code></td>
+        <td>CÔNG TY TNHH THƯƠNG MẠI DỊCH VỤ VẬN TẢI CHÂU BẢO LONG</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g48OtIAI/view" target="_blank"><code>001Vu00002g48OtIAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xA9IAI/view" target="_blank"><code>a29Vu0000063xA9IAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJt7MAH/view" target="_blank"><code>a0OVu00000CUJt7MAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">26</td>
+        <td><code>SAL_Visit_000026</code></td>
+        <td><code>SAL_VSP_00008</code></td>
+        <td>CÔNG TY TNHH THƯƠNG MẠI VÀ DỊCH VỤ VẬN TẢI MINH QUÂN</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fQykAIAS/view" target="_blank"><code>001Vu00002fQykAIAS</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xAAIAY/view" target="_blank"><code>a29Vu0000063xAAIAY</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJt8MAH/view" target="_blank"><code>a0OVu00000CUJt8MAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">27</td>
+        <td><code>SAL_Visit_000027</code></td>
+        <td><code>SAL_VSP_00009</code></td>
+        <td>TRƯỜNG TRUNG CẤP THUẬN THÀNH</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fQzcOIAS/view" target="_blank"><code>001Vu00002fQzcOIAS</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xABIAY/view" target="_blank"><code>a29Vu0000063xABIAY</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJt9MAH/view" target="_blank"><code>a0OVu00000CUJt9MAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">28</td>
+        <td><code>SAL_Visit_000028</code></td>
+        <td><code>SAL_VSP_00009</code></td>
+        <td>CÔNG TY TNHH A SÓC</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fhOZcIAM/view" target="_blank"><code>001Vu00002fhOZcIAM</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xACIAY/view" target="_blank"><code>a29Vu0000063xACIAY</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtAMAX/view" target="_blank"><code>a0OVu00000CUJtAMAX</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">29</td>
+        <td><code>SAL_Visit_000029</code></td>
+        <td><code>SAL_VSP_00010</code></td>
+        <td>NGUYỄN THỊ KIỀU OANH</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4PXpIAM/view" target="_blank"><code>001Vu00002g4PXpIAM</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xADIAY/view" target="_blank"><code>a29Vu0000063xADIAY</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtBMAX/view" target="_blank"><code>a0OVu00000CUJtBMAX</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">30</td>
+        <td><code>SAL_Visit_000030</code></td>
+        <td><code>SAL_VSP_00010</code></td>
+        <td>NGUYỄN THỊ THỦY</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4RKOIA2/view" target="_blank"><code>001Vu00002g4RKOIA2</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xAEIAY/view" target="_blank"><code>a29Vu0000063xAEIAY</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtCMAX/view" target="_blank"><code>a0OVu00000CUJtCMAX</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">31</td>
+        <td><code>SAL_Visit_000031</code></td>
+        <td><code>SAL_VSP_00010</code></td>
+        <td>CÔNG TY TNHH THƯƠNG MẠI AN THÀNH ĐT</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fPQiRIAW/view" target="_blank"><code>001Vu00002fPQiRIAW</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xAFIAY/view" target="_blank"><code>a29Vu0000063xAFIAY</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtDMAX/view" target="_blank"><code>a0OVu00000CUJtDMAX</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">32</td>
+        <td><code>SAL_Visit_000032</code></td>
+        <td><code>SAL_VSP_00010</code></td>
+        <td>CÔNG TY TNHH MỘT THÀNH VIÊN VẬN TẢI XUÂN THÀNH SA ĐÉC</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4EMPIA2/view" target="_blank"><code>001Vu00002g4EMPIA2</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xAGIAY/view" target="_blank"><code>a29Vu0000063xAGIAY</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtEMAX/view" target="_blank"><code>a0OVu00000CUJtEMAX</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">33</td>
+        <td><code>SAL_Visit_000033</code></td>
+        <td><code>SAL_VSP_00011</code></td>
+        <td>CÔNG TY TNHH VẬN TẢI HẢI NHƯ</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g5N71IAE/view" target="_blank"><code>001Vu00002g5N71IAE</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xAHIAY/view" target="_blank"><code>a29Vu0000063xAHIAY</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtFMAX/view" target="_blank"><code>a0OVu00000CUJtFMAX</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">34</td>
+        <td><code>SAL_Visit_000034</code></td>
+        <td><code>SAL_VSP_00012</code></td>
+        <td>CÔNG TY TNHH VĨNH THỊNH LOGISTICS</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fQwEWIA0/view" target="_blank"><code>001Vu00002fQwEWIA0</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xAIIAY/view" target="_blank"><code>a29Vu0000063xAIIAY</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtGMAX/view" target="_blank"><code>a0OVu00000CUJtGMAX</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">35</td>
+        <td><code>SAL_Visit_000035</code></td>
+        <td><code>SAL_VSP_00013</code></td>
+        <td>CÔNG TY TNHH THƯƠNG MẠI TỔNG HỢP VÀ DỊCH VỤ MINH QUÂN</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g5NvpIAE/view" target="_blank"><code>001Vu00002g5NvpIAE</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xAJIAY/view" target="_blank"><code>a29Vu0000063xAJIAY</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtHMAX/view" target="_blank"><code>a0OVu00000CUJtHMAX</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">36</td>
+        <td><code>SAL_Visit_000036</code></td>
+        <td><code>SAL_VSP_00013</code></td>
+        <td>CÔNG TY TNHH THƯƠNG MẠI - ĐẦU TƯ MINH HÀ</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g5O73IAE/view" target="_blank"><code>001Vu00002g5O73IAE</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xAKIAY/view" target="_blank"><code>a29Vu0000063xAKIAY</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtIMAX/view" target="_blank"><code>a0OVu00000CUJtIMAX</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">37</td>
+        <td><code>SAL_Visit_000037</code></td>
+        <td><code>SAL_VSP_00013</code></td>
+        <td>CÔNG TY CỔ PHẦN SỮA NÔNG TRẠI XANH BA VÌ</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4FH8IAM/view" target="_blank"><code>001Vu00002g4FH8IAM</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xALIAY/view" target="_blank"><code>a29Vu0000063xALIAY</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtJMAX/view" target="_blank"><code>a0OVu00000CUJtJMAX</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">38</td>
+        <td><code>SAL_Visit_000038</code></td>
+        <td><code>SAL_VSP_00014</code></td>
+        <td>CÔNG TY TNHH MỘT THÀNH VIÊN CHUYỂN PHÁT NHANH THUẬN PHONG - CHI NHÁNH TÂY NGUYÊN</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4HGeIAM/view" target="_blank"><code>001Vu00002g4HGeIAM</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xAMIAY/view" target="_blank"><code>a29Vu0000063xAMIAY</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtKMAX/view" target="_blank"><code>a0OVu00000CUJtKMAX</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">39</td>
+        <td><code>SAL_Visit_000039</code></td>
+        <td><code>SAL_VSP_00014</code></td>
+        <td>TRUNG TÂM GIÁO DỤC NGHỀ NGHIỆP VIỆT MỸ</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g5NJZIA2/view" target="_blank"><code>001Vu00002g5NJZIA2</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xANIAY/view" target="_blank"><code>a29Vu0000063xANIAY</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtLMAX/view" target="_blank"><code>a0OVu00000CUJtLMAX</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">40</td>
+        <td><code>SAL_Visit_000040</code></td>
+        <td><code>SAL_VSP_00014</code></td>
+        <td>Nguyễn Quốc Chiến</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g3Y1YIAU/view" target="_blank"><code>001Vu00002g3Y1YIAU</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xAOIAY/view" target="_blank"><code>a29Vu0000063xAOIAY</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtMMAX/view" target="_blank"><code>a0OVu00000CUJtMMAX</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">41</td>
+        <td><code>SAL_Visit_000041</code></td>
+        <td><code>SAL_VSP_00014</code></td>
+        <td>NGUYEN CANH VINH</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4T5jIAE/view" target="_blank"><code>001Vu00002g4T5jIAE</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xAPIAY/view" target="_blank"><code>a29Vu0000063xAPIAY</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtNMAX/view" target="_blank"><code>a0OVu00000CUJtNMAX</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">42</td>
+        <td><code>SAL_Visit_000042</code></td>
+        <td><code>SAL_VSP_00015</code></td>
+        <td>CÔNG TY CỔ PHẦN THỰC PHẨM THIÊN VƯƠNG</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fQPKKIA4/view" target="_blank"><code>001Vu00002fQPKKIA4</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xAQIAY/view" target="_blank"><code>a29Vu0000063xAQIAY</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtOMAX/view" target="_blank"><code>a0OVu00000CUJtOMAX</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">44</td>
+        <td><code>SAL_Visit_000044</code></td>
+        <td><code>SAL_VSP_00016</code></td>
+        <td>CÔNG TY CỔ PHẦN CƠ KIM KHÍ THUẬN PHÁT</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g46R2IAI/view" target="_blank"><code>001Vu00002g46R2IAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xARIAY/view" target="_blank"><code>a29Vu0000063xARIAY</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtPMAX/view" target="_blank"><code>a0OVu00000CUJtPMAX</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">48</td>
+        <td><code>SAL_Visit_000048</code></td>
+        <td><code>SAL_VSP_00016</code></td>
+        <td>Nguyễn Đình Phú</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4RSEIA2/view" target="_blank"><code>001Vu00002g4RSEIA2</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xASIAY/view" target="_blank"><code>a29Vu0000063xASIAY</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtQMAX/view" target="_blank"><code>a0OVu00000CUJtQMAX</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">49</td>
+        <td><code>SAL_Visit_000049</code></td>
+        <td><code>SAL_VSP_00016</code></td>
+        <td>CÔNG TY TNHH THIẾT BỊ CÔNG NGHIỆP DML VIỆT NAM</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g5N6wIAE/view" target="_blank"><code>001Vu00002g5N6wIAE</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xATIAY/view" target="_blank"><code>a29Vu0000063xATIAY</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtRMAX/view" target="_blank"><code>a0OVu00000CUJtRMAX</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">52</td>
+        <td><code>SAL_Visit_000052</code></td>
+        <td><code>SAL_VSP_00016</code></td>
+        <td>CÔNG TY TNHH TM VÀ XD MINH ĐỨC</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g5N7UIAU/view" target="_blank"><code>001Vu00002g5N7UIAU</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xAUIAY/view" target="_blank"><code>a29Vu0000063xAUIAY</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtSMAX/view" target="_blank"><code>a0OVu00000CUJtSMAX</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">53</td>
+        <td><code>SAL_Visit_000053</code></td>
+        <td><code>SAL_VSP_00016</code></td>
+        <td>CÔNG TY CỔ PHẦN VẬN TẢI AN ĐẠT</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g5NImIAM/view" target="_blank"><code>001Vu00002g5NImIAM</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xAVIAY/view" target="_blank"><code>a29Vu0000063xAVIAY</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtTMAX/view" target="_blank"><code>a0OVu00000CUJtTMAX</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">54</td>
+        <td><code>SAL_Visit_000054</code></td>
+        <td><code>SAL_VSP_00016</code></td>
+        <td>CÔNG TY TNHH TRƯỜNG PHÁT ĐẠI LỢI</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fPzgKIAS/view" target="_blank"><code>001Vu00002fPzgKIAS</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xAWIAY/view" target="_blank"><code>a29Vu0000063xAWIAY</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtUMAX/view" target="_blank"><code>a0OVu00000CUJtUMAX</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">55</td>
+        <td><code>SAL_Visit_000055</code></td>
+        <td><code>SAL_VSP_00016</code></td>
+        <td>CÔNG TY TNHH THƯƠNG MẠI KHÁNH LINH VIỆT NAM</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g49neIAA/view" target="_blank"><code>001Vu00002g49neIAA</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xAXIAY/view" target="_blank"><code>a29Vu0000063xAXIAY</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtVMAX/view" target="_blank"><code>a0OVu00000CUJtVMAX</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">56</td>
+        <td><code>SAL_Visit_000056</code></td>
+        <td><code>SAL_VSP_00016</code></td>
+        <td>CÔNG TY CỔ PHẦN VẬN TẢI KHÁNH AN</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fSoC1IAK/view" target="_blank"><code>001Vu00002fSoC1IAK</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xAYIAY/view" target="_blank"><code>a29Vu0000063xAYIAY</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtWMAX/view" target="_blank"><code>a0OVu00000CUJtWMAX</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">57</td>
+        <td><code>SAL_Visit_000057</code></td>
+        <td><code>SAL_VSP_00017</code></td>
+        <td>TRUNG TÂM GIÁO DỤC NGHỀ NGHIỆP ĐÀO TẠO LÁI XE SƠN HÙNG - CHI NHÁNH CÔNG TY TNHH </td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g49OYIAY/view" target="_blank"><code>001Vu00002g49OYIAY</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xAZIAY/view" target="_blank"><code>a29Vu0000063xAZIAY</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtXMAX/view" target="_blank"><code>a0OVu00000CUJtXMAX</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">58</td>
+        <td><code>SAL_Visit_000058</code></td>
+        <td><code>SAL_VSP_00017</code></td>
+        <td>CHI NHÁNH CÔNG TY TNHH MỘT THÀNH VIÊN VIỆT NAM KỸ NGHỆ SÚC SẢN (VISSAN) TẠI ĐÀ N</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g5NQkIAM/view" target="_blank"><code>001Vu00002g5NQkIAM</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xAaIAI/view" target="_blank"><code>a29Vu0000063xAaIAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtYMAX/view" target="_blank"><code>a0OVu00000CUJtYMAX</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">59</td>
+        <td><code>SAL_Visit_000059</code></td>
+        <td><code>SAL_VSP_00017</code></td>
+        <td>CÔNG TY TNHH VẬN TẢI VÀ XÂY DỰNG HOÀNG NGUYÊN KHANG</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4BF7IAM/view" target="_blank"><code>001Vu00002g4BF7IAM</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xAbIAI/view" target="_blank"><code>a29Vu0000063xAbIAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtZMAX/view" target="_blank"><code>a0OVu00000CUJtZMAX</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">60</td>
+        <td><code>SAL_Visit_000060</code></td>
+        <td><code>SAL_VSP_00017</code></td>
+        <td>Công ty Minh Thiên</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4AQoIAM/view" target="_blank"><code>001Vu00002g4AQoIAM</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xAcIAI/view" target="_blank"><code>a29Vu0000063xAcIAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtaMAH/view" target="_blank"><code>a0OVu00000CUJtaMAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">61</td>
+        <td><code>SAL_Visit_000061</code></td>
+        <td><code>SAL_VSP_00018</code></td>
+        <td>CÔNG TY TNHH THƯƠNG MẠI DỊCH VỤ VẬN TẢI PHÚC THỊNH TÀI</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fNVsxIAG/view" target="_blank"><code>001Vu00002fNVsxIAG</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xAdIAI/view" target="_blank"><code>a29Vu0000063xAdIAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtbMAH/view" target="_blank"><code>a0OVu00000CUJtbMAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">62</td>
+        <td><code>SAL_Visit_000062</code></td>
+        <td><code>SAL_VSP_00019</code></td>
+        <td>CÔNG TY CỔ PHẦN CÔNG TRÌNH ĐÔ THỊ GIA LAI</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4Cg9IAE/view" target="_blank"><code>001Vu00002g4Cg9IAE</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xAeIAI/view" target="_blank"><code>a29Vu0000063xAeIAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtcMAH/view" target="_blank"><code>a0OVu00000CUJtcMAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">65</td>
+        <td><code>SAL_Visit_000065</code></td>
+        <td><code>SAL_VSP_00021</code></td>
+        <td>CÔNG TY TNHH AN THỊNH FOOD</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g5NK9IAM/view" target="_blank"><code>001Vu00002g5NK9IAM</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xAfIAI/view" target="_blank"><code>a29Vu0000063xAfIAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtdMAH/view" target="_blank"><code>a0OVu00000CUJtdMAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">66</td>
+        <td><code>SAL_Visit_000066</code></td>
+        <td><code>SAL_VSP_00021</code></td>
+        <td>CÔNG TY TNHH GAS PETROLIMEX ĐÀ NẴNG</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fPKhdIAG/view" target="_blank"><code>001Vu00002fPKhdIAG</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xAgIAI/view" target="_blank"><code>a29Vu0000063xAgIAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJteMAH/view" target="_blank"><code>a0OVu00000CUJteMAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">70</td>
+        <td><code>SAL_Visit_000070</code></td>
+        <td><code>SAL_VSP_00024</code></td>
+        <td>CÔNG TY TNHH KHO VẬN THÁI BÌNH DƯƠNG</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fhObsIAE/view" target="_blank"><code>001Vu00002fhObsIAE</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xAhIAI/view" target="_blank"><code>a29Vu0000063xAhIAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtfMAH/view" target="_blank"><code>a0OVu00000CUJtfMAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">72</td>
+        <td><code>SAL_Visit_000072</code></td>
+        <td><code>SAL_VSP_00025</code></td>
+        <td>CÔNG TY TNHH PHƯỢNG VŨ TÂY NGUYÊN</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4DgPIAU/view" target="_blank"><code>001Vu00002g4DgPIAU</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xAiIAI/view" target="_blank"><code>a29Vu0000063xAiIAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtgMAH/view" target="_blank"><code>a0OVu00000CUJtgMAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">73</td>
+        <td><code>SAL_Visit_000073</code></td>
+        <td><code>SAL_VSP_00026</code></td>
+        <td>CÔNG TY CỔ PHẦN XÂY DỰNG VÀ THƯƠNG MẠI HUYỀN MINH</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4DbUIAU/view" target="_blank"><code>001Vu00002g4DbUIAU</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xAjIAI/view" target="_blank"><code>a29Vu0000063xAjIAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJthMAH/view" target="_blank"><code>a0OVu00000CUJthMAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">75</td>
+        <td><code>SAL_Visit_000075</code></td>
+        <td><code>SAL_VSP_00027</code></td>
+        <td>CÔNG TY CỔ PHẦN TRƯỜNG SƠN 532</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g5NycIAE/view" target="_blank"><code>001Vu00002g5NycIAE</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xAkIAI/view" target="_blank"><code>a29Vu0000063xAkIAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtiMAH/view" target="_blank"><code>a0OVu00000CUJtiMAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">76</td>
+        <td><code>SAL_Visit_000076</code></td>
+        <td><code>SAL_VSP_00027</code></td>
+        <td>CÔNG TY TNHH THƯƠNG MẠI DỊCH VỤ VẬN TẢI VÂN PHONG</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4BEzIAM/view" target="_blank"><code>001Vu00002g4BEzIAM</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xAlIAI/view" target="_blank"><code>a29Vu0000063xAlIAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtjMAH/view" target="_blank"><code>a0OVu00000CUJtjMAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">77</td>
+        <td><code>SAL_Visit_000077</code></td>
+        <td><code>SAL_VSP_00027</code></td>
+        <td>CÔNG TY TNHH DUY THỊNH</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g5NHhIAM/view" target="_blank"><code>001Vu00002g5NHhIAM</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xAmIAI/view" target="_blank"><code>a29Vu0000063xAmIAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtkMAH/view" target="_blank"><code>a0OVu00000CUJtkMAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">78</td>
+        <td><code>SAL_Visit_000078</code></td>
+        <td><code>SAL_VSP_00027</code></td>
+        <td>CÔNG TY CỔ PHẦN VẬN TẢI VÀ GIAO NHẬN VIỆT THANH PHÚ</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fRFtiIAG/view" target="_blank"><code>001Vu00002fRFtiIAG</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xAnIAI/view" target="_blank"><code>a29Vu0000063xAnIAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtlMAH/view" target="_blank"><code>a0OVu00000CUJtlMAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">79</td>
+        <td><code>SAL_Visit_000079</code></td>
+        <td><code>SAL_VSP_00027</code></td>
+        <td>CÔNG TY CỔ PHẦN LOGISTICS CẢNG ĐÀ NẴNG</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g5NPRIA2/view" target="_blank"><code>001Vu00002g5NPRIA2</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xAoIAI/view" target="_blank"><code>a29Vu0000063xAoIAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtmMAH/view" target="_blank"><code>a0OVu00000CUJtmMAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">80</td>
+        <td><code>SAL_Visit_000080</code></td>
+        <td><code>SAL_VSP_00027</code></td>
+        <td>CÔNG TY TNHH HƯNG VINH</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fhOZyIAM/view" target="_blank"><code>001Vu00002fhOZyIAM</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xApIAI/view" target="_blank"><code>a29Vu0000063xApIAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtnMAH/view" target="_blank"><code>a0OVu00000CUJtnMAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">81</td>
+        <td><code>SAL_Visit_000081</code></td>
+        <td><code>SAL_VSP_00028</code></td>
+        <td>TRẦN VĂN TUẤN TÀI</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu000031iyg9IAA/view" target="_blank"><code>001Vu000031iyg9IAA</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xAqIAI/view" target="_blank"><code>a29Vu0000063xAqIAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtoMAH/view" target="_blank"><code>a0OVu00000CUJtoMAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">82</td>
+        <td><code>SAL_Visit_000082</code></td>
+        <td><code>SAL_VSP_00028</code></td>
+        <td>NGUYỄN THANH PHÚC</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu000031iwrIIAQ/view" target="_blank"><code>001Vu000031iwrIIAQ</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xArIAI/view" target="_blank"><code>a29Vu0000063xArIAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtpMAH/view" target="_blank"><code>a0OVu00000CUJtpMAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">83</td>
+        <td><code>SAL_Visit_000083</code></td>
+        <td><code>SAL_VSP_00028</code></td>
+        <td>CÔNG TY TNHH NGUYỄN TẤN HÀO</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu000031j3uRIAQ/view" target="_blank"><code>001Vu000031j3uRIAQ</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xAsIAI/view" target="_blank"><code>a29Vu0000063xAsIAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtqMAH/view" target="_blank"><code>a0OVu00000CUJtqMAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">84</td>
+        <td><code>SAL_Visit_000084</code></td>
+        <td><code>SAL_VSP_00028</code></td>
+        <td>NGUYỄN NGỌC CHÚC</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4Sw8IAE/view" target="_blank"><code>001Vu00002g4Sw8IAE</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xAtIAI/view" target="_blank"><code>a29Vu0000063xAtIAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtrMAH/view" target="_blank"><code>a0OVu00000CUJtrMAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">85</td>
+        <td><code>SAL_Visit_000085</code></td>
+        <td><code>SAL_VSP_00028</code></td>
+        <td>ĐẶNG SƠN EM</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4P4iIAE/view" target="_blank"><code>001Vu00002g4P4iIAE</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xAuIAI/view" target="_blank"><code>a29Vu0000063xAuIAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtsMAH/view" target="_blank"><code>a0OVu00000CUJtsMAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">86</td>
+        <td><code>SAL_Visit_000086</code></td>
+        <td><code>SAL_VSP_00028</code></td>
+        <td>TRẦN DUY SƠN</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fPQd9IAG/view" target="_blank"><code>001Vu00002fPQd9IAG</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xAvIAI/view" target="_blank"><code>a29Vu0000063xAvIAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJttMAH/view" target="_blank"><code>a0OVu00000CUJttMAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">87</td>
+        <td><code>SAL_Visit_000087</code></td>
+        <td><code>SAL_VSP_00029</code></td>
+        <td>CÔNG TY CỔ PHẦN MÔI TRƯỜNG VÀ DỊCH VỤ ĐÔ THỊ VIỆT TRÌ</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4IQeIAM/view" target="_blank"><code>001Vu00002g4IQeIAM</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xAwIAI/view" target="_blank"><code>a29Vu0000063xAwIAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtuMAH/view" target="_blank"><code>a0OVu00000CUJtuMAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">88</td>
+        <td><code>SAL_Visit_000088</code></td>
+        <td><code>SAL_VSP_00029</code></td>
+        <td>TRUNG TÂM DẠY NGHỀ VÀ ĐÀO TẠO LÁI XE VIỆT TRÌ</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fR2uuIAC/view" target="_blank"><code>001Vu00002fR2uuIAC</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xAxIAI/view" target="_blank"><code>a29Vu0000063xAxIAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtvMAH/view" target="_blank"><code>a0OVu00000CUJtvMAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">89</td>
+        <td><code>SAL_Visit_000089</code></td>
+        <td><code>SAL_VSP_00029</code></td>
+        <td>CÔNG TY TNHH VẬN TẢI VÀ DU LỊCH KIÊN THANH</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4AXwIAM/view" target="_blank"><code>001Vu00002g4AXwIAM</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xAyIAI/view" target="_blank"><code>a29Vu0000063xAyIAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtwMAH/view" target="_blank"><code>a0OVu00000CUJtwMAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">90</td>
+        <td><code>SAL_Visit_000090</code></td>
+        <td><code>SAL_VSP_00029</code></td>
+        <td>CÔNG TY CỔ PHẦN THƯƠNG MẠI VÀ DỊCH VỤ CHUYỂN PHÁT NHANH THÀNH LỘC</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g471qIAA/view" target="_blank"><code>001Vu00002g471qIAA</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xAzIAI/view" target="_blank"><code>a29Vu0000063xAzIAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtxMAH/view" target="_blank"><code>a0OVu00000CUJtxMAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">91</td>
+        <td><code>SAL_Visit_000091</code></td>
+        <td><code>SAL_VSP_00029</code></td>
+        <td>CÔNG TY CỔ PHẦN VẬN TẢI THƯƠNG MẠI VÀ DỊCH VỤ HOA VINH</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g473KIAQ/view" target="_blank"><code>001Vu00002g473KIAQ</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xB0IAI/view" target="_blank"><code>a29Vu0000063xB0IAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtyMAH/view" target="_blank"><code>a0OVu00000CUJtyMAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">92</td>
+        <td><code>SAL_Visit_000092</code></td>
+        <td><code>SAL_VSP_00029</code></td>
+        <td>Phạm Hữu Tuân</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4ToXIAU/view" target="_blank"><code>001Vu00002g4ToXIAU</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xB1IAI/view" target="_blank"><code>a29Vu0000063xB1IAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJtzMAH/view" target="_blank"><code>a0OVu00000CUJtzMAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">93</td>
+        <td><code>SAL_Visit_000093</code></td>
+        <td><code>SAL_VSP_00029</code></td>
+        <td>CÔNG TY TNHH THƯƠNG MẠI VẬN TẢI HOÀNG ĐOÀN</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4SryIAE/view" target="_blank"><code>001Vu00002g4SryIAE</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xB2IAI/view" target="_blank"><code>a29Vu0000063xB2IAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJu0MAH/view" target="_blank"><code>a0OVu00000CUJu0MAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">94</td>
+        <td><code>SAL_Visit_000094</code></td>
+        <td><code>SAL_VSP_00030</code></td>
+        <td>CÔNG TY TNHH DỊCH VỤ THƯƠNG MẠI VÀ VẬN TẢI XUÂN PHÁT</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4FvZIAU/view" target="_blank"><code>001Vu00002g4FvZIAU</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xB3IAI/view" target="_blank"><code>a29Vu0000063xB3IAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJu1MAH/view" target="_blank"><code>a0OVu00000CUJu1MAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">95</td>
+        <td><code>SAL_Visit_000095</code></td>
+        <td><code>SAL_VSP_00030</code></td>
+        <td>CÔNG TY TNHH MỘT THÀNH VIÊN GIAO NHẬN VẬN TẢI KHÁNH CHÂU</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fTC3eIAG/view" target="_blank"><code>001Vu00002fTC3eIAG</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xB4IAI/view" target="_blank"><code>a29Vu0000063xB4IAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJu2MAH/view" target="_blank"><code>a0OVu00000CUJu2MAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">96</td>
+        <td><code>SAL_Visit_000096</code></td>
+        <td><code>SAL_VSP_00030</code></td>
+        <td>CÔNG TY TNHH MỘT THÀNH VIÊN GIAO NHẬN VẬN TẢI MẠNH ĐỨC</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fhOcMIAU/view" target="_blank"><code>001Vu00002fhOcMIAU</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xB5IAI/view" target="_blank"><code>a29Vu0000063xB5IAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJu3MAH/view" target="_blank"><code>a0OVu00000CUJu3MAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">97</td>
+        <td><code>SAL_Visit_000097</code></td>
+        <td><code>SAL_VSP_00030</code></td>
+        <td>CÔNG TY CỔ PHẦN PHÚC HUY TRANSPORT</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002fhOZQIA2/view" target="_blank"><code>001Vu00002fhOZQIA2</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xB6IAI/view" target="_blank"><code>a29Vu0000063xB6IAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJu4MAH/view" target="_blank"><code>a0OVu00000CUJu4MAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">98</td>
+        <td><code>SAL_Visit_000098</code></td>
+        <td><code>SAL_VSP_00030</code></td>
+        <td>CÔNG TY CỔ PHẦN THƯƠNG MẠI VẬN TẢI VÀ CHUYỂN PHÁT PHƯƠNG ĐÔNG</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g49sXIAQ/view" target="_blank"><code>001Vu00002g49sXIAQ</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xB7IAI/view" target="_blank"><code>a29Vu0000063xB7IAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJu5MAH/view" target="_blank"><code>a0OVu00000CUJu5MAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">99</td>
+        <td><code>SAL_Visit_000099</code></td>
+        <td><code>SAL_VSP_00031</code></td>
+        <td>CÔNG TY CỔ PHẦN MÁY MÓC &amp; THIẾT BỊ LTK</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu000036XvAYIA0/view" target="_blank"><code>001Vu000036XvAYIA0</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xB8IAI/view" target="_blank"><code>a29Vu0000063xB8IAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJu6MAH/view" target="_blank"><code>a0OVu00000CUJu6MAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">100</td>
+        <td><code>SAL_Visit_000100</code></td>
+        <td><code>SAL_VSP_00031</code></td>
+        <td>CÔNG TY CỔ PHẦN LICOGI 12.1</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002wufg5IAA/view" target="_blank"><code>001Vu00002wufg5IAA</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xB9IAI/view" target="_blank"><code>a29Vu0000063xB9IAI</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJu7MAH/view" target="_blank"><code>a0OVu00000CUJu7MAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">101</td>
+        <td><code>SAL_Visit_000101</code></td>
+        <td><code>SAL_VSP_00032</code></td>
+        <td>CÔNG TY TNHH THƯƠNG MẠI DỊCH VỤ VẬN TẢI KIỀU ANH</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu000038ixujIAA/view" target="_blank"><code>001Vu000038ixujIAA</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xBAIAY/view" target="_blank"><code>a29Vu0000063xBAIAY</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJu8MAH/view" target="_blank"><code>a0OVu00000CUJu8MAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">102</td>
+        <td><code>SAL_Visit_000102</code></td>
+        <td><code>SAL_VSP_00032</code></td>
+        <td>CÔNG TY TNHH VẬN TẢI THỨC ANH</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4D79IAE/view" target="_blank"><code>001Vu00002g4D79IAE</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xBBIAY/view" target="_blank"><code>a29Vu0000063xBBIAY</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJu9MAH/view" target="_blank"><code>a0OVu00000CUJu9MAH</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">103</td>
+        <td><code>SAL_Visit_000103</code></td>
+        <td><code>SAL_VSP_00032</code></td>
+        <td>CÔNG TY CỔ PHẦN QHL VIỆT NAM</td>
+        <td><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Account/001Vu00002g4FGNIA2/view" target="_blank"><code>001Vu00002g4FGNIA2</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Visit__c/a29Vu0000063xBCIAY/view" target="_blank"><code>a29Vu0000063xBCIAY</code></a></td>
+        <td style="text-align: center;"><a class="sf-link" href="https://ivcl.lightning.force.com/lightning/r/Customer_Basic_Data__c/a0OVu00000CUJuAMAX/view" target="_blank"><code>a0OVu00000CUJuAMAX</code></a></td>
+        <td style="text-align: center;"><span class="badge badge-ok">SUCCESS</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 id="sec4">4. Danh Sách 14 Khách Hàng Tạm Hoãn Chờ Bổ Sung Account ID</h2>
+  <p>14 lượt viếng thăm này tạm hoãn import để chờ cung cấp / xác nhận Account ID trên PROD. Đã xuất thành 2 file CSV gửi cho User / BA:</p>
+
+  <h3>4.1. Bảng 1: 8 Khách Hàng Chưa Có Tài Khoản Trên PROD (Cần tạo mới Account)</h3>
+  <p>File xuất: <code>docs\Import Visit\Bang1_8_Khach_Hang_Chua_Co_Tren_PROD_SAL.csv</code></p>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th style="width: 5%; text-align: center;">Dòng</th>
+        <th style="width: 12%;">Plan ID</th>
+        <th style="width: 12%;">Visit Code</th>
+        <th style="width: 25%;">Tên Khách Hàng</th>
+        <th style="width: 10%;">Mã Thuế</th>
+        <th style="width: 8%;">Đại Lý</th>
+        <th style="width: 28%;">Địa Chỉ</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="text-align: center;"></td>
+        <td><code></code></td>
+        <td><code></code></td>
+        <td><strong></strong></td>
+        <td><code></code></td>
+        <td></td>
+        <td><small></small></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;"></td>
+        <td><code></code></td>
+        <td><code></code></td>
+        <td><strong></strong></td>
+        <td><code></code></td>
+        <td></td>
+        <td><small></small></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;"></td>
+        <td><code></code></td>
+        <td><code></code></td>
+        <td><strong></strong></td>
+        <td><code></code></td>
+        <td></td>
+        <td><small></small></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;"></td>
+        <td><code></code></td>
+        <td><code></code></td>
+        <td><strong></strong></td>
+        <td><code></code></td>
+        <td></td>
+        <td><small></small></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;"></td>
+        <td><code></code></td>
+        <td><code></code></td>
+        <td><strong></strong></td>
+        <td><code></code></td>
+        <td></td>
+        <td><small></small></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;"></td>
+        <td><code></code></td>
+        <td><code></code></td>
+        <td><strong></strong></td>
+        <td><code></code></td>
+        <td></td>
+        <td><small></small></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;"></td>
+        <td><code></code></td>
+        <td><code></code></td>
+        <td><strong></strong></td>
+        <td><code></code></td>
+        <td></td>
+        <td><small></small></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;"></td>
+        <td><code></code></td>
+        <td><code></code></td>
+        <td><strong></strong></td>
+        <td><code></code></td>
+        <td></td>
+        <td><small></small></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>4.2. Bảng 2: 6 Khách Hàng Có Trùng / Cần Xác Nhận Tên Trên PROD</h3>
+  <p>File xuất: <code>docs\Import Visit\Bang2_6_Khach_Hang_Can_Xac_Nhan_Ten_PROD_SAL.csv</code></p>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th style="width: 5%; text-align: center;">Dòng</th>
+        <th style="width: 12%;">Plan ID</th>
+        <th style="width: 12%;">Visit Code</th>
+        <th style="width: 25%;">Tên Trên File CSV</th>
+        <th style="width: 10%;">Mã Thuế</th>
+        <th style="width: 8%;">Đại Lý</th>
+        <th style="width: 28%;">Tên / Ứng Viên Gợi Ý Trên PROD</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="text-align: center;"></td>
+        <td><code></code></td>
+        <td><code></code></td>
+        <td><strong></strong></td>
+        <td><code></code></td>
+        <td></td>
+        <td><small> &bull; <code></code></small></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;"></td>
+        <td><code></code></td>
+        <td><code></code></td>
+        <td><strong></strong></td>
+        <td><code></code></td>
+        <td></td>
+        <td><small> &bull; <code></code></small></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;"></td>
+        <td><code></code></td>
+        <td><code></code></td>
+        <td><strong></strong></td>
+        <td><code></code></td>
+        <td></td>
+        <td><small> &bull; <code></code></small></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;"></td>
+        <td><code></code></td>
+        <td><code></code></td>
+        <td><strong></strong></td>
+        <td><code></code></td>
+        <td></td>
+        <td><small> &bull; <code></code></small></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;"></td>
+        <td><code></code></td>
+        <td><code></code></td>
+        <td><strong></strong></td>
+        <td><code></code></td>
+        <td></td>
+        <td><small> &bull; <code></code></small></td>
+      </tr>
+      <tr>
+        <td style="text-align: center;"></td>
+        <td><code></code></td>
+        <td><code></code></td>
+        <td><strong></strong></td>
+        <td><code></code></td>
+        <td></td>
+        <td><small> &bull; <code></code></small></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 id="sec5">5. Xác Nhận Kỹ Thuật, Mối Quan Hệ &amp; Công Thức Tự Động</h2>
+  <div class="callout callout-ok">
+    <strong>1. Toàn Vẹn Liên Kết Quan Hệ (Relationship Integrity):</strong><br>
+    &bull; <code>Visit_Plan__c</code> &rarr; <code>Visit__c</code>: Khóa ngoại <code>Visit_Plan__c</code> được gán chính xác theo mã <code>External_ID__c</code> (SAL_VSP_00001..32).<br>
+    &bull; <code>Visit__c</code> &rarr; <code>Customer_Basic_Data__c</code>: Liên kết 1-1 chặt chẽ thông qua trường lookup <code>Visit__c</code> và <code>Visit_Plan__c</code>.<br>
+    &bull; <code>Vendor__c</code> trên <code>Visit__c</code> và <code>Customer_Name__c</code> trên <code>Customer_Basic_Data__c</code> cùng trỏ đến đúng Account ID của khách hàng.<br>
+    &bull; <code>Dealer_Name__c</code> trên <code>Visit__c</code> và <code>Account__c</code> trên <code>Customer_Basic_Data__c</code> cùng trỏ đến đúng Account ID của Đại lý.
+  </div>
+
+  <div class="callout">
+    <strong>2. Xác Thực Công Thức Tự Động (Formula Fields):</strong><br>
+    &bull; Trường công thức <code>Customer_Basic_Data__c.Visit_nNote__c</code> = <code>Visit__r.Note__c</code> tự động hiển thị đầy đủ thông tin cán bộ phụ trách viếng thăm (Ví dụ: <em>Nguyễn Thắng Duy</em>).<br>
+    &bull; Picklist Xếp hạng khách hàng <code>Customer_Rank__c</code> đã chuẩn hóa thành công: Platinum &rarr; <code>FLS Platium</code>, Gold &rarr; <code>FLS Gold</code>, Silver &rarr; <code>FLS Silver</code>.
+  </div>
+
+  <div class="callout callout-ok">
+    <strong>3. An Toàn Dữ Liệu &amp; Khả Năng Mở Rộng:</strong><br>
+    &bull; Tệp kết quả chi tiết đã được xuất ra định dạng CSV tại: <code>docs\Import Visit\Ket_Qua_Import_Visit_SAL_PROD.csv</code>.<br>
+    &bull; Khi User/BA hoàn tất bổ sung 14 Account trên PROD, script chỉ cần nạp lại 14 dòng này vào đúng các Plan tương ứng đã tồn tại mà không ảnh hưởng tới bất kỳ bản ghi nào đã import.
+  </div>
+</div>
+</body>
+</html>
